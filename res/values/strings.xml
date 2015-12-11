@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ProjetMobile</string>
+    <string name="ErrorWhenLoadingMap">Désolé la carte n\'a pas pu être chargée</string>
 </resources>

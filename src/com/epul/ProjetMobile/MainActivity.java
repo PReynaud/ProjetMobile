@@ -36,14 +36,15 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
             googleMap = ((MapFragment) getFragmentManager().findFragmentById(
                     R.id.map)).getMap();
 
-            //MapFragment
+            MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+            mapFragment.getMapAsync(this);
 
             // check if map is created successfully or not
-            if (googleMap == null) {
+            /*if (googleMap == null) {
                 Toast.makeText(getApplicationContext(),
                         getString(R.string.ErrorWhenLoadingMap), Toast.LENGTH_SHORT)
                         .show();
-            }
+            }*/
         }
     }
 
@@ -59,5 +60,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
                 .position(new LatLng(0, 0))
                 .title("Pouet"));
         Toast.makeText(getApplicationContext(), "BOUDIBOUBABADOU", Toast.LENGTH_SHORT).show();
+
+        this.googleMap = googleMap;
     }
 }

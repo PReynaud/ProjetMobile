@@ -5,8 +5,11 @@ import android.os.Bundle;
 import android.widget.Toast;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements OnMapReadyCallback {
     // Google Map
     private GoogleMap googleMap;
 
@@ -33,6 +36,8 @@ public class MainActivity extends Activity {
             googleMap = ((MapFragment) getFragmentManager().findFragmentById(
                     R.id.map)).getMap();
 
+            //MapFragment
+
             // check if map is created successfully or not
             if (googleMap == null) {
                 Toast.makeText(getApplicationContext(),
@@ -46,5 +51,13 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         initilizeMap();
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        this.googleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(0, 0))
+                .title("Pouet"));
+        Toast.makeText(getApplicationContext(), "BOUDIBOUBABADOU", Toast.LENGTH_SHORT).show();
     }
 }

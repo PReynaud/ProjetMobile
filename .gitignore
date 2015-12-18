@@ -15,6 +15,7 @@ bin/
 gen/
 
 # Gradle files
+/res/values/google_maps_api.xml
 .gradle/
 build/
 

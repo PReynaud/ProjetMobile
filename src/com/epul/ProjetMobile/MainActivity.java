@@ -1,6 +1,8 @@
 package com.epul.ProjetMobile;
 
+import android.*;
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Toast;
 import com.google.android.gms.maps.GoogleMap;
@@ -60,6 +62,10 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
                 .position(new LatLng(0, 0))
                 .title("Pouet"));
         Toast.makeText(getApplicationContext(), "BOUDIBOUBABADOU", Toast.LENGTH_SHORT).show();
+
+
+        //Active la localisation
+        googleMap.setMyLocationEnabled(true);
 
         this.googleMap = googleMap;
     }

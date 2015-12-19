@@ -1,18 +1,18 @@
 package com.epul.ProjetMobile;
 
-import android.*;
 import android.app.Activity;
-import android.content.pm.PackageManager;
+import android.content.Context;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.widget.Toast;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MainActivity extends Activity implements OnMapReadyCallback {
-    // Google Map
     private GoogleMap googleMap;
 
     @Override
@@ -21,7 +21,6 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         setContentView(R.layout.main);
 
         try {
-            // Loading map
             initilizeMap();
 
         } catch (Exception e) {
@@ -31,7 +30,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
     }
 
     /**
-     * function to load map. If map is not created it will create it for you
+     * Fonction qui va charger la map
      * */
     private void initilizeMap() {
         if (googleMap == null) {
@@ -41,12 +40,30 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
             MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
             mapFragment.getMapAsync(this);
 
-            // check if map is created successfully or not
-            /*if (googleMap == null) {
+            //Met la carte en hybride
+            googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
+            // Vérifie si la carte a bien été créée correctement sinon affiche un message
+            if (googleMap == null) {
                 Toast.makeText(getApplicationContext(),
                         getString(R.string.ErrorWhenLoadingMap), Toast.LENGTH_SHORT)
                         .show();
-            }*/
+            }
+
+            //Active la localisation
+            googleMap.setMyLocationEnabled(true);
+
+            // Active les bouttons de zoom
+            googleMap.getUiSettings().setZoomControlsEnabled(true);
+
+            //Active le boutton de location
+            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+            //Active le compas
+            googleMap.getUiSettings().setCompassEnabled(true);
+
+            //Désactive la rotation
+            googleMap.getUiSettings().setRotateGesturesEnabled(false);
         }
     }
 
@@ -61,12 +78,25 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         this.googleMap.addMarker(new MarkerOptions()
                 .position(new LatLng(0, 0))
                 .title("Pouet"));
-        Toast.makeText(getApplicationContext(), "BOUDIBOUBABADOU", Toast.LENGTH_SHORT).show();
-
-
-        //Active la localisation
-        googleMap.setMyLocationEnabled(true);
 
         this.googleMap = googleMap;
+        this.centerMapOnUserLocation();
+    }
+
+    private void centerMapOnUserLocation(){
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+
+        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+        if (location != null)
+        {
+            this.googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(location.getLatitude(), location.getLongitude()), 13));
+        }
+        else{
+            Toast.makeText(getApplicationContext(),
+                    getString(R.string.ErrorWhenGettingLocation), Toast.LENGTH_SHORT)
+                    .show();
+        }
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ProjetMobile</string>
-    <string name="ErrorWhenLoadingMap">Désolé la carte n\'a pas pu être chargée</string>
+    <string name="ErrorWhenLoadingMap">La carte n\'a pas pu être chargée</string>
+    <string name="ErrorWhenGettingLocation">Impossible d\'obtenir la position actuelle</string>
 </resources>

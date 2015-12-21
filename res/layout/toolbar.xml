@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-                                   android:id="@+id/my_toolbar"
+                                   android:id="@+id/toolbar"
                                    android:layout_width="match_parent"
                                    android:layout_height="wrap_content"
                                    android:minHeight="@dimen/abc_action_bar_default_height_material"
+                                   android:elevation="4dp"
                                    android:background="@color/primary">
 </android.widget.Toolbar>

@@ -2,6 +2,7 @@ package com.epul.ProjetMobile;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -14,13 +15,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MainActivity extends Activity implements OnMapReadyCallback {
     private GoogleMap googleMap;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setActionBar(mToolbar);
 
         // Inflate a menu to be displayed in the toolbar
         //toolbar.inflateMenu(R.menu.your_toolbar_menu);
@@ -88,7 +91,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         this.centerMapOnUserLocation();
     }
 
-    private void centerMapOnUserLocation(){
+    private void centerMapOnUserLocation() {
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
@@ -8,5 +8,11 @@
         <item name="android:colorAccent">@color/accent</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
         <item name="android:navigationBarColor">@color/primaryDark</item>
+        <item name="android:actionMenuTextColor">@color/textColorPrimary</item>
+        <item name="android:popupBackground">@color/primary</item>
+    </style>
+
+    <style name="ToolbarTheme" parent="android:Widget.Material.Toolbar">
+        <item name="android:background">@color/primary</item>
     </style>
 </resources>

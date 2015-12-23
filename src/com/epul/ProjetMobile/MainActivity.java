@@ -7,6 +7,11 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.Toolbar;
 import com.google.android.gms.maps.*;
@@ -18,15 +23,36 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
     private Toolbar mToolbar;
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.action_settings:
+                Toast.makeText(MainActivity.this, "Setting clic :)", Toast.LENGTH_LONG).show();
+                break;
+            case R.id.action_search:
+                Toast.makeText(MainActivity.this, "Search clic :)", Toast.LENGTH_LONG).show();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setActionBar(mToolbar);
-
-        // Inflate a menu to be displayed in the toolbar
-        //toolbar.inflateMenu(R.menu.your_toolbar_menu);
 
         try {
             initilizeMap();
@@ -38,7 +64,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
     }
 
     /**
-     * Fonction qui va charger la map
+     * Initialisation de la map et de tous ces paramètres
      * */
     private void initilizeMap() {
         if (googleMap == null) {
@@ -91,20 +117,30 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         this.centerMapOnUserLocation();
     }
 
+    /**
+     * Vérifie l'autorisation concernant la position de l'utilisateur et centre la map sur celle-ci
+     */
     private void centerMapOnUserLocation() {
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
 
-        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-        if (location != null)
-        {
-            this.googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                    new LatLng(location.getLatitude(), location.getLongitude()), 13));
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(getApplicationContext(),
+                    getString(R.string.ErrorPermissionWhenGettingLocation), Toast.LENGTH_SHORT)
+                    .show();
         }
         else{
-            Toast.makeText(getApplicationContext(),
-                    getString(R.string.ErrorWhenGettingLocation), Toast.LENGTH_SHORT)
-                    .show();
+            Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+            if (location != null)
+            {
+                this.googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                        new LatLng(location.getLatitude(), location.getLongitude()), 13));
+            }
+            else{
+                Toast.makeText(getApplicationContext(),
+                        getString(R.string.ErrorWhenGettingLocation), Toast.LENGTH_SHORT)
+                        .show();
+            }
         }
     }
 }

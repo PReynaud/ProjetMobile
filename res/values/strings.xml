@@ -3,4 +3,7 @@
     <string name="app_name">ProjetMobile</string>
     <string name="ErrorWhenLoadingMap">La carte n\'a pas pu être chargée</string>
     <string name="ErrorWhenGettingLocation">Impossible d\'obtenir la position actuelle</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="search">Recherche</string>
+    <string name="ErrorPermissionWhenGettingLocation">L\'application n\'a pas l\'autorisation nécessaire</string>
 </resources>

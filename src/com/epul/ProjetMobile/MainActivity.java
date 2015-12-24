@@ -2,6 +2,7 @@ package com.epul.ProjetMobile;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -14,13 +15,19 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.Toolbar;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MainActivity extends Activity implements OnMapReadyCallback {
+import java.util.List;
+
+public class MainActivity extends Activity implements OnMapReadyCallback, PlacesServiceDelegate {
     private GoogleMap googleMap;
     private Toolbar mToolbar;
+    private Location userLocation;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -54,8 +61,11 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setActionBar(mToolbar);
 
+        userLocation = null;
+
         try {
             initilizeMap();
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -109,12 +119,11 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        this.googleMap.addMarker(new MarkerOptions()
-                .position(new LatLng(0, 0))
-                .title("Pouet"));
-
         this.googleMap = googleMap;
         this.centerMapOnUserLocation();
+        PlacesService service = new PlacesService(getResources().getString(R.string.google_places_key));
+        service.setLocation(this.userLocation, this);
+        service.execute();
     }
 
     /**
@@ -135,6 +144,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
             {
                 this.googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                         new LatLng(location.getLatitude(), location.getLongitude()), 13));
+                this.userLocation = location;
             }
             else{
                 Toast.makeText(getApplicationContext(),
@@ -142,5 +152,12 @@ public class MainActivity extends Activity implements OnMapReadyCallback {
                         .show();
             }
         }
+    }
+
+    @Override
+    public void placeMarkers(List<Place> listOfPlaces) {
+        Toast.makeText(getApplicationContext(),
+                "Ajouter le placement des marqueurs", Toast.LENGTH_SHORT)
+                .show();
     }
 }

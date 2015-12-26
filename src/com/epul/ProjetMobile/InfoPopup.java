@@ -3,6 +3,7 @@ package com.epul.ProjetMobile;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -28,12 +29,25 @@ public class InfoPopup implements GoogleMap.InfoWindowAdapter {
         LayoutInflater inflater = LayoutInflater.from(context);
         View v = inflater.inflate(R.layout.info_popup, null);
 
-        LatLng latLng = marker.getPosition();
+        TextView placeName = (TextView) v.findViewById(R.id.place_name);
+        placeName.setText(marker.getTitle());
 
-        TextView tvLat = (TextView) v.findViewById(R.id.tv_lat);
-        TextView tvLng = (TextView) v.findViewById(R.id.tv_lng);
-        tvLat.setText("Latitude:" + latLng.latitude);
-        tvLng.setText("Longitude:"+ latLng.longitude);
+        Button addButton = (Button) v.findViewById(R.id.buttonAdd);
+        Button detailButton = (Button) v.findViewById(R.id.buttonDetail);
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        detailButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         return v;
     }

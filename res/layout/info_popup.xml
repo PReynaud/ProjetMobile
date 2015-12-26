@@ -4,14 +4,11 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
     <TextView
-            android:id="@+id/tv_lat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    <TextView
-            android:id="@+id/tv_lng"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:id="@+id/place_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_margin="2dp"/>
 
     <LinearLayout
             android:orientation="horizontal"
@@ -22,15 +19,21 @@
                 android:id="@+id/buttonDetail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight=".50"
                 android:text="@string/DetailButton"
-                style="@style/AppTheme"/>
+                android:background="@drawable/button_white"
+                style="@style/AppTheme"
+                android:textColor="#000000"
+                android:elevation="4dp"/>
         <Button
                 android:id="@+id/buttonAdd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight=".50"
                 android:text="@string/AddButton"
-                android:background="@drawable/button"
-                style="@style/AppTheme"/>
+                android:background="@drawable/button_blue"
+                style="@style/AppTheme"
+                android:elevation="4dp"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -66,7 +66,8 @@ public class PlacesService extends AsyncTask<String, Void, String> {
         urlString.append(Double.toString(latitude));
         urlString.append(",");
         urlString.append(Double.toString(longitude));
-        urlString.append("&radius=1000");
+        urlString.append("&radius=5000");
+        urlString.append("&types=museum");
         urlString.append("&sensor=true&key=" + this.apiKey);
 
         return urlString.toString();

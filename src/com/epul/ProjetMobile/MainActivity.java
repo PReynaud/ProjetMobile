@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
+import android.widget.Toolbar;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -24,7 +25,7 @@ import java.util.List;
 
 public class MainActivity extends Activity implements OnMapReadyCallback, PlacesServiceDelegate {
     private GoogleMap googleMap;
-    //private Toolbar mToolbar;
+    private Toolbar mToolbar;
     private Location userLocation;
 
     @Override
@@ -56,8 +57,8 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Places
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        //mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setActionBar(mToolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setActionBar(mToolbar);
 
         userLocation = null;
 
@@ -113,7 +114,6 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Places
     @Override
     protected void onResume() {
         super.onResume();
-        initilizeMap();
     }
 
     @Override
@@ -121,6 +121,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Places
         this.googleMap = googleMap;
         this.centerMapOnUserLocation();
         PlacesService service = new PlacesService(getResources().getString(R.string.google_places_key));
+        googleMap.setInfoWindowAdapter(new InfoPopup(this));
         service.setLocation(this.userLocation, this);
         service.execute();
     }

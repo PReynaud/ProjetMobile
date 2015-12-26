@@ -7,4 +7,6 @@
     <string name="search">Recherche</string>
     <string name="ErrorPermissionWhenGettingLocation">L\'application n\'a pas l\'autorisation nécessaire</string>
     <string name="ErrorWhenDownloadingPlaces">Le téléchargement des informations a échoué</string>
+    <string name="DetailButton">Détails</string>
+    <string name="AddButton">Ajouter</string>
 </resources>

@@ -98,11 +98,13 @@ public class PlacesService extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... params) {
-        String urlString = this.makeUrl(this.location.getLatitude(), this.location.getLongitude());
-        Log.d("com.epul.ProjetMobile", "Url : " + urlString);
-        String json = getJSON(urlString);
-        Log.d("com.epul.ProjetMobile", "Result : " + json);
-        this.places = this.createPlaces(json);
+        if(this.location != null) {
+            String urlString = this.makeUrl(this.location.getLatitude(), this.location.getLongitude());
+            Log.d("com.epul.ProjetMobile", "Url : " + urlString);
+            String json = getJSON(urlString);
+            Log.d("com.epul.ProjetMobile", "Result : " + json);
+            this.places = this.createPlaces(json);
+        }
         return null;
     }
 

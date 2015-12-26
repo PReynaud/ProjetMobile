@@ -2,7 +2,6 @@ package com.epul.ProjetMobile;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -12,13 +11,12 @@ import android.support.v4.app.ActivityCompat;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.Toast;
-import android.widget.Toolbar;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -26,7 +24,7 @@ import java.util.List;
 
 public class MainActivity extends Activity implements OnMapReadyCallback, PlacesServiceDelegate {
     private GoogleMap googleMap;
-    private Toolbar mToolbar;
+    //private Toolbar mToolbar;
     private Location userLocation;
 
     @Override
@@ -58,8 +56,8 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Places
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setActionBar(mToolbar);
+        //mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setActionBar(mToolbar);
 
         userLocation = null;
 
@@ -108,6 +106,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Places
 
             //Désactive la rotation
             googleMap.getUiSettings().setRotateGesturesEnabled(false);
+
         }
     }
 
@@ -125,6 +124,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Places
         service.setLocation(this.userLocation, this);
         service.execute();
     }
+
 
     /**
      * Vérifie l'autorisation concernant la position de l'utilisateur et centre la map sur celle-ci
@@ -153,11 +153,15 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Places
             }
         }
     }
-
     @Override
     public void placeMarkers(List<Place> listOfPlaces) {
+        for (Place place : listOfPlaces) {
+            googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude()))
+                    .title(place.getName())
+            .icon(BitmapDescriptorFactory.fromResource(R.drawable.monument)));
+        }
         Toast.makeText(getApplicationContext(),
-                "Ajouter le placement des marqueurs", Toast.LENGTH_SHORT)
+                "Placement des marqueurs terminé", Toast.LENGTH_SHORT)
                 .show();
     }
 }

@@ -1,6 +1,5 @@
 package com.epul.ProjetMobile;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
@@ -8,11 +7,12 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
-import android.widget.Toolbar;
+import android.support.v7.widget.Toolbar;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -23,7 +23,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
-public class MainActivity extends Activity implements OnMapReadyCallback, PlacesServiceDelegate {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, PlacesServiceDelegate {
     private GoogleMap googleMap;
     private Toolbar mToolbar;
     private Location userLocation;
@@ -58,7 +58,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Places
         setContentView(R.layout.main);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setActionBar(mToolbar);
+        setSupportActionBar(mToolbar);
 
         userLocation = null;
 

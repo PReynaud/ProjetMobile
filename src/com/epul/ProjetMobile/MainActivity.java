@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -19,11 +20,12 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, PlacesServiceDelegate {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, PlacesServiceDelegate, GoogleMap.OnInfoWindowClickListener {
     private GoogleMap googleMap;
     private Toolbar mToolbar;
     private Location userLocation;
@@ -108,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             //Désactive la rotation
             googleMap.getUiSettings().setRotateGesturesEnabled(false);
 
+            googleMap.setOnInfoWindowClickListener(this);
         }
     }
 
@@ -164,5 +167,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toast.makeText(getApplicationContext(),
                 "Placement des marqueurs terminé", Toast.LENGTH_SHORT)
                 .show();
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+            Toast.makeText(getApplicationContext(),
+                    marker.getTitle(), Toast.LENGTH_SHORT)
+                    .show();
+
     }
 }

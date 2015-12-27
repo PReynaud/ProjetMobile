@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -12,7 +13,7 @@ import com.google.android.gms.maps.model.Marker;
 /**
  * Created by Pierre on 26/12/2015.
  */
-public class InfoPopup implements GoogleMap.InfoWindowAdapter {
+public class InfoPopup implements GoogleMap.InfoWindowAdapter{
     Context context;
 
     public InfoPopup(Context context) {
@@ -31,23 +32,7 @@ public class InfoPopup implements GoogleMap.InfoWindowAdapter {
 
         TextView placeName = (TextView) v.findViewById(R.id.place_name);
         placeName.setText(marker.getTitle());
-
-        Button addButton = (Button) v.findViewById(R.id.buttonAdd);
         Button detailButton = (Button) v.findViewById(R.id.buttonDetail);
-
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        detailButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
 
         return v;
     }

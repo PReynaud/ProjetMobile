@@ -1,6 +1,8 @@
 package com.epul.ProjetMobile;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -55,7 +57,10 @@ public class InfoPopup implements GoogleMap.InfoWindowAdapter {
         detailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Log.d("InfoPopup", "onClick ");
+                Intent intentMain = new Intent(InfoPopup.this.context ,
+                        DetailActivity.class);
+                InfoPopup.this.context.startActivity(intentMain);
             }
         });
 

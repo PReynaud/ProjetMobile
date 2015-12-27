@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -31,6 +32,15 @@ public class InfoPopup implements GoogleMap.InfoWindowAdapter {
 
         TextView placeName = (TextView) v.findViewById(R.id.place_name);
         placeName.setText(marker.getTitle());
+
+        TextView placeDistance = (TextView) v.findViewById(R.id.place_distance);
+        placeDistance.setText("10m");
+
+        ImageView imagePlaceRating = (ImageView) v.findViewById(R.id.image_place_rating);
+        imagePlaceRating.setImageResource(R.drawable.stars_4_5);
+
+        TextView placeRating = (TextView) v.findViewById(R.id.place_rating);
+        placeRating.setText("4.3");
 
         Button addButton = (Button) v.findViewById(R.id.buttonAdd);
         Button detailButton = (Button) v.findViewById(R.id.buttonDetail);

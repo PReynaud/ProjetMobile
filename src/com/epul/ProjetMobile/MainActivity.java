@@ -1,19 +1,19 @@
 package com.epul.ProjetMobile;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
+import android.view.*;
+import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -23,12 +23,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, PlacesServiceDelegate, GoogleMap.OnInfoWindowClickListener {
+    public static final String wayResource = "Way";
     private GoogleMap googleMap;
-    private Toolbar mToolbar;
     private Location userLocation;
+    private ArrayList<Place> way;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -55,23 +57,26 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //A la fin de l'activité secondaire on réaffiche la toolbar
+        findViewById(R.id.list_top).setVisibility(View.VISIBLE);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        way = new ArrayList<>();
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
         userLocation = null;
-
         try {
             initilizeMap();
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -127,8 +132,36 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         googleMap.setInfoWindowAdapter(new InfoPopup(this));
         service.setLocation(this.userLocation, this);
         service.execute();
+
+        //Ajout du détecteur de swipe une fois la map chargée
+        final GestureDetectorCompat detector = new GestureDetectorCompat(this, new SwipeDetector() {
+            @Override
+            public void onTouch() {
+                launchListActivity();
+            }
+
+            @Override
+            public void onSwipeToUp() {
+                launchListActivity();
+            }
+        });
+
+        Toolbar topToolbar = (Toolbar) findViewById(R.id.list_top);
+        topToolbar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                detector.onTouchEvent(event);
+                return false;
+            }
+        });
     }
 
+    public void launchListActivity() {
+        Intent intent = new Intent(MainActivity.this, ListActivity.class);
+        intent.putParcelableArrayListExtra(wayResource, way);
+        startActivityForResult(intent, Activity.RESULT_OK);
+        //findViewById(R.id.list_top).setVisibility(View.GONE);
+    }
 
     /**
      * Vérifie l'autorisation concernant la position de l'utilisateur et centre la map sur celle-ci

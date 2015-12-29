@@ -8,8 +8,8 @@ import android.view.MotionEvent;
  * @Version 1.0
  */
 public class SwipeDetector extends GestureDetector.SimpleOnGestureListener {
-    private static final int SWIPE_MIN_DISTANCE = 120;
-    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+    protected static final int SWIPE_MIN_DISTANCE = 120;
+    protected static final int SWIPE_THRESHOLD_VELOCITY = 200;
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
@@ -21,11 +21,11 @@ public class SwipeDetector extends GestureDetector.SimpleOnGestureListener {
             onSwipeToUp();
             return false; // Bottom to top
         }
-        if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+        if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
             onSwipeToRight();
             return false; // Left to right
         }
-        if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+        if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
             onSwipeToLeft();
             return false; // Right to left
         }

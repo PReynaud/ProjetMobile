@@ -1,22 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+              android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="#fff">
-    <TextView android:id="@+id/monumentName"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:textSize="@dimen/place_autocomplete_prediction_primary_text"
-              android:textColor="#000"
-              android:layout_margin="10dp"/>
-    <TextView android:id="@+id/monumentAddress"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:textSize="@dimen/place_autocomplete_prediction_secondary_text"
-              android:textColor="#555"
-              android:layout_marginLeft="20dp"
-              android:layout_marginStart="20dp"
-              android:layout_marginBottom="10dp"
+              android:layout_height="match_parent">
+    <ImageView android:id="@+id/star"
+               android:layout_width="40dp"
+               android:layout_height="match_parent"
+               android:scaleType="center"
+               android:src="@drawable/filled_star"
+               android:background="@color/favorite"
+               android:visibility="gone"/>
+    <LinearLayout android:orientation="vertical"
+                  android:id="@+id/item_list"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:background="@color/windowBackground"
+                  android:layout_weight="1">
+        <TextView android:id="@+id/monumentName"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:textSize="@dimen/place_autocomplete_prediction_primary_text"
+                  android:textColor="#000"
+                  android:layout_margin="10dp"/>
+        <TextView android:id="@+id/monumentAddress"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:textSize="@dimen/place_autocomplete_prediction_secondary_text"
+                  android:textColor="#555"
+                  android:layout_marginLeft="20dp"
+                  android:layout_marginStart="20dp"
+                  android:layout_marginBottom="10dp"
+        />
+    </LinearLayout>
+    <ImageView android:id="@+id/delete"
+               android:layout_width="40dp"
+               android:layout_height="match_parent"
+               android:scaleType="center"
+               android:src="@drawable/delete"
+               android:background="@color/warning"
+               android:visibility="gone"
     />
 </LinearLayout>

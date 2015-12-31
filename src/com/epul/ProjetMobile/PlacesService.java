@@ -8,15 +8,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.io.IOException;
-import java.net.HttpURLConnection;
 
 public class PlacesService extends AsyncTask<String, Void, String> {
     private String apiKey;
@@ -38,24 +38,24 @@ public class PlacesService extends AsyncTask<String, Void, String> {
     }
 
     private ArrayList<Place> createPlaces(String jsonResult) {
+        JSONArray array;
         try {
             JSONObject object = new JSONObject(jsonResult);
-            JSONArray array = object.getJSONArray("results");
-
-            ArrayList<Place> arrayList = new ArrayList<>();
-            for (int i = 0; i < array.length(); i++) {
-                try {
-                    Place place = Place.jsonToObject((JSONObject) array.get(i));
-                    arrayList.add(place);
-                } catch (Exception e) {
-                }
-            }
-            return arrayList;
+            array = object.getJSONArray("results");
         } catch (JSONException ex) {
             Logger.getLogger(PlacesService.class.getName()).log(Level.SEVERE,
                     null, ex);
+            return null;
         }
-        return null;
+        ArrayList<Place> arrayList = new ArrayList<>();
+        for (int i = 0; i < array.length(); i++) {
+            try {
+                Place place = Place.jsonToObject((JSONObject) array.get(i));
+                arrayList.add(place);
+            } catch (Exception ignored) {
+            }
+        }
+        return arrayList;
     }
 
     // https://maps.googleapis.com/maps/api/place/search/json?location=28.632808,77.218276&radius=500&types=atm&sensor=false&key=apikey

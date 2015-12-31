@@ -41,12 +41,10 @@ public class MonumentAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.monument, parent, false);
-            ((TextView) convertView.findViewById(R.id.monumentName)).setText(places.get(position).getName());
-            ((TextView) convertView.findViewById(R.id.monumentAddress)).setText(places.get(position).getVicinity());
-        }
-        //On reset les couleurs à chaque fois pour éviter les bugs de recyclage des items (listview)
+        //On reset les items à chaque fois pour éviter les bugs de recyclage des items (listview)
+        convertView = mInflater.inflate(R.layout.monument, parent, false);
+        ((TextView) convertView.findViewById(R.id.monumentName)).setText(places.get(position).getName());
+        ((TextView) convertView.findViewById(R.id.monumentAddress)).setText(places.get(position).getVicinity());
         resetItemList(status.get(position), convertView);
         return convertView;
     }

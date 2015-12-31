@@ -125,4 +125,32 @@ public class Place implements Parcelable {
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Place place = (Place) o;
+
+        return getId() != null ? getId().equals(place.getId()) :
+                place.getId() == null && (getIcon() != null ? getIcon().equals(place.getIcon()) :
+                        place.getIcon() == null && (getName() != null ? getName().equals(place.getName()) :
+                                place.getName() == null && (getVicinity() != null ? getVicinity().equals(place.getVicinity()) :
+                                        place.getVicinity() == null && (getLatitude() != null ? getLatitude().equals(place.getLatitude()) :
+                                                place.getLatitude() == null && (getLongitude() != null ? getLongitude().equals(place.getLongitude()) :
+                                                        place.getLongitude() == null)))));
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId() != null ? getId().hashCode() : 0;
+        result = 31 * result + (getIcon() != null ? getIcon().hashCode() : 0);
+        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+        result = 31 * result + (getVicinity() != null ? getVicinity().hashCode() : 0);
+        result = 31 * result + (getLatitude() != null ? getLatitude().hashCode() : 0);
+        result = 31 * result + (getLongitude() != null ? getLongitude().hashCode() : 0);
+        return result;
+    }
 }

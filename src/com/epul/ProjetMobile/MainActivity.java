@@ -60,9 +60,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ListResult) {
             way = (ArrayList<Place>) data.getExtras().getSerializable(wayResource);
+            //A la fin de l'activité secondaire on réaffiche la toolbar
+            findViewById(R.id.list_top).setVisibility(View.VISIBLE);
         }
-        //A la fin de l'activité secondaire on réaffiche la toolbar
-        findViewById(R.id.list_top).setVisibility(View.VISIBLE);
+        //On met à jour la position et les markers
+        launchService();
     }
 
     @Override
@@ -130,11 +132,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
-        this.centerMapOnUserLocation();
-        PlacesService service = new PlacesService(getResources().getString(R.string.google_places_key));
+        launchService();
         googleMap.setInfoWindowAdapter(new InfoPopup(this));
-        service.setLocation(this.userLocation, this);
-        service.execute();
 
         //Ajout du détecteur de swipe une fois la map chargée
         final GestureDetectorCompat detector = new GestureDetectorCompat(this, new SwipeDetector() {
@@ -166,6 +165,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         findViewById(R.id.list_top).setVisibility(View.GONE);
     }
 
+    public void launchService() {
+        googleMap.clear();
+        centerMapOnUserLocation();
+        PlacesService service = new PlacesService(getResources().getString(R.string.google_places_key));
+        service.setLocation(this.userLocation, this);
+        service.execute();
+    }
+
     /**
      * Vérifie l'autorisation concernant la position de l'utilisateur et centre la map sur celle-ci
      */
@@ -183,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (location != null)
             {
                 this.googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                        new LatLng(location.getLatitude(), location.getLongitude()), 13));
+                        new LatLng(location.getLatitude(), location.getLongitude()), 15));
                 this.userLocation = location;
             }
             else{
@@ -198,7 +205,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         for (Place place : listOfPlaces) {
             googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude()))
                     .title(place.getName())
-            .icon(BitmapDescriptorFactory.fromResource(R.drawable.monument)));
+                    .icon(way.contains(place) ?
+                            BitmapDescriptorFactory.fromResource(R.drawable.selected_monument) :
+                            BitmapDescriptorFactory.fromResource(R.drawable.monument)));
         }
         Toast.makeText(getApplicationContext(),
                 "Placement des marqueurs terminé", Toast.LENGTH_SHORT)

@@ -1,6 +1,5 @@
 package com.epul.ProjetMobile;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -28,6 +27,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, PlacesServiceDelegate, GoogleMap.OnInfoWindowClickListener {
     public static final String wayResource = "Way";
+    public static final int ListResult = 1;
     private GoogleMap googleMap;
     private Location userLocation;
     private ArrayList<Place> way;
@@ -58,6 +58,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ListResult) {
+            way = (ArrayList<Place>) data.getExtras().getSerializable(wayResource);
+        }
         //A la fin de l'activité secondaire on réaffiche la toolbar
         findViewById(R.id.list_top).setVisibility(View.VISIBLE);
     }
@@ -159,8 +162,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void launchListActivity() {
         Intent intent = new Intent(MainActivity.this, ListActivity.class);
         intent.putParcelableArrayListExtra(wayResource, way);
-        startActivityForResult(intent, Activity.RESULT_OK);
-        //findViewById(R.id.list_top).setVisibility(View.GONE);
+        startActivityForResult(intent, ListResult);
+        findViewById(R.id.list_top).setVisibility(View.GONE);
     }
 
     /**

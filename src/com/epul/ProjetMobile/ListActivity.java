@@ -1,6 +1,7 @@
 package com.epul.ProjetMobile;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
 import android.view.MotionEvent;
@@ -69,7 +70,9 @@ public class ListActivity extends Activity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                setResult(Activity.RESULT_OK);
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra(MainActivity.wayResource, places);
+                setResult(MainActivity.ListResult, resultIntent);
                 finish();
             }
 

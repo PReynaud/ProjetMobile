@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.*;
 import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap googleMap;
     private Location userLocation;
     private ArrayList<Place> way;
+    private LocationManager locationManager;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -86,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /**
      * Initialisation de la map et de tous ces paramètres
-     * */
+     */
     private void initilizeMap() {
         if (googleMap == null) {
             googleMap = ((MapFragment) getFragmentManager().findFragmentById(
@@ -123,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             googleMap.setOnInfoWindowClickListener(this);
         }
     }
+
 
     @Override
     protected void onResume() {
@@ -177,48 +181,64 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      * Vérifie l'autorisation concernant la position de l'utilisateur et centre la map sur celle-ci
      */
     private void centerMapOnUserLocation() {
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        Location location = getLastKnownLocation();
+        if (location != null) {
+            this.googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(location.getLatitude(), location.getLongitude()), 15));
+            this.userLocation = location;
+        } else {
             Toast.makeText(getApplicationContext(),
-                    getString(R.string.ErrorPermissionWhenGettingLocation), Toast.LENGTH_SHORT)
+                    getString(R.string.ErrorWhenGettingLocation), Toast.LENGTH_SHORT)
                     .show();
-        }
-        else{
-            Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-            if (location != null)
-            {
-                this.googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                        new LatLng(location.getLatitude(), location.getLongitude()), 15));
-                this.userLocation = location;
-            }
-            else{
-                Toast.makeText(getApplicationContext(),
-                        getString(R.string.ErrorWhenGettingLocation), Toast.LENGTH_SHORT)
-                        .show();
-            }
+
         }
     }
+
+    private Location getLastKnownLocation() {
+        locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
+        List<String> providers = locationManager.getProviders(true);
+        Location bestLocation = null;
+        for (String provider : providers) {
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(getApplicationContext(),
+                        getString(R.string.ErrorPermissionWhenGettingLocation), Toast.LENGTH_SHORT)
+                        .show();
+            } else {
+                Location l = locationManager.getLastKnownLocation(provider);
+                if (l == null) {
+                    continue;
+                }
+                if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                    // Found best last known location: %s", l);
+                    bestLocation = l;
+                }
+            }
+        }
+        return bestLocation;
+    }
+
     @Override
     public void placeMarkers(List<Place> listOfPlaces) {
-        for (Place place : listOfPlaces) {
-            googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude()))
-                    .title(place.getName())
-                    .icon(way.contains(place) ?
-                            BitmapDescriptorFactory.fromResource(R.drawable.selected_monument) :
-                            BitmapDescriptorFactory.fromResource(R.drawable.monument)));
+        if (listOfPlaces != null) {
+            for (Place place : listOfPlaces) {
+                googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude()))
+                        .title(place.getName())
+                        .icon(way.contains(place) ?
+                                BitmapDescriptorFactory.fromResource(R.drawable.selected_monument) :
+                                BitmapDescriptorFactory.fromResource(R.drawable.monument)));
+            }
+            Toast.makeText(getApplicationContext(),
+                    "Placement des marqueurs terminé", Toast.LENGTH_SHORT)
+                    .show();
+
         }
-        Toast.makeText(getApplicationContext(),
-                "Placement des marqueurs terminé", Toast.LENGTH_SHORT)
-                .show();
     }
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-            Toast.makeText(getApplicationContext(),
-                    marker.getTitle(), Toast.LENGTH_SHORT)
-                    .show();
+        Toast.makeText(getApplicationContext(),
+                marker.getTitle(), Toast.LENGTH_SHORT)
+                .show();
 
     }
 }

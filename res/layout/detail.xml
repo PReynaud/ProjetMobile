@@ -1,13 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    <TextView
-            android:id="@+id/place_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:layout_margin="2dp" android:text="Pouet"/>
+              android:layout_height="match_parent"
+>
+    <ImageView android:layout_width="match_parent"
+               android:layout_height="250dp"
+               android:background="#d90800"/>
 
-</LinearLayout>
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+            />
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp" android:background="@color/primary">
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                />
+            </LinearLayout>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="500dp"
+                    android:text="blabla"/>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

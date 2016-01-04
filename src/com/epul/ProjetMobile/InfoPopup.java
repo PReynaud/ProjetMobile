@@ -1,6 +1,7 @@
 package com.epul.ProjetMobile;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -39,9 +40,9 @@ public class InfoPopup implements GoogleMap.InfoWindowAdapter{
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_UP:
-                        Toast.makeText(context,
-                                "Button Detail", Toast.LENGTH_SHORT)
-                                .show();
+                        Intent intent = new Intent(context, DetailActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
                         break;
                     default:
                         break;

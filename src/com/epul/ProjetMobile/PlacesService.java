@@ -59,14 +59,15 @@ public class PlacesService extends AsyncTask<String, Void, String> {
     }
 
     // https://maps.googleapis.com/maps/api/place/search/json?location=28.632808,77.218276&radius=500&types=atm&sensor=false&key=apikey
-    private String makeUrl(double latitude, double longitude) {
+    private String makeUrl(double latitude, double longitude, int radius) {
         StringBuilder urlString = new StringBuilder(
                 "https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
         urlString.append("location=");
         urlString.append(Double.toString(latitude));
         urlString.append(",");
         urlString.append(Double.toString(longitude));
-        urlString.append("&radius=5000");
+        urlString.append("&radius=");
+        urlString.append(radius);
         urlString.append("&types=museum");
         urlString.append("&sensor=true&key=" + this.apiKey);
 
@@ -97,10 +98,19 @@ public class PlacesService extends AsyncTask<String, Void, String> {
         return builder.toString();
     }
 
+    public Place getPlace(Double longitude, Double latitude) {
+        String urlString = this.makeUrl(latitude, longitude, 5);
+        Log.d("com.epul.ProjetMobile", "Url : " + urlString);
+        String json = getJSON(urlString);
+        Log.d("com.epul.ProjetMobile", "Result : " + json);
+        ArrayList<Place> foundPlaces = this.createPlaces(json);
+        return foundPlaces != null && foundPlaces.size() > 0 ? foundPlaces.get(0) : null;
+    }
+
     @Override
     protected String doInBackground(String... params) {
         if(this.location != null) {
-            String urlString = this.makeUrl(this.location.getLatitude(), this.location.getLongitude());
+            String urlString = this.makeUrl(this.location.getLatitude(), this.location.getLongitude(), 5000);
             Log.d("com.epul.ProjetMobile", "Url : " + urlString);
             String json = getJSON(urlString);
             Log.d("com.epul.ProjetMobile", "Result : " + json);

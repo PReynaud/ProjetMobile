@@ -1,19 +1,16 @@
 package com.epul.ProjetMobile;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.*;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,13 +24,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, PlacesServiceDelegate, GoogleMap.OnInfoWindowClickListener {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, PlacesServiceDelegate {
     public static final String wayResource = "Way";
     public static final int ListResult = 1;
+    private final ArrayList<Place> way = new ArrayList<>();
     private GoogleMap googleMap;
     private Location userLocation;
-    private ArrayList<Place> way;
-    private LocationManager locationManager;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -62,7 +58,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ListResult) {
-            way = (ArrayList<Place>) data.getExtras().getSerializable(wayResource);
+            way.clear();
+            way.addAll((ArrayList<Place>) data.getExtras().getSerializable(wayResource));
             //A la fin de l'activité secondaire on réaffiche la toolbar
             findViewById(R.id.list_top).setVisibility(View.VISIBLE);
         }
@@ -74,14 +71,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        way = new ArrayList<>();
 
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
         userLocation = null;
         try {
-            initilizeMap();
+            initializeMap();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -90,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     /**
      * Initialisation de la map et de tous ces paramètres
      */
-    private void initilizeMap() {
+    private void initializeMap() {
         if (googleMap == null) {
             googleMap = ((MapFragment) getFragmentManager().findFragmentById(
                     R.id.map)).getMap();
@@ -122,11 +118,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             //Désactive la rotation
             googleMap.getUiSettings().setRotateGesturesEnabled(false);
-
-            googleMap.setOnInfoWindowClickListener(this);
         }
     }
-
 
     @Override
     protected void onResume() {
@@ -137,7 +130,55 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
         launchService();
-        googleMap.setInfoWindowAdapter(new InfoPopup(this));
+        final MapLayout layout = ((MapLayout) findViewById(R.id.map_layout));
+        layout.init(this.googleMap, (int) (59 * this.getResources().getDisplayMetrics().density + 0.5f));
+
+        final ViewGroup view = (ViewGroup) getLayoutInflater().inflate(R.layout.info_popup, null);
+
+        googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                ((TextView) view.findViewById(R.id.place_name)).setText(marker.getTitle());
+                layout.setMarkerWithInfoWindow(marker, view);
+                view.findViewById(R.id.buttonDetail).setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        switch (event.getActionMasked()) {
+                            case MotionEvent.ACTION_UP:
+                                Toast.makeText(getApplicationContext(),
+                                        "Button Detail", Toast.LENGTH_SHORT)
+                                        .show();
+                                break;
+                            default:
+                                break;
+                        }
+                        return false;
+                    }
+                });
+                view.findViewById(R.id.buttonAdd).setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        switch (event.getActionMasked()) {
+                            case MotionEvent.ACTION_UP:
+                                Toast.makeText(getApplicationContext(),
+                                        "Button Ajouter", Toast.LENGTH_SHORT)
+                                        .show();
+                                break;
+                            default:
+                                break;
+                        }
+                        return false;
+                    }
+                });
+                return view;
+            }
+        });
+
 
         //Ajout du détecteur de swipe une fois la map chargée
         final GestureDetectorCompat detector = new GestureDetectorCompat(this, new SwipeDetector() {
@@ -195,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private Location getLastKnownLocation() {
-        locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
         List<String> providers = locationManager.getProviders(true);
         Location bestLocation = null;
         for (String provider : providers) {
@@ -232,13 +273,5 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     .show();
 
         }
-    }
-
-    @Override
-    public void onInfoWindowClick(Marker marker) {
-        Toast.makeText(getApplicationContext(),
-                marker.getTitle(), Toast.LENGTH_SHORT)
-                .show();
-
     }
 }

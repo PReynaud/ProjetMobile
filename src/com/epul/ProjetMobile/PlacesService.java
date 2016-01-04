@@ -98,15 +98,6 @@ public class PlacesService extends AsyncTask<String, Void, String> {
         return builder.toString();
     }
 
-    public Place getPlace(Double longitude, Double latitude) {
-        String urlString = this.makeUrl(latitude, longitude, 5);
-        Log.d("com.epul.ProjetMobile", "Url : " + urlString);
-        String json = getJSON(urlString);
-        Log.d("com.epul.ProjetMobile", "Result : " + json);
-        ArrayList<Place> foundPlaces = this.createPlaces(json);
-        return foundPlaces != null && foundPlaces.size() > 0 ? foundPlaces.get(0) : null;
-    }
-
     @Override
     protected String doInBackground(String... params) {
         if(this.location != null) {

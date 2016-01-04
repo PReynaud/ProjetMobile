@@ -2,14 +2,11 @@ package com.epul.ProjetMobile;
 
 import android.content.Context;
 import android.content.Intent;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 /**
@@ -26,6 +23,18 @@ public class InfoPopup implements GoogleMap.InfoWindowAdapter{
         this.layout = layout;
     }
 
+    public void actionAjouter(Marker marker) {
+        Toast.makeText(context,
+                "Button Ajouter", Toast.LENGTH_SHORT)
+                .show();
+    }
+
+    public void actionDetail(Marker marker) {
+        Intent intent = new Intent(context, DetailActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
     @Override
     public View getInfoWindow(Marker marker) {
         return null;
@@ -33,6 +42,7 @@ public class InfoPopup implements GoogleMap.InfoWindowAdapter{
 
     @Override
     public View getInfoContents(Marker marker) {
+        final Marker clonedMarker = marker;
         ((TextView) view.findViewById(R.id.place_name)).setText(marker.getTitle());
         layout.setMarkerWithInfoWindow(marker, view);
         view.findViewById(R.id.buttonDetail).setOnTouchListener(new View.OnTouchListener() {
@@ -40,9 +50,7 @@ public class InfoPopup implements GoogleMap.InfoWindowAdapter{
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_UP:
-                        Intent intent = new Intent(context, DetailActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
+                        actionDetail(clonedMarker);
                         break;
                     default:
                         break;
@@ -55,9 +63,7 @@ public class InfoPopup implements GoogleMap.InfoWindowAdapter{
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_UP:
-                        Toast.makeText(context,
-                                "Button Ajouter", Toast.LENGTH_SHORT)
-                                .show();
+                        actionAjouter(clonedMarker);
                         break;
                     default:
                         break;

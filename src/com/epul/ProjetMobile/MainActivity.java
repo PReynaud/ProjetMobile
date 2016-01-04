@@ -135,50 +135,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         final ViewGroup view = (ViewGroup) getLayoutInflater().inflate(R.layout.info_popup, null);
 
-        googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-            @Override
-            public View getInfoWindow(Marker marker) {
-                return null;
-            }
-
-            @Override
-            public View getInfoContents(Marker marker) {
-                ((TextView) view.findViewById(R.id.place_name)).setText(marker.getTitle());
-                layout.setMarkerWithInfoWindow(marker, view);
-                view.findViewById(R.id.buttonDetail).setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        switch (event.getActionMasked()) {
-                            case MotionEvent.ACTION_UP:
-                                Toast.makeText(getApplicationContext(),
-                                        "Button Detail", Toast.LENGTH_SHORT)
-                                        .show();
-                                break;
-                            default:
-                                break;
-                        }
-                        return false;
-                    }
-                });
-                view.findViewById(R.id.buttonAdd).setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        switch (event.getActionMasked()) {
-                            case MotionEvent.ACTION_UP:
-                                Toast.makeText(getApplicationContext(),
-                                        "Button Ajouter", Toast.LENGTH_SHORT)
-                                        .show();
-                                break;
-                            default:
-                                break;
-                        }
-                        return false;
-                    }
-                });
-                return view;
-            }
-        });
-
+        googleMap.setInfoWindowAdapter(new InfoPopup(getApplicationContext(), view, layout));
 
         //Ajout du détecteur de swipe une fois la map chargée
         final GestureDetectorCompat detector = new GestureDetectorCompat(this, new SwipeDetector() {

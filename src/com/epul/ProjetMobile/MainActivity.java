@@ -10,7 +10,6 @@ import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.*;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,12 +21,15 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, PlacesServiceDelegate {
     public static final String wayResource = "Way";
     public static final int ListResult = 1;
     private final ArrayList<Place> way = new ArrayList<>();
+    private final Map<Marker, Place> markers = new HashMap<>();
     private GoogleMap googleMap;
     private Location userLocation;
 
@@ -135,7 +137,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         final ViewGroup view = (ViewGroup) getLayoutInflater().inflate(R.layout.info_popup, null);
 
-        googleMap.setInfoWindowAdapter(new InfoPopup(getApplicationContext(), view, layout));
+        googleMap.setInfoWindowAdapter(new InfoPopup(getApplicationContext(), view, layout) {
+            @Override
+            public void actionAjouter(Marker marker) {
+                super.actionAjouter(marker);
+                if (!way.contains(markers.get(marker))) {
+                    way.add(markers.get(marker));
+                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.selected_monument));
+                }
+            }
+        });
 
         //Ajout du détecteur de swipe une fois la map chargée
         final GestureDetectorCompat detector = new GestureDetectorCompat(this, new SwipeDetector() {
@@ -218,17 +229,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void placeMarkers(List<Place> listOfPlaces) {
         if (listOfPlaces != null) {
+            markers.clear();
             for (Place place : listOfPlaces) {
-                googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude()))
+                Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude()))
                         .title(place.getName())
                         .icon(way.contains(place) ?
                                 BitmapDescriptorFactory.fromResource(R.drawable.selected_monument) :
                                 BitmapDescriptorFactory.fromResource(R.drawable.monument)));
+                markers.put(marker, place);
             }
-            Toast.makeText(getApplicationContext(),
-                    "Placement des marqueurs terminé", Toast.LENGTH_SHORT)
-                    .show();
-
         }
     }
 }

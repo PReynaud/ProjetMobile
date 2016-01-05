@@ -9,30 +9,25 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:layout_margin="2dp"/>
-    <TextView
-            android:id="@+id/place_distance"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="13sp"
-            android:layout_margin="2dp"/>
 
-    <!--<LinearLayout
+    <LinearLayout
             android:orientation="horizontal"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="15dp"
-                android:id="@+id/image_place_rating"
-                android:layout_margin="2dp"/>
-        <TextView
-                android:id="@+id/place_rating"
+        <RatingBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:layout_margin="2dp"
-                android:layout_marginBottom="10dp"/>
-    </LinearLayout>-->
+                android:id="@+id/ratingBarPopup"
+                android:rating="4.3"
+                style="@style/ratingBarTheme"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="4,3 (15)"
+                android:id="@+id/textView"
+                android:layout_marginLeft="5dp" android:layout_marginTop="8dp"/>
+    </LinearLayout>
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"

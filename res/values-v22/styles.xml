@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
@@ -20,5 +20,11 @@
 
     <style name="ToolbarTheme" parent="android:Widget.Material.Toolbar">
         <item name="android:background">@color/primary</item>
+    </style>
+
+    <style name="ratingBarTheme" parent="android:Widget.Material.RatingBar.Small">
+        <item name="android:progressDrawable">@drawable/rating_stars</item>
+        <item name="android:minHeight">30dip</item>
+        <item name="android:maxHeight">30dip</item>
     </style>
 </resources>

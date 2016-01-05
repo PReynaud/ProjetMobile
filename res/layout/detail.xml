@@ -24,24 +24,27 @@
                     android:layout_height="100dp"
                     android:background="@color/primary">
                 <TextView
+                        android:id="@+id/nameDetail"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:text="Tour Eiffel"
                         android:textColor="@color/textColorPrimary"
-                        android:layout_margin="5dp" android:layout_marginTop="15dp" android:textSize="22sp"/>
+                        android:layout_margin="5dp" android:layout_marginTop="15dp" android:textSize="30sp"/>
                 <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_horizontal">
                     <TextView
+                            android:id="@+id/adresseDetail"
                             android:layout_width="match_parent"
                             android:layout_height="fill_parent"
                             android:text="Adresse"
                             android:layout_weight="0.4"
                             android:textColor="@color/textColorPrimary"
-                    />
+                            android:layout_marginLeft="5dp"/>
                     <TextView
+                            android:id="@+id/distanceDetail"
                             android:layout_width="match_parent"
                             android:layout_height="fill_parent"
                             android:text="153m"
@@ -51,10 +54,19 @@
                 </LinearLayout>
 
             </LinearLayout>
-            <TextView
+            <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="500dp"
-                    android:text="blabla \n blabla\nbloublou\nje décris des choses\blabla"/>
+                    android:layout_height="match_parent"
+                    android:background="@color/windowBackground">
+                <TextView
+                        android:id="@+id/descriptionDetail"
+                        android:layout_width="match_parent"
+                        android:layout_height="500dp"
+                        android:text="blabla \n blabla\nbloublou\nje décris des choses\blabla"
+                        android:layout_margin="5dp"/>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
+    <include layout="@layout/detail_toolbar" />
 </RelativeLayout>

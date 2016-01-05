@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.maps.GoogleMap;
@@ -43,8 +44,14 @@ public class InfoPopup implements GoogleMap.InfoWindowAdapter{
     @Override
     public View getInfoContents(Marker marker) {
         final Marker clonedMarker = marker;
+
+        RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingBarPopup);
+        TextView tRating = (TextView) view.findViewById(R.id.ratingText);
+
         ((TextView) view.findViewById(R.id.place_name)).setText(marker.getTitle());
         layout.setMarkerWithInfoWindow(marker, view);
+
+
         view.findViewById(R.id.buttonDetail).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

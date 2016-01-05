@@ -7,4 +7,6 @@ import java.util.List;
  */
 public interface PlacesServiceDelegate {
     void placeMarkers(List<Place> listOfPlaces);
+
+    void enableSearch();
 }

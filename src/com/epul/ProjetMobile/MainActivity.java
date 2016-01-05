@@ -3,35 +3,92 @@ package com.epul.ProjetMobile;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.*;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.Toast;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, PlacesServiceDelegate {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, PlacesServiceDelegate, GoogleApiClient.OnConnectionFailedListener {
     public static final String wayResource = "Way";
     public static final int ListResult = 1;
+    private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
+            new LatLng(-34.041458, 150.790100), new LatLng(-33.682247, 151.383362));
     private final ArrayList<Place> way = new ArrayList<>();
     private final Map<Marker, Place> markers = new HashMap<>();
     private GoogleMap googleMap;
     private Location userLocation;
+    private PlaceAdapter adapter;
+    private AutoCompleteTextView mAutocompleteView;
+    private Button localisationButton;
+    private PlacesService service;
+    /**
+     * Listener that handles selections from suggestions from the AutoCompleteTextView that
+     * displays Place suggestions.
+     * Gets the place id of the selected item and issues a request to the Places Geo Data API
+     * to retrieve more details about the place.
+     *
+     * @see com.google.android.gms.location.places.GeoDataApi#getPlaceById(com.google.android.gms.common.api.GoogleApiClient,
+     * String...)
+     */
+    private AdapterView.OnItemClickListener mAutocompleteClickListener
+            = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            /*
+             Retrieve the place ID of the selected item from the Adapter.
+             The adapter stores each Place suggestion in a AutocompletePrediction from which we
+             read the place ID and title.
+              */
+            final Place item = adapter.getItem(position);
+            final String placeId = item.getId();
+            final CharSequence primaryText = item.getName();
+
+            Toast.makeText(getApplicationContext(), "Clicked: " + primaryText,
+                    Toast.LENGTH_SHORT).show();
+        }
+    };
+    /**
+     * Callback for results from a Places Geo Data API query that shows the first place result in
+     * the details view on screen.
+     */
+    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
+            = new ResultCallback<PlaceBuffer>() {
+        @Override
+        public void onResult(PlaceBuffer places) {
+            if (!places.getStatus().isSuccess()) {
+                // Request did not complete successfully
+                places.release();
+                return;
+            }
+            // Get the Place object from the buffer.
+            final com.google.android.gms.location.places.Place place = places.get(0);
+            places.release();
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -74,8 +131,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+        localisationButton = (Button) findViewById(R.id.localisationbutton);
+        localisationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                centerMapOnUserLocation();
+            }
+        });
+
+        // Retrieve the AutoCompleteTextView that will display Place suggestions.
+        mAutocompleteView = (AutoCompleteTextView)
+                findViewById(R.id.autocomplete_places);
+
+        // Register a listener that receives callbacks when a suggestion has been selected
+        mAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
 
         userLocation = null;
         try {
@@ -109,17 +178,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             //Active la localisation
             googleMap.setMyLocationEnabled(true);
 
-            // Active les bouttons de zoom
-            googleMap.getUiSettings().setZoomControlsEnabled(true);
+            // Désactive les boutons de navigation
+            googleMap.getUiSettings().setMapToolbarEnabled(false);
 
-            //Active le boutton de location
-            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-
-            //Active le compas
-            googleMap.getUiSettings().setCompassEnabled(true);
+            //Désactive le boutton de location
+            googleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
             //Désactive la rotation
-            googleMap.getUiSettings().setRotateGesturesEnabled(false);
+            googleMap.getUiSettings().setRotateGesturesEnabled(true);
         }
     }
 
@@ -181,9 +247,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void launchService() {
         googleMap.clear();
         centerMapOnUserLocation();
-        PlacesService service = new PlacesService(getResources().getString(R.string.google_places_key));
+        service = new PlacesService(getResources().getString(R.string.google_places_key));
         service.setLocation(this.userLocation, this);
         service.execute();
+    }
+
+    public void enableSearch() {
+        ArrayList<Place> list_places = new ArrayList<>();
+        list_places.addAll(service.getPlaces());
+        adapter = new PlaceAdapter(this, list_places);
+        mAutocompleteView.setAdapter(adapter);
+        mAutocompleteView.setThreshold(1);
     }
 
     /**
@@ -207,17 +281,35 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         LocationManager locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
         List<String> providers = locationManager.getProviders(true);
         Location bestLocation = null;
-        for (String provider : providers) {
-            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(getApplicationContext(),
-                        getString(R.string.ErrorPermissionWhenGettingLocation), Toast.LENGTH_SHORT)
-                        .show();
-            } else {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(getApplicationContext(),
+                    getString(R.string.ErrorPermissionWhenGettingLocation), Toast.LENGTH_SHORT)
+                    .show();
+        } else {
+            locationManager.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener() {
+                        @Override
+                        public void onStatusChanged(String provider, int status, Bundle extras) {
+                        }
+
+                        @Override
+                        public void onProviderEnabled(String provider) {
+                        }
+
+                        @Override
+                        public void onProviderDisabled(String provider) {
+                        }
+
+                        @Override
+                        public void onLocationChanged(final Location location) {
+                        }
+                    });
+            for (String provider : providers) {
                 Location l = locationManager.getLastKnownLocation(provider);
                 if (l == null) {
                     continue;
                 }
-                if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy() || !provider.equals("passive")) {
                     // Found best last known location: %s", l);
                     bestLocation = l;
                 }
@@ -239,5 +331,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 markers.put(marker, place);
             }
         }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }

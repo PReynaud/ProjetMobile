@@ -1,4 +1,6 @@
-package com.epul.ProjetMobile;
+package com.epul.ProjetMobile.service;
+
+import com.epul.ProjetMobile.business.Place;
 
 import java.util.List;
 

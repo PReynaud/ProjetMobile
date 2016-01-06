@@ -1,4 +1,4 @@
-package com.epul.ProjetMobile;
+package com.epul.ProjetMobile.tools;
 
 import android.view.GestureDetector;
 import android.view.MotionEvent;

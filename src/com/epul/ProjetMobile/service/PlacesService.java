@@ -1,8 +1,9 @@
-package com.epul.ProjetMobile;
+package com.epul.ProjetMobile.service;
 
 import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
+import com.epul.ProjetMobile.business.Place;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -1,4 +1,4 @@
-package com.epul.ProjetMobile;
+package com.epul.ProjetMobile.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,6 +13,11 @@ import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import com.epul.ProjetMobile.R;
+import com.epul.ProjetMobile.adapter.MonumentAdapter;
+import com.epul.ProjetMobile.business.Place;
+import com.epul.ProjetMobile.tools.ItemStatus;
+import com.epul.ProjetMobile.tools.SwipeDetector;
 
 import java.util.ArrayList;
 

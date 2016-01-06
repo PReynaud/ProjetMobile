@@ -6,7 +6,7 @@
               android:fillViewport="true"
 >
     <!--<include layout="@layout/toolbar"/>-->
-    <com.epul.ProjetMobile.MapLayout
+    <com.epul.ProjetMobile.tools.MapLayout
             android:id="@+id/map_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -18,7 +18,7 @@
                 android:layout_height="match_parent">
             <include layout="@layout/searchbar"/>
         </fragment>
-    </com.epul.ProjetMobile.MapLayout>
+    </com.epul.ProjetMobile.tools.MapLayout>
     <include layout="@layout/list_top"/>
 </LinearLayout>
 

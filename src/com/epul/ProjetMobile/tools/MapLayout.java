@@ -1,4 +1,4 @@
-package com.epul.ProjetMobile;
+package com.epul.ProjetMobile.tools;
 
 import android.content.Context;
 import android.graphics.Point;

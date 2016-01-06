@@ -1,5 +1,6 @@
-package com.epul.ProjetMobile;
+package com.epul.ProjetMobile.adapter;
 
+import com.epul.ProjetMobile.business.Place;
 import com.google.android.gms.maps.model.Marker;
 
 /**

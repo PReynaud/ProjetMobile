@@ -1,4 +1,4 @@
-package com.epul.ProjetMobile;
+package com.epul.ProjetMobile.activity;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,6 +16,14 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Toast;
+import com.epul.ProjetMobile.R;
+import com.epul.ProjetMobile.adapter.InfoPopup;
+import com.epul.ProjetMobile.adapter.PlaceAdapter;
+import com.epul.ProjetMobile.business.Place;
+import com.epul.ProjetMobile.service.PlacesService;
+import com.epul.ProjetMobile.service.PlacesServiceDelegate;
+import com.epul.ProjetMobile.tools.MapLayout;
+import com.epul.ProjetMobile.tools.SwipeDetector;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;

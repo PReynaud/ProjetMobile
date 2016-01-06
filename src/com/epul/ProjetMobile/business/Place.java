@@ -1,4 +1,4 @@
-package com.epul.ProjetMobile;
+package com.epul.ProjetMobile.business;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -40,7 +40,7 @@ public class Place implements Parcelable {
         this.longitude = in.readDouble();
     }
 
-    static Place jsonToObject(JSONObject JSONResult) {
+    public static Place jsonToObject(JSONObject JSONResult) {
         try {
             Place result = new Place();
             JSONObject geometry = (JSONObject) JSONResult.get("geometry");

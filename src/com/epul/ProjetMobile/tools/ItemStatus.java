@@ -1,4 +1,4 @@
-package com.epul.ProjetMobile;
+package com.epul.ProjetMobile.tools;
 
 /**
  * @Author Dimitri on 29/12/2015.

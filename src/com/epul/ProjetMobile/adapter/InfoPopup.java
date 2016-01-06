@@ -1,4 +1,4 @@
-package com.epul.ProjetMobile;
+package com.epul.ProjetMobile.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.epul.ProjetMobile.R;
+import com.epul.ProjetMobile.activity.DetailActivity;
+import com.epul.ProjetMobile.tools.MapLayout;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 

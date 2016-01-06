@@ -52,21 +52,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private AutoCompleteTextView autoCompleteTextView;
     private Button localisationButton;
     private PlacesService service;
-    private AdapterView.OnItemClickListener mAutocompleteClickListener
-            = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            final Place item = adapter.getItem(position);
-            Marker marker = places.get(item);
-            //Vide le textView
-            autoCompleteTextView.clearListSelection();
-            autoCompleteTextView.setText("");
-            //Cache le clavier
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(autoCompleteTextView.getWindowToken(), 0);
-            centerMapOnMarker(marker);
-        }
-    };
+    private AdapterView.OnItemClickListener mAutocompleteClickListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,10 +66,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 centerMapOnUserLocation();
             }
         });
+        mAutocompleteClickListener = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final Place item = adapter.getItem(position);
+                Marker marker = places.get(item);
+                //Vide le textView
+                autoCompleteTextView.clearListSelection();
+                autoCompleteTextView.setText("");
+                //Cache le clavier
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(autoCompleteTextView.getWindowToken(), 0);
+                centerMapOnMarker(marker);
+            }
+        };
         autoCompleteTextView = (AutoCompleteTextView)
                 findViewById(R.id.autocomplete_places);
         autoCompleteTextView.setOnItemClickListener(mAutocompleteClickListener);
-
         userLocation = null;
         try {
             initializeMap();
@@ -136,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         final ViewGroup view = (ViewGroup) getLayoutInflater().inflate(R.layout.info_popup, null);
 
+        //Décale la vue si on clique sur un marker (permet de voir l'infobulle, normalement cachée en haut de l'écran)
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 
             @Override
@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     /**
-     * Active la recherche après le placement des marqueurs
+     * Active la recherche après le placement des markers
      */
     public void enableSearch() {
         ArrayList<Place> list_places = new ArrayList<>();

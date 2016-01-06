@@ -12,21 +12,32 @@ import com.epul.ProjetMobile.business.Place;
 import java.util.ArrayList;
 
 public class PlaceAdapter extends ArrayAdapter<Place> implements Filterable {
-    private ArrayList<Place> items;
-    private ArrayList<Place> itemsAll;
+    /**
+     * Liste de toutes les places de l'application
+     */
+    private ArrayList<Place> placeList;
+    /**
+     * Liste des résultats
+     */
     private ArrayList<Place> resultList;
     Filter nameFilter = new Filter() {
         @Override
         public String convertResultToString(Object resultValue) {
-            String str = ((Place) (resultValue)).getName();
-            return str;
+            return ((Place) (resultValue)).getName();
         }
 
+        /**
+         * Trouve les résultats à partir de la requête
+         *
+         * @param constraint requête
+         * @return Une liste de résultats avec le nombre de résultats
+         */
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             if (constraint != null) {
                 resultList.clear();
-                for (Place place : itemsAll) {
+                for (Place place : placeList) {
+                    // Cette ligne fait le tri à partir de la requête
                     if (place.getName().toLowerCase().startsWith(constraint.toString().toLowerCase())) {
                         resultList.add(place);
                     }
@@ -48,28 +59,43 @@ public class PlaceAdapter extends ArrayAdapter<Place> implements Filterable {
         }
     };
 
+    /**
+     * Constructeur, créé aussi la vue (dropdown menu) des résultats
+     * @param context
+     * @param items
+     */
     public PlaceAdapter(Context context, ArrayList<Place> items) {
         super(context, android.R.layout.simple_expandable_list_item_2, android.R.id.text1);
-        this.items = items;
-        this.itemsAll = (ArrayList<Place>) items.clone();
+        this.placeList = (ArrayList<Place>) items.clone();
         this.resultList = new ArrayList<>();
     }
 
+    /**
+     * Retourne la vue correspondant à la liste des résultats
+     *
+     * @param position    position de la vue
+     * @param convertView
+     * @param parent
+     * @return la vue correspondant à la liste des résultats
+     */
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = super.getView(position, convertView, parent);
         Place place = getItem(position);
         if (place != null) {
             TextView label = (TextView) v.findViewById(android.R.id.text1);
+            TextView description = (TextView) v.findViewById(android.R.id.text2);
             if (label != null) {
-//              Log.i(MY_DEBUG_TAG, "getView Customer Name:"+customer.getName());
                 label.setText(place.getName());
+            }
+            if (description != null) {
+                description.setText(place.getVicinity());
             }
         }
         return v;
     }
 
     /**
-     * Returns the number of results received in the last autocomplete query.
+     * Retourne le nombre de résultats
      */
     @Override
     public int getCount() {
@@ -77,7 +103,7 @@ public class PlaceAdapter extends ArrayAdapter<Place> implements Filterable {
     }
 
     /**
-     * Returns an item from the last autocomplete query.
+     * Retourne un résultat à partir de sa position
      */
     @Override
     public Place getItem(int position) {

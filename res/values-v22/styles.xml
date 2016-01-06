@@ -28,4 +28,7 @@
         <item name="android:minHeight">30dip</item>
         <item name="android:maxHeight">30dip</item>
     </style>
+    <dimen name="marginTop" templateMergeStrategy="preserve" translatable="false">
+        32dp
+    </dimen>
 </resources>

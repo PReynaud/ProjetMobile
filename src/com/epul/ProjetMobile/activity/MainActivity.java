@@ -1,17 +1,19 @@
 package com.epul.ProjetMobile.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.*;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -24,115 +26,47 @@ import com.epul.ProjetMobile.service.PlacesService;
 import com.epul.ProjetMobile.service.PlacesServiceDelegate;
 import com.epul.ProjetMobile.tools.MapLayout;
 import com.epul.ProjetMobile.tools.SwipeDetector;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.*;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, PlacesServiceDelegate, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, PlacesServiceDelegate {
     public static final String wayResource = "Way";
     public static final int ListResult = 1;
-    private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
-            new LatLng(-34.041458, 150.790100), new LatLng(-33.682247, 151.383362));
     private final ArrayList<Place> way = new ArrayList<>();
     private final Map<Marker, Place> markers = new HashMap<>();
+    private final Map<Place, Marker> places = new HashMap<>();
     private GoogleMap googleMap;
     private Location userLocation;
     private PlaceAdapter adapter;
-    private AutoCompleteTextView mAutocompleteView;
+    private AutoCompleteTextView autoCompleteTextView;
     private Button localisationButton;
     private PlacesService service;
-    /**
-     * Listener that handles selections from suggestions from the AutoCompleteTextView that
-     * displays Place suggestions.
-     * Gets the place id of the selected item and issues a request to the Places Geo Data API
-     * to retrieve more details about the place.
-     *
-     * @see com.google.android.gms.location.places.GeoDataApi#getPlaceById(com.google.android.gms.common.api.GoogleApiClient,
-     * String...)
-     */
     private AdapterView.OnItemClickListener mAutocompleteClickListener
             = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            /*
-             Retrieve the place ID of the selected item from the Adapter.
-             The adapter stores each Place suggestion in a AutocompletePrediction from which we
-             read the place ID and title.
-              */
             final Place item = adapter.getItem(position);
-            final String placeId = item.getId();
-            final CharSequence primaryText = item.getName();
-
-            Toast.makeText(getApplicationContext(), "Clicked: " + primaryText,
-                    Toast.LENGTH_SHORT).show();
+            Marker marker = places.get(item);
+            //Vide le textView
+            autoCompleteTextView.clearListSelection();
+            autoCompleteTextView.setText("");
+            //Cache le clavier
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(autoCompleteTextView.getWindowToken(), 0);
+            centerMapOnMarker(marker);
         }
     };
-    /**
-     * Callback for results from a Places Geo Data API query that shows the first place result in
-     * the details view on screen.
-     */
-    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
-            = new ResultCallback<PlaceBuffer>() {
-        @Override
-        public void onResult(PlaceBuffer places) {
-            if (!places.getStatus().isSuccess()) {
-                // Request did not complete successfully
-                places.release();
-                return;
-            }
-            // Get the Place object from the buffer.
-            final com.google.android.gms.location.places.Place place = places.get(0);
-            places.release();
-        }
-    };
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id) {
-            case R.id.action_settings:
-                Toast.makeText(MainActivity.this, "Setting clic :)", Toast.LENGTH_LONG).show();
-                break;
-            case R.id.action_search:
-                Toast.makeText(MainActivity.this, "Search clic :)", Toast.LENGTH_LONG).show();
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ListResult) {
-            way.clear();
-            way.addAll((ArrayList<Place>) data.getExtras().getSerializable(wayResource));
-            //A la fin de l'activité secondaire on réaffiche la toolbar
-            findViewById(R.id.list_top).setVisibility(View.VISIBLE);
-        }
-        //On met à jour la position et les markers
-        launchService();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,13 +80,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 centerMapOnUserLocation();
             }
         });
-
-        // Retrieve the AutoCompleteTextView that will display Place suggestions.
-        mAutocompleteView = (AutoCompleteTextView)
+        autoCompleteTextView = (AutoCompleteTextView)
                 findViewById(R.id.autocomplete_places);
-
-        // Register a listener that receives callbacks when a suggestion has been selected
-        mAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
+        autoCompleteTextView.setOnItemClickListener(mAutocompleteClickListener);
 
         userLocation = null;
         try {
@@ -163,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     /**
-     * Initialisation de la map et de tous ces paramètres
+     * Initialisation de la map et de tous ses paramètres
      */
     private void initializeMap() {
         if (googleMap == null) {
@@ -198,11 +128,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
         launchService();
@@ -210,6 +135,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         layout.init(this.googleMap, (int) (59 * this.getResources().getDisplayMetrics().density + 0.5f));
 
         final ViewGroup view = (ViewGroup) getLayoutInflater().inflate(R.layout.info_popup, null);
+
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                centerMapOnMarker(marker);
+                return true;
+            }
+        });
 
         googleMap.setInfoWindowAdapter(new InfoPopup(getApplicationContext(), view, layout) {
             @Override
@@ -245,6 +179,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ListResult) {
+            way.clear();
+            way.addAll((ArrayList<Place>) data.getExtras().getSerializable(wayResource));
+            //A la fin de l'activité secondaire on réaffiche la toolbar
+            findViewById(R.id.list_top).setVisibility(View.VISIBLE);
+        }
+        //On met à jour la position et les markers
+        launchService();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     public void launchListActivity() {
         Intent intent = new Intent(MainActivity.this, ListActivity.class);
         intent.putParcelableArrayListExtra(wayResource, way);
@@ -260,12 +211,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         service.execute();
     }
 
+    /**
+     * Active la recherche après le placement des marqueurs
+     */
     public void enableSearch() {
         ArrayList<Place> list_places = new ArrayList<>();
         list_places.addAll(service.getPlaces());
         adapter = new PlaceAdapter(this, list_places);
-        mAutocompleteView.setAdapter(adapter);
-        mAutocompleteView.setThreshold(1);
+        autoCompleteTextView.setAdapter(adapter);
+        autoCompleteTextView.setThreshold(1);
     }
 
     /**
@@ -285,6 +239,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    /**
+     * Anime la caméra sur un marker, avec un décalage pour pouvoir aussi afficher l'infobulle
+     *
+     * @param marker marker sur lequel centrer la map
+     */
+    private void centerMapOnMarker(Marker marker) {
+        LatLng markerLocation = marker.getPosition();
+        Point mappoint = googleMap.getProjection().toScreenLocation(new LatLng(markerLocation.latitude, markerLocation.longitude));
+        mappoint.set(mappoint.x, mappoint.y - 150);
+        marker.showInfoWindow();
+        googleMap.animateCamera(CameraUpdateFactory.newLatLng(googleMap.getProjection().fromScreenLocation(mappoint)));
+    }
+
+    /**
+     * Met à jour et récupère la dernière location
+     *
+     * @return dernière location
+     */
     private Location getLastKnownLocation() {
         LocationManager locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
         List<String> providers = locationManager.getProviders(true);
@@ -294,6 +266,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     getString(R.string.ErrorPermissionWhenGettingLocation), Toast.LENGTH_SHORT)
                     .show();
         } else {
+            // Règle les bugs de location dus aux roms customs de type TouchWiz, etc
             locationManager.requestLocationUpdates(
                     LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener() {
                         @Override
@@ -317,8 +290,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (l == null) {
                     continue;
                 }
-                if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy() || !provider.equals("passive")) {
-                    // Found best last known location: %s", l);
+                if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
                     bestLocation = l;
                 }
             }
@@ -330,6 +302,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void placeMarkers(List<Place> listOfPlaces) {
         if (listOfPlaces != null) {
             markers.clear();
+            places.clear();
             for (Place place : listOfPlaces) {
                 Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude()))
                         .title(place.getName())
@@ -337,12 +310,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 BitmapDescriptorFactory.fromResource(R.drawable.selected_monument) :
                                 BitmapDescriptorFactory.fromResource(R.drawable.monument)));
                 markers.put(marker, place);
+                places.put(place, marker);
             }
         }
     }
 
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
     }
 }

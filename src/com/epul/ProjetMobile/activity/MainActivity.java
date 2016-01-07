@@ -45,32 +45,35 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static final int ListResult = 1;
     private final ArrayList<Place> way = new ArrayList<>();
     private final Map<Marker, Place> markers = new HashMap<>();
-    private final Map<Place, Marker> places = new HashMap<>();
     private GoogleMap googleMap;
     private Location userLocation;
     private PlaceAdapter adapter;
     private AutoCompleteTextView autoCompleteTextView;
-    private Button localisationButton;
     private PlacesService service;
-    private AdapterView.OnItemClickListener mAutocompleteClickListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        localisationButton = (Button) findViewById(R.id.localisationbutton);
+        Button localisationButton = (Button) findViewById(R.id.localisationbutton);
         localisationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 centerMapOnUserLocation();
             }
         });
-        mAutocompleteClickListener = new AdapterView.OnItemClickListener() {
+        AdapterView.OnItemClickListener mAutocompleteClickListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final Place item = adapter.getItem(position);
-                Marker marker = places.get(item);
+                Marker marker = null;
+                for (Map.Entry<Marker, Place> placeEntry : markers.entrySet()) {
+                    if (placeEntry.getValue().equals(item)) {
+                        marker = placeEntry.getKey();
+                        break;
+                    }
+                }
                 //Vide le textView
                 autoCompleteTextView.clearListSelection();
                 autoCompleteTextView.setText("");
@@ -129,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
+        centerMapOnUserLocation();
         launchService();
         final MapLayout layout = ((MapLayout) findViewById(R.id.map_layout));
         layout.init(this.googleMap, (int) (59 * this.getResources().getDisplayMetrics().density + 0.5f));
@@ -188,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             findViewById(R.id.list_top).setVisibility(View.VISIBLE);
         }
         //On met à jour la position et les markers
+        googleMap.clear();
         launchService();
     }
 
@@ -204,8 +209,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void launchService() {
-        googleMap.clear();
-        centerMapOnUserLocation();
         service = new PlacesService(getResources().getString(R.string.google_places_key));
         service.setLocation(this.userLocation, this);
         service.execute();
@@ -302,7 +305,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void placeMarkers(List<Place> listOfPlaces) {
         if (listOfPlaces != null) {
             markers.clear();
-            places.clear();
             for (Place place : listOfPlaces) {
                 Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude()))
                         .title(place.getName())
@@ -310,7 +312,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 BitmapDescriptorFactory.fromResource(R.drawable.selected_monument) :
                                 BitmapDescriptorFactory.fromResource(R.drawable.monument)));
                 markers.put(marker, place);
-                places.put(place, marker);
             }
         }
     }

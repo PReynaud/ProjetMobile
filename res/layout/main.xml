@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:fillViewport="true"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:fillViewport="true"
 >
     <!--<include layout="@layout/toolbar"/>-->
     <com.epul.ProjetMobile.tools.MapLayout
             android:id="@+id/map_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_height="match_parent">
         <fragment
                 android:id="@+id/map"
                 android:name="com.google.android.gms.maps.MapFragment"
@@ -20,5 +19,5 @@
         </fragment>
     </com.epul.ProjetMobile.tools.MapLayout>
     <include layout="@layout/list_top"/>
-</LinearLayout>
+</RelativeLayout>
 

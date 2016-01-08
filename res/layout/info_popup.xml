@@ -39,9 +39,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".50"
                 android:text="@string/DetailButton"
-                android:background="@drawable/button_white"
-                style="@style/AppTheme"
-                android:textColor="#000000"
+                android:theme="@style/DetailButton"
+                android:textAllCaps="false"
                 android:elevation="4dp"
                 android:layout_margin="3dp"/>
         <Button
@@ -50,8 +49,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".50"
                 android:text="@string/AddButton"
-                android:background="@drawable/button_blue"
-                style="@style/AppTheme"
+                android:theme="@style/AddButton"
+                android:textAllCaps="false"
                 android:elevation="4dp"
                 android:layout_margin="3dp"/>
     </LinearLayout>

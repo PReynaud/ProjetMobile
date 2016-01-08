@@ -4,7 +4,6 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:colorPrimary">@color/primary</item>
-        <item name="android:windowTranslucentStatus">true</item>
         <item name="android:colorPrimaryDark">@color/primaryDark</item>
         <item name="android:colorAccent">@color/accent</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
@@ -28,7 +27,10 @@
         <item name="android:minHeight">30dip</item>
         <item name="android:maxHeight">30dip</item>
     </style>
-    <dimen name="marginTop" templateMergeStrategy="preserve" translatable="false">
-        32dp
-    </dimen>
+    <style name="DetailButton" parent="android:Widget.Button">
+    </style>
+    <style name="AddButton" parent="android:Widget.Button">
+        <item name="android:colorButtonNormal">@color/primary</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+    </style>
 </resources>

@@ -1,5 +1,6 @@
 package com.epul.ProjetMobile.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,23 +10,21 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.*;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.Toast;
+import android.widget.*;
 import com.epul.ProjetMobile.R;
 import com.epul.ProjetMobile.adapter.InfoPopup;
 import com.epul.ProjetMobile.adapter.PlaceAdapter;
 import com.epul.ProjetMobile.business.Place;
 import com.epul.ProjetMobile.service.PlacesService;
 import com.epul.ProjetMobile.service.PlacesServiceDelegate;
+import com.epul.ProjetMobile.tools.ListManager;
 import com.epul.ProjetMobile.tools.MapLayout;
-import com.epul.ProjetMobile.tools.SwipeDetector;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -50,6 +49,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private PlaceAdapter adapter;
     private AutoCompleteTextView autoCompleteTextView;
     private PlacesService service;
+    private ListView monumentList;
+    private ListManager listManager;
+    private int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,10 +85,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 centerMapOnMarker(marker);
             }
         };
-        autoCompleteTextView = (AutoCompleteTextView)
-                findViewById(R.id.autocomplete_places);
+        autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.autocomplete_places);
         autoCompleteTextView.setOnItemClickListener(mAutocompleteClickListener);
         userLocation = null;
+        this.monumentList = (ListView) findViewById(R.id.list);
+        listManager = new ListManager(monumentList, way);
+        listManager.createListView();
         try {
             initializeMap();
         } catch (Exception e) {
@@ -115,7 +119,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         .show();
             }
 
-            //Active la localisation
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+            }
             googleMap.setMyLocationEnabled(true);
 
             // Désactive les boutons de navigation
@@ -156,29 +164,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (!way.contains(markers.get(marker))) {
                     way.add(markers.get(marker));
                     marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.selected_monument));
+                    listManager.createListView();
                 }
-            }
-        });
-
-        //Ajout du détecteur de swipe une fois la map chargée
-        final GestureDetectorCompat detector = new GestureDetectorCompat(this, new SwipeDetector() {
-            @Override
-            public void onTouch() {
-                launchListActivity();
-            }
-
-            @Override
-            public void onSwipeToUp() {
-                launchListActivity();
-            }
-        });
-
-        Toolbar topToolbar = (Toolbar) findViewById(R.id.list_top);
-        topToolbar.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                detector.onTouchEvent(event);
-                return false;
             }
         });
     }
@@ -199,13 +186,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onResume() {
         super.onResume();
-    }
-
-    public void launchListActivity() {
-        Intent intent = new Intent(MainActivity.this, ListActivity.class);
-        intent.putParcelableArrayListExtra(wayResource, way);
-        startActivityForResult(intent, ListResult);
-        findViewById(R.id.list_top).setVisibility(View.GONE);
     }
 
     public void launchService() {
@@ -303,16 +283,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void placeMarkers(List<Place> listOfPlaces) {
-        if (listOfPlaces != null) {
-            markers.clear();
-            for (Place place : listOfPlaces) {
-                Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude()))
-                        .title(place.getName())
-                        .icon(way.contains(place) ?
-                                BitmapDescriptorFactory.fromResource(R.drawable.selected_monument) :
-                                BitmapDescriptorFactory.fromResource(R.drawable.monument)));
-                markers.put(marker, place);
-            }
+        markers.clear();
+        for (Place place : listOfPlaces) {
+            Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude()))
+                    .title(place.getName())
+                    .icon(way.contains(place) ?
+                            BitmapDescriptorFactory.fromResource(R.drawable.selected_monument) :
+                            BitmapDescriptorFactory.fromResource(R.drawable.monument)));
+            markers.put(marker, place);
         }
     }
 

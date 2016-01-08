@@ -1,23 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:orientation="vertical"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:fillViewport="true"
+<com.sothree.slidinguppanel.SlidingUpPanelLayout
+        xmlns:sothree="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/sliding_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        sothree:umanoPanelHeight="55dp"
+        sothree:umanoShadowHeight="4dp"
+        sothree:umanoParallaxOffset="100dp"
+        sothree:umanoDragView="@+id/list_top"
+        sothree:umanoOverlay="true"
+        sothree:umanoScrollableView="@+id/list"
 >
-    <!--<include layout="@layout/toolbar"/>-->
-    <com.epul.ProjetMobile.tools.MapLayout
-            android:id="@+id/map_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        <fragment
-                android:id="@+id/map"
-                android:name="com.google.android.gms.maps.MapFragment"
+    <RelativeLayout android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fillViewport="true"
+                    android:focusableInTouchMode="true"
+    >
+        <com.epul.ProjetMobile.tools.MapLayout
+                android:id="@+id/map_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-            <include layout="@layout/searchbar"/>
-        </fragment>
-    </com.epul.ProjetMobile.tools.MapLayout>
-    <include layout="@layout/list_top"/>
-</RelativeLayout>
+            <fragment
+                    android:id="@+id/map"
+                    android:name="com.google.android.gms.maps.MapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                <include layout="@layout/searchbar"/>
+            </fragment>
+        </com.epul.ProjetMobile.tools.MapLayout>
+    </RelativeLayout>
+    <include layout="@layout/monument_list"/>
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>
 

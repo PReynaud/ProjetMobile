@@ -27,6 +27,10 @@ public class InfoPopup implements GoogleMap.InfoWindowAdapter{
         this.layout = layout;
     }
 
+    public Context getContext() {
+        return context;
+    }
+
     public void actionAjouter(Marker marker) {
         Toast.makeText(context,
                 "Button Ajouter", Toast.LENGTH_SHORT)

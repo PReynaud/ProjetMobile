@@ -1,102 +1,41 @@
-package com.epul.ProjetMobile.activity;
+package com.epul.ProjetMobile.tools;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import com.epul.ProjetMobile.R;
 import com.epul.ProjetMobile.adapter.MonumentAdapter;
 import com.epul.ProjetMobile.business.Place;
-import com.epul.ProjetMobile.tools.ItemStatus;
-import com.epul.ProjetMobile.tools.SwipeDetector;
 
 import java.util.ArrayList;
 
-/**
- * @Author Dimitri on 24/12/2015.
- * @Version 1.0
- */
-public class ListActivity extends Activity {
+public class ListManager {
     private final ArrayList<ItemStatus> status = new ArrayList<>();
     private ListView monumentList;
-    private ArrayList<Place> places;
+    private ArrayList<Place> way;
     private MonumentAdapter adapter;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.monument_list);
-        this.monumentList = (ListView) findViewById(R.id.list);
-        this.places = getIntent().getParcelableArrayListExtra(MainActivity.wayResource);
+    public ListManager(ListView monumentList, ArrayList<Place> way) {
+        this.monumentList = monumentList;
+        this.way = way;
+        this.adapter = new MonumentAdapter(monumentList.getContext(), way, status);
         createListView();
-
-        //Animations
-        ImageView imageView = (ImageView) findViewById(R.id.expand_icon);
+    }
+    //Animations
+        /*ImageView imageView = (ImageView) findViewById(R.id.expand_icon);
         findViewById(R.id.monumentList).startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate_up));
-        imageView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_180));
+        imageView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_180));*/
 
-        //Détecteur pour la barre du haut
-        final GestureDetectorCompat detector = new GestureDetectorCompat(this, new SwipeDetector() {
-            @Override
-            public void onTouch() {
-                animateAndQuit();
-            }
-
-            @Override
-            public void onSwipeToDown() {
-                animateAndQuit();
-            }
-        });
-        findViewById(R.id.list_top).setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                detector.onTouchEvent(event);
-                return false;
-            }
-        });
-    }
-
-    private void animateAndQuit() {
-        RotateAnimation rotateAnimation = new RotateAnimation(180, 0, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate_down);
-        animation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra(MainActivity.wayResource, places);
-                setResult(MainActivity.ListResult, resultIntent);
-                finish();
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
-        rotateAnimation.setDuration(500);
-
-        findViewById(R.id.monumentList).startAnimation(animation);
-        findViewById(R.id.expand_icon).startAnimation(rotateAnimation);
-    }
-
-    private void createListView() {
-        for (int i = 0; i < places.size(); i++) {
+    public void createListView() {
+        for (int i = 0; i < way.size(); i++) {
             status.add(ItemStatus.Normal);
         }
         //Swipe Détecteur pour les éléments de la liste
-        final GestureDetectorCompat detector = new GestureDetectorCompat(this, new SwipeDetector() {
+        final GestureDetectorCompat detector = new GestureDetectorCompat(monumentList.getContext(), new SwipeDetector() {
             int item = -1;
 
             @Override
@@ -195,7 +134,7 @@ public class ListActivity extends Activity {
                 adapter.notifyDataSetChanged();
             }
         });
-        adapter = new MonumentAdapter(this, places, status);
+        adapter = new MonumentAdapter(monumentList.getContext(), way, status);
         monumentList.setAdapter(adapter);
         monumentList.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -214,7 +153,7 @@ public class ListActivity extends Activity {
                         //Goto DetailActivity
                         break;
                     case Delete:
-                        removeMonument(places.get(position));
+                        removeMonument(way.get(position));
                         break;
                     case Favorite:
                         //Add Monument to favorites
@@ -227,9 +166,9 @@ public class ListActivity extends Activity {
     }
 
     public boolean removeMonument(Place place) {
-        int i = places.indexOf(place);
+        int i = way.indexOf(place);
         if (i >= 0) {
-            places.remove(place);
+            way.remove(place);
             status.remove(i);
             adapter.notifyDataSetChanged();
             monumentList.setAdapter(adapter);

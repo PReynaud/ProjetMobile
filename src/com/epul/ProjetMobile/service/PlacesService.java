@@ -114,7 +114,9 @@ public class PlacesService extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        this.delegate.placeMarkers(this.places);
-        this.delegate.enableSearch();
+        if (this.places != null) {
+            this.delegate.placeMarkers(this.places);
+            this.delegate.enableSearch();
+        }
     }
 }

@@ -2,10 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.epul.ProjetMobile">
     <permission
-            android:name="info.androidhive.googlemapsv2.permission.MAPS_RECEIVE"
+            android:name="com.epul.ProjetMobile.permission.MAPS_RECEIVE"
             android:protectionLevel="signature" />
 
-    <uses-permission android:name="info.androidhive.googlemapsv2.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="com.epul.ProjetMobile.permission.MAPS_RECEIVE" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />

@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 
 public class Place implements Parcelable {
     public static final Parcelable.Creator<Place> CREATOR = new Parcelable.Creator<Place>() {
-
         @Override
         public Place createFromParcel(Parcel source) {
             return new Place(source);

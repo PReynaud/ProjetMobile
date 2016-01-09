@@ -1,30 +1,32 @@
 package com.epul.ProjetMobile.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.epul.ProjetMobile.R;
-import com.epul.ProjetMobile.activity.DetailActivity;
 import com.epul.ProjetMobile.tools.MapLayout;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
+
+import java.util.ArrayList;
 
 /**
  * Created by Pierre on 26/12/2015.
  */
 public class InfoPopup implements GoogleMap.InfoWindowAdapter{
-    Context context;
-    View view;
-    MapLayout layout;
+    private Context context;
+    private View view;
+    private MapLayout layout;
+    private ArrayList<Marker> places;
 
     public InfoPopup(Context context, View view, MapLayout layout) {
         this.context = context;
         this.view = view;
         this.layout = layout;
+        this.places = new ArrayList<>();
     }
 
     public Context getContext() {
@@ -32,15 +34,10 @@ public class InfoPopup implements GoogleMap.InfoWindowAdapter{
     }
 
     public void actionAjouter(Marker marker) {
-        Toast.makeText(context,
-                "Button Ajouter", Toast.LENGTH_SHORT)
-                .show();
+        boolean test = places.contains(marker) ? places.remove(marker) : places.add(marker);
     }
 
     public void actionDetail(Marker marker) {
-        Intent intent = new Intent(context, DetailActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
     }
 
     @Override
@@ -57,9 +54,9 @@ public class InfoPopup implements GoogleMap.InfoWindowAdapter{
 
         ((TextView) view.findViewById(R.id.place_name)).setText(marker.getTitle());
         layout.setMarkerWithInfoWindow(marker, view);
-
-
-        view.findViewById(R.id.buttonDetail).setOnTouchListener(new View.OnTouchListener() {
+        Button buttonDetail = (Button) view.findViewById(R.id.buttonDetail),
+                buttonAjouter = (Button) view.findViewById(R.id.buttonAdd);
+        buttonDetail.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked()) {
@@ -72,7 +69,10 @@ public class InfoPopup implements GoogleMap.InfoWindowAdapter{
                 return false;
             }
         });
-        view.findViewById(R.id.buttonAdd).setOnTouchListener(new View.OnTouchListener() {
+        boolean isAdded = places.contains(marker);
+        buttonAjouter.setText(view.getResources().getString(isAdded ? R.string.AddedButton : R.string.AddButton));
+        buttonAjouter.setBackgroundResource(isAdded ? R.color.warning : R.color.primary);
+        buttonAjouter.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked()) {

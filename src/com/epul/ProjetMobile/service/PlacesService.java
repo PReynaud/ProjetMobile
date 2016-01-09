@@ -1,41 +1,26 @@
 package com.epul.ProjetMobile.service;
 
 import android.location.Location;
-import android.os.AsyncTask;
 import android.util.Log;
 import com.epul.ProjetMobile.business.Place;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class PlacesService extends AsyncTask<String, Void, String> {
-    private String apiKey;
-    private List<Place> places;
-    private Location location;
+public class PlacesService extends GoogleService {
     private PlacesServiceDelegate delegate;
 
     public PlacesService(String apiKey) {
-        this.apiKey = apiKey;
+        super(apiKey);
     }
 
     public void setLocation(Location location, PlacesServiceDelegate delegate) {
         this.location = location;
         this.delegate = delegate;
-    }
-
-    public List<Place> getPlaces() {
-        return places;
     }
 
     private ArrayList<Place> createPlaces(String jsonResult) {
@@ -69,34 +54,10 @@ public class PlacesService extends AsyncTask<String, Void, String> {
         urlString.append(Double.toString(longitude));
         urlString.append("&radius=");
         urlString.append(radius);
-        urlString.append("&types=museum");
+        urlString.append("&rankBy=distance");
+        urlString.append("style=feature:poi.attraction");
         urlString.append("&sensor=true&key=" + this.apiKey);
-
         return urlString.toString();
-    }
-
-    private String getJSON(String urlToGet) {
-        StringBuilder builder = new StringBuilder();
-        try {
-            URL url = new URL(urlToGet);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            int statusCode = connection.getResponseCode();
-            if (statusCode == 200) {
-                InputStream content = connection.getInputStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(content));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    builder.append(line);
-                }
-            } else {
-                throw new Exception("" + statusCode);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return builder.toString();
     }
 
     @Override

@@ -9,6 +9,7 @@
     <string name="ErrorWhenDownloadingPlaces">Le téléchargement des informations a échoué</string>
     <string name="DetailButton">Détails</string>
     <string name="AddButton">Ajouter</string>
+    <string name="AddedButton">Supprimer</string>
     <string name="RatingImageDescription">Rating</string>
     <string name="toolbarList">Votre Parcours</string>
 </resources>

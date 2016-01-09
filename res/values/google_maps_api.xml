@@ -5,4 +5,7 @@
     <string name="google_places_key" templateMergeStrategy="preserve" translatable="false">
         "AIzaSyDapZqU3n516PIkAwaqLIWYuppo_A2uqs8"
     </string>
+    <string name="google_direction_key" templateMergeStrategy="preserve" translatable="false">
+        "AIzaSyCj7ppYsXzzqY0Vqz8IArmdYL9UJUwty1g"
+    </string>
 </resources>

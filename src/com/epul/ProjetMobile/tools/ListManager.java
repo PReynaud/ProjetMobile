@@ -25,10 +25,6 @@ public class ListManager {
         this.adapter = new MonumentAdapter(monumentList.getContext(), way, status);
         createListView();
     }
-    //Animations
-        /*ImageView imageView = (ImageView) findViewById(R.id.expand_icon);
-        findViewById(R.id.monumentList).startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate_up));
-        imageView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_180));*/
 
     public void createListView() {
         for (int i = 0; i < way.size(); i++) {

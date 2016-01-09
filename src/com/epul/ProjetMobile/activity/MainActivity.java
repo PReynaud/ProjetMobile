@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationListener;
@@ -21,6 +22,9 @@ import com.epul.ProjetMobile.R;
 import com.epul.ProjetMobile.adapter.InfoPopup;
 import com.epul.ProjetMobile.adapter.PlaceAdapter;
 import com.epul.ProjetMobile.business.Place;
+import com.epul.ProjetMobile.business.Route;
+import com.epul.ProjetMobile.service.DirectionService;
+import com.epul.ProjetMobile.service.DirectionServiceDelegate;
 import com.epul.ProjetMobile.service.PlacesService;
 import com.epul.ProjetMobile.service.PlacesServiceDelegate;
 import com.epul.ProjetMobile.tools.ListManager;
@@ -29,17 +33,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, PlacesServiceDelegate {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, PlacesServiceDelegate, DirectionServiceDelegate {
     public static final String wayResource = "Way";
     public static final int ListResult = 1;
     private final ArrayList<Place> way = new ArrayList<>();
@@ -48,16 +46,40 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Location userLocation;
     private PlaceAdapter adapter;
     private AutoCompleteTextView autoCompleteTextView;
-    private PlacesService service;
-    private ListView monumentList;
+    private PlacesService placesService;
+    private DirectionService directionService;
     private ListManager listManager;
-    private int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        //Set the default language
+        Locale.setDefault(new Locale("fr_FR"));
+        userLocation = null;
 
+        initializeSearchBar();
+        initializeMonumentList();
+        try {
+            initializeMap();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Initialisation de la searchBar et de tous ses paramètres
+     */
+    private void initializeMonumentList() {
+        ListView monumentList = (ListView) findViewById(R.id.list);
+        listManager = new ListManager(monumentList, way);
+        listManager.createListView();
+    }
+
+    /**
+     * Initialisation de la searchBar et de tous ses paramètres
+     */
+    private void initializeSearchBar() {
         Button localisationButton = (Button) findViewById(R.id.localisationbutton);
         localisationButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,15 +109,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         };
         autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.autocomplete_places);
         autoCompleteTextView.setOnItemClickListener(mAutocompleteClickListener);
-        userLocation = null;
-        this.monumentList = (ListView) findViewById(R.id.list);
-        listManager = new ListManager(monumentList, way);
-        listManager.createListView();
-        try {
-            initializeMap();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -120,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
@@ -141,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
         centerMapOnUserLocation();
-        launchService();
+        launchPlaceService();
         final MapLayout layout = ((MapLayout) findViewById(R.id.map_layout));
         layout.init(this.googleMap, (int) (59 * this.getResources().getDisplayMetrics().density + 0.5f));
 
@@ -156,7 +170,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return true;
             }
         });
-
         googleMap.setInfoWindowAdapter(new InfoPopup(getApplicationContext(), view, layout) {
             @Override
             public void actionAjouter(Marker marker) {
@@ -164,8 +177,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (!way.contains(markers.get(marker))) {
                     way.add(markers.get(marker));
                     marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.selected_monument));
-                    listManager.createListView();
+                } else {
+                    way.remove(markers.get(marker));
+                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.monument));
                 }
+                listManager.createListView();
             }
         });
     }
@@ -176,11 +192,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             way.clear();
             way.addAll((ArrayList<Place>) data.getExtras().getSerializable(wayResource));
             //A la fin de l'activité secondaire on réaffiche la toolbar
-            findViewById(R.id.list_top).setVisibility(View.VISIBLE);
         }
         //On met à jour la position et les markers
         googleMap.clear();
-        launchService();
+        launchPlaceService();
     }
 
     @Override
@@ -188,10 +203,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onResume();
     }
 
-    public void launchService() {
-        service = new PlacesService(getResources().getString(R.string.google_places_key));
-        service.setLocation(this.userLocation, this);
-        service.execute();
+    public void launchPlaceService() {
+        placesService = new PlacesService(getResources().getString(R.string.google_places_key));
+        placesService.setLocation(this.userLocation, this);
+        placesService.execute();
+    }
+
+    public void launchDirectionService() {
+        directionService = new DirectionService(getResources().getString(R.string.google_direction_key), false, way);
+        directionService.init(this.userLocation, this);
+        directionService.execute();
     }
 
     /**
@@ -199,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     public void enableSearch() {
         ArrayList<Place> list_places = new ArrayList<>();
-        list_places.addAll(service.getPlaces());
+        list_places.addAll(placesService.getPlaces());
         adapter = new PlaceAdapter(this, list_places);
         autoCompleteTextView.setAdapter(adapter);
         autoCompleteTextView.setThreshold(1);
@@ -300,5 +321,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public void displayWay(List<Route> routes) {
+        //TODO: Choose the best route
+        Route bestRoute = routes.size() > 0 ? routes.get(0) : null;
+        if (bestRoute != null)
+            for (int i = 0; i < bestRoute.waypoints.length - 1; i++) {
+                LatLng src = bestRoute.overview[i];
+                LatLng dest = bestRoute.overview[i + 1];
+                Polyline line = googleMap.addPolyline(new PolylineOptions()
+                        .add(new LatLng(src.latitude, src.longitude),
+                                new LatLng(dest.latitude, dest.longitude))
+                        .width(8).color(Color.RED).geodesic(true));
+            }
     }
 }

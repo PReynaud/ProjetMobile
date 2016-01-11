@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      * Initialisation de la searchBar et de tous ses paramètres
      */
     private void initializeSearchBar() {
-        Button localisationButton = (Button) findViewById(R.id.localisationbutton);
+        ImageView localisationButton = (ImageView) findViewById(R.id.localisationicon);
         localisationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

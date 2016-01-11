@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private PlacesService placesService;
     private DirectionService directionService;
     private ListManager listManager;
+    private ImageView settingsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +75,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         ListView monumentList = (ListView) findViewById(R.id.list);
         listManager = new ListManager(monumentList, way, markers);
         listManager.createListView();
+        settingsButton = (ImageView) findViewById(R.id.settings_icon);
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),
+                        "Bouton Settings", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
     }
 
     /**
@@ -277,7 +287,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (l == null) {
                     continue;
                 }
-                if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                if (bestLocation == null || l.getAccuracy() > bestLocation.getAccuracy()) {
                     bestLocation = l;
                 }
             }

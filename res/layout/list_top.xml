@@ -11,8 +11,18 @@
                android:scaleType="center"
                android:src="@drawable/expand"/>
     <TextView android:text="@string/toolbarList"
-              android:gravity="center"
-              android:layout_width="match_parent"
+              android:layout_width="wrap_content"
               android:layout_height="match_parent"
-              android:textColor="@color/accent"/>
+              android:textColor="@color/textColorPrimary"
+              android:textSize="23sp"
+              android:scaleType="center"
+              android:gravity="left|center"
+              android:paddingLeft="18dp"/>
+    <ImageView android:id="@+id/settings_icon"
+               android:layout_width="wrap_content"
+               android:layout_height="match_parent"
+               android:scaleType="center"
+               android:src="@drawable/settings"
+               android:layout_gravity="end"
+               android:paddingRight="15dp"/>
 </android.support.v7.widget.Toolbar>

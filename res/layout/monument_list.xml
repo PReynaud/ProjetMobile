@@ -4,10 +4,22 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/windowBackground">
+              android:background="@color/primary"
+              android:weightSum="1">
     <include layout="@layout/list_top"/>
     <ListView android:id="@+id/list"
+              android:background="@color/windowBackground"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="wrap_content" android:layout_weight="1.00">
     </ListView>
+    <Button
+            android:id="@+id/ParcoursSimpleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ParcoursSimpleButton"
+            android:theme="@style/ParcoursSimpleButton"
+            android:textAllCaps="false"
+            android:elevation="4dp"
+            android:layout_margin="3dp"
+            android:layout_gravity="center_horizontal"/>
 </LinearLayout>

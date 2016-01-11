@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private DirectionService directionService;
     private ListManager listManager;
     private ImageView settingsButton;
+    private Button parcoursSimpleButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +82,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(),
                         "Bouton Settings", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
+        parcoursSimpleButton = (Button) findViewById(R.id.ParcoursSimpleButton);
+        parcoursSimpleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),
+                        "A toi de jouer Dimitri", Toast.LENGTH_SHORT)
                         .show();
             }
         });

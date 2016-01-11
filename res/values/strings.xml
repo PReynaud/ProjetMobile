@@ -12,4 +12,5 @@
     <string name="AddedButton">Supprimer</string>
     <string name="RatingImageDescription">Rating</string>
     <string name="toolbarList">Liste de Monuments</string>
+    <string name="ParcoursSimpleButton">Parcours Simple</string>
 </resources>

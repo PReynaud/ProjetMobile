@@ -159,29 +159,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         final MapLayout layout = ((MapLayout) findViewById(R.id.map_layout));
         layout.init(this.googleMap, (int) (59 * this.getResources().getDisplayMetrics().density + 0.5f));
 
-        final ViewGroup view = (ViewGroup) getLayoutInflater().inflate(R.layout.info_popup, null);
-
         //Décale la vue si on clique sur un marker (permet de voir l'infobulle, normalement cachée en haut de l'écran)
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-
             @Override
             public boolean onMarkerClick(Marker marker) {
                 centerMapOnMarker(marker);
                 return true;
-            }
-        });
-        googleMap.setInfoWindowAdapter(new InfoPopup(getApplicationContext(), view, layout) {
-            @Override
-            public void actionAjouter(Marker marker) {
-                super.actionAjouter(marker);
-                if (!way.contains(markers.get(marker))) {
-                    way.add(markers.get(marker));
-                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.monument_selectionne));
-                } else {
-                    way.remove(markers.get(marker));
-                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.monument_normal));
-                }
-                listManager.createListView();
             }
         });
     }
@@ -313,6 +296,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             BitmapDescriptorFactory.fromResource(R.drawable.monument_normal)));
             markers.put(marker, place);
         }
+        final ViewGroup view = (ViewGroup) getLayoutInflater().inflate(R.layout.info_popup, null);
+
+        MapLayout layout = ((MapLayout) findViewById(R.id.map_layout));
+        Map<Marker, Map<Place, Boolean>> placeAdapter = new HashMap<>();
+        for (Map.Entry<Marker, Place> placeEntry : markers.entrySet()) {
+            Map<Place, Boolean> temp = new HashMap<>();
+            temp.put(placeEntry.getValue(), false);
+            placeAdapter.put(placeEntry.getKey(), temp);
+        }
+        googleMap.setInfoWindowAdapter(new InfoPopup(getApplicationContext(), view, layout, placeAdapter) {
+            @Override
+            public void actionAjouter(Marker marker) {
+                super.actionAjouter(marker);
+                if (!way.contains(markers.get(marker))) {
+                    way.add(markers.get(marker));
+                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.monument_selectionne));
+                } else {
+                    way.remove(markers.get(marker));
+                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.monument_normal));
+                }
+                listManager.createListView();
+            }
+        });
     }
 
     @Override

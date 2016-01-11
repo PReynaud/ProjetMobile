@@ -26,6 +26,7 @@ public class Place implements Parcelable {
     private String vicinity;
     private Double latitude;
     private Double longitude;
+    private float rating;
 
     public Place() {
     }
@@ -37,11 +38,13 @@ public class Place implements Parcelable {
         this.vicinity = in.readString();
         this.latitude = in.readDouble();
         this.longitude = in.readDouble();
+        this.rating = in.readFloat();
     }
 
     public static Place jsonToObject(JSONObject JSONResult) {
+        Place result = new Place();
+        //Paramètres obligaatoires
         try {
-            Place result = new Place();
             JSONObject geometry = (JSONObject) JSONResult.get("geometry");
             JSONObject location = (JSONObject) geometry.get("location");
             result.setLatitude((Double) location.get("lat"));
@@ -50,11 +53,18 @@ public class Place implements Parcelable {
             result.setName(JSONResult.getString("name"));
             result.setVicinity(JSONResult.getString("vicinity"));
             result.setId(JSONResult.getString("id"));
-            return result;
         } catch (JSONException ex) {
             Logger.getLogger(Place.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
-        return null;
+        //Paramètres optionnels.
+        try {
+            result.setRating(Double.valueOf(JSONResult.getDouble("rating")).floatValue());
+            return result;
+        } catch (JSONException e) {
+            result.setRating(-1f);
+            return result;
+        }
     }
 
     public String getId() {
@@ -103,6 +113,14 @@ public class Place implements Parcelable {
 
     public void setVicinity(String vicinity) {
         this.vicinity = vicinity;
+    }
+
+    public float getRating() {
+        return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
     }
 
     @Override

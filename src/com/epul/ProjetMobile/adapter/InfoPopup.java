@@ -9,11 +9,12 @@ import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import com.epul.ProjetMobile.R;
+import com.epul.ProjetMobile.business.Place;
 import com.epul.ProjetMobile.tools.MapLayout;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 
-import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by Pierre on 26/12/2015.
@@ -22,13 +23,13 @@ public class InfoPopup implements GoogleMap.InfoWindowAdapter{
     private Context context;
     private View view;
     private MapLayout layout;
-    private ArrayList<Marker> places;
+    private Map<Marker, Map<Place, Boolean>> places;
 
-    public InfoPopup(Context context, View view, MapLayout layout) {
+    public InfoPopup(Context context, View view, MapLayout layout, Map<Marker, Map<Place, Boolean>> places) {
         this.context = context;
         this.view = view;
         this.layout = layout;
-        this.places = new ArrayList<>();
+        this.places = places;
     }
 
     public Context getContext() {
@@ -36,7 +37,8 @@ public class InfoPopup implements GoogleMap.InfoWindowAdapter{
     }
 
     public void actionAjouter(Marker marker) {
-        boolean test = places.contains(marker) ? places.remove(marker) : places.add(marker);
+        boolean test = places.get(marker).values().iterator().next();
+        places.get(marker).entrySet().iterator().next().setValue(!test);
     }
 
     public void actionDetail(Marker marker) {
@@ -50,9 +52,11 @@ public class InfoPopup implements GoogleMap.InfoWindowAdapter{
     @Override
     public View getInfoContents(Marker marker) {
         final Marker clonedMarker = marker;
+        Place place = places.get(marker).entrySet().iterator().next().getKey();
+        float rating = place.getRating();
 
-        RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingBarPopup);
-        TextView tRating = (TextView) view.findViewById(R.id.ratingText);
+        ((RatingBar) view.findViewById(R.id.ratingBarPopup)).setRating(rating <= 0 ? 0 : rating);
+        ((TextView) view.findViewById(R.id.ratingText)).setText(rating < 0 ? "Pas encore de note" : Float.toString(rating));
 
         ((TextView) view.findViewById(R.id.place_name)).setText(marker.getTitle());
         layout.setMarkerWithInfoWindow(marker, view);
@@ -71,7 +75,7 @@ public class InfoPopup implements GoogleMap.InfoWindowAdapter{
                 return false;
             }
         });
-        boolean isAdded = places.contains(marker);
+        boolean isAdded = places.get(marker).values().iterator().next();
         buttonAjouter.setText(view.getResources().getString(isAdded ? R.string.AddedButton : R.string.AddButton));
         buttonAjouter.getBackground().setColorFilter(ContextCompat.getColor(context, isAdded ? R.color.warning : R.color.primary), PorterDuff.Mode.MULTIPLY);
         buttonAjouter.setOnTouchListener(new View.OnTouchListener() {

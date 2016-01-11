@@ -10,22 +10,36 @@ import android.widget.ListView;
 import com.epul.ProjetMobile.R;
 import com.epul.ProjetMobile.adapter.MonumentAdapter;
 import com.epul.ProjetMobile.business.Place;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Marker;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class ListManager {
     private final ArrayList<ItemStatus> status = new ArrayList<>();
+    private final Map<Marker, Place> markers;
     private ListView monumentList;
     private ArrayList<Place> way;
     private MonumentAdapter adapter;
 
-    public ListManager(ListView monumentList, ArrayList<Place> way) {
+    public ListManager(ListView monumentList, ArrayList<Place> way, Map<Marker, Place> markers) {
         this.monumentList = monumentList;
         this.way = way;
         this.adapter = new MonumentAdapter(monumentList.getContext(), way, status);
+        this.markers = markers;
         createListView();
     }
 
+    private void changePicture(int item, int drawable) {
+        for (Map.Entry<Marker, Place> placeEntry : markers.entrySet()) {
+            if (placeEntry.getValue().equals(way.get(item))) {
+                Marker marker = placeEntry.getKey();
+                marker.setIcon(BitmapDescriptorFactory.fromResource(drawable));
+                break;
+            }
+        }
+    }
     public void createListView() {
         for (int i = 0; i < way.size(); i++) {
             status.add(ItemStatus.Normal);
@@ -82,6 +96,7 @@ public class ListManager {
                         monument.findViewById(R.id.item_list).setBackgroundResource(R.color.windowBackground);
                         monument.startAnimation(animation);
                         status.set(item, ItemStatus.Normal);
+                        changePicture(item, R.drawable.monument_selectionne);
                         break;
                     default:
                         break;
@@ -101,6 +116,7 @@ public class ListManager {
                         monument.findViewById(R.id.star).setVisibility(View.VISIBLE);
                         monument.startAnimation(animation);
                         status.set(item, ItemStatus.Favorite);
+                        changePicture(item, R.drawable.monument_favori);
                         break;
                     case Delete:
                         animation = new TranslateAnimation(0, 100, 0, 0);
@@ -122,6 +138,7 @@ public class ListManager {
                         monument.findViewById(R.id.item_list).setBackgroundResource(R.color.windowBackground);
                         monument.startAnimation(animation);
                         status.set(item, ItemStatus.Normal);
+                        changePicture(item, R.drawable.monument_normal);
                         break;
                     default:
                         break;
@@ -163,6 +180,7 @@ public class ListManager {
 
     public boolean removeMonument(Place place) {
         int i = way.indexOf(place);
+        changePicture(i, R.drawable.monument_normal);
         if (i >= 0) {
             way.remove(place);
             status.remove(i);

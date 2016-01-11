@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     private void initializeMonumentList() {
         ListView monumentList = (ListView) findViewById(R.id.list);
-        listManager = new ListManager(monumentList, way);
+        listManager = new ListManager(monumentList, way, markers);
         listManager.createListView();
     }
 
@@ -176,10 +176,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 super.actionAjouter(marker);
                 if (!way.contains(markers.get(marker))) {
                     way.add(markers.get(marker));
-                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.selected_monument));
+                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.monument_selectionne));
                 } else {
                     way.remove(markers.get(marker));
-                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.monument));
+                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.monument_normal));
                 }
                 listManager.createListView();
             }
@@ -309,8 +309,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude()))
                     .title(place.getName())
                     .icon(way.contains(place) ?
-                            BitmapDescriptorFactory.fromResource(R.drawable.selected_monument) :
-                            BitmapDescriptorFactory.fromResource(R.drawable.monument)));
+                            BitmapDescriptorFactory.fromResource(R.drawable.monument_selectionne) :
+                            BitmapDescriptorFactory.fromResource(R.drawable.monument_normal)));
             markers.put(marker, place);
         }
     }

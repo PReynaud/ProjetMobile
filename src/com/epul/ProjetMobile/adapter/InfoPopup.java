@@ -1,6 +1,8 @@
 package com.epul.ProjetMobile.adapter;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.support.v4.content.ContextCompat;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -71,7 +73,7 @@ public class InfoPopup implements GoogleMap.InfoWindowAdapter{
         });
         boolean isAdded = places.contains(marker);
         buttonAjouter.setText(view.getResources().getString(isAdded ? R.string.AddedButton : R.string.AddButton));
-        buttonAjouter.setBackgroundResource(isAdded ? R.color.warning : R.color.primary);
+        buttonAjouter.getBackground().setColorFilter(ContextCompat.getColor(context, isAdded ? R.color.warning : R.color.primary), PorterDuff.Mode.MULTIPLY);
         buttonAjouter.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

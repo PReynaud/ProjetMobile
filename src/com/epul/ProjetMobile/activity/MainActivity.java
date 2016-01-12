@@ -355,8 +355,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Route bestRoute = routes.size() > 0 ? routes.get(0) : null;
         if (bestRoute != null)
             for (int i = 0; i < bestRoute.waypoints.length - 1; i++) {
-                LatLng src = bestRoute.overview[i];
-                LatLng dest = bestRoute.overview[i + 1];
+                LatLng src = bestRoute.overview.get(i);
+                LatLng dest = bestRoute.overview.get(i + 1);
                 Polyline line = googleMap.addPolyline(new PolylineOptions()
                         .add(new LatLng(src.latitude, src.longitude),
                                 new LatLng(dest.latitude, dest.longitude))

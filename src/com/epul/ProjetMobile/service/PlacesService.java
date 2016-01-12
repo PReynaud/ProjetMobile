@@ -55,7 +55,8 @@ public class PlacesService extends GoogleService {
         urlString.append("&radius=");
         urlString.append(radius);
         urlString.append("&rankBy=distance");
-        urlString.append("style=feature:poi.attraction");
+        urlString.append("&types=aquarium|art_gallery|city_hall|museum|park|place_of_worship|zoo");
+        //urlString.append("style=feature:poi.attraction");
         urlString.append("&sensor=true&key=" + this.apiKey);
         return urlString.toString();
     }

@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author Dimitri on 09/01/2016.
@@ -26,7 +27,7 @@ public class Route implements Parcelable {
     };
     public int distance;
     public int duree;
-    public LatLng[] overview;
+    public List<LatLng> overview;
     public Waypoint[] waypoints;
 
     public Route(JSONObject jsonObject) {
@@ -49,8 +50,8 @@ public class Route implements Parcelable {
         waypoints = in.createTypedArray(Waypoint.CREATOR);
     }
 
-    public static LatLng[] decodePoly(String encoded) {
-        ArrayList<LatLng> travel = new ArrayList<>();
+    private List<LatLng> decodePoly(String encoded) {
+        List<LatLng> poly = new ArrayList<>();
         int index = 0, len = encoded.length();
         int lat = 0, lng = 0;
 
@@ -76,9 +77,9 @@ public class Route implements Parcelable {
 
             LatLng p = new LatLng((((double) lat / 1E5)),
                     (((double) lng / 1E5)));
-            travel.add(p);
+            poly.add(p);
         }
-        return (LatLng[]) travel.toArray();
+        return poly;
     }
 
     @Override

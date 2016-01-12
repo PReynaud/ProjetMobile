@@ -60,6 +60,7 @@ public class DirectionService extends GoogleService {
 
 
     protected void findBestWay(String json) {
+        travels = new ArrayList<>();
         try {
             JSONArray routes = new JSONObject(json).getJSONArray("routes");
             for (int i = 0; i < routes.length(); i++) {

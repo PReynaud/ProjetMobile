@@ -21,8 +21,10 @@ import android.widget.*;
 import com.epul.ProjetMobile.R;
 import com.epul.ProjetMobile.adapter.InfoPopup;
 import com.epul.ProjetMobile.adapter.PlaceAdapter;
+import com.epul.ProjetMobile.business.Leg;
 import com.epul.ProjetMobile.business.Place;
 import com.epul.ProjetMobile.business.Route;
+import com.epul.ProjetMobile.business.Waypoint;
 import com.epul.ProjetMobile.service.DirectionService;
 import com.epul.ProjetMobile.service.DirectionServiceDelegate;
 import com.epul.ProjetMobile.service.PlacesService;
@@ -89,9 +91,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         parcoursSimpleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),
-                        "A toi de jouer Dimitri", Toast.LENGTH_SHORT)
-                        .show();
+                launchDirectionService();
             }
         });
     }
@@ -354,13 +354,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //TODO: Choose the best route
         Route bestRoute = routes.size() > 0 ? routes.get(0) : null;
         if (bestRoute != null)
-            for (int i = 0; i < bestRoute.waypoints.length - 1; i++) {
-                LatLng src = bestRoute.overview.get(i);
-                LatLng dest = bestRoute.overview.get(i + 1);
-                Polyline line = googleMap.addPolyline(new PolylineOptions()
-                        .add(new LatLng(src.latitude, src.longitude),
-                                new LatLng(dest.latitude, dest.longitude))
-                        .width(8).color(Color.RED).geodesic(true));
+            for (int i = 0; i < bestRoute.legs.length; i++) {
+                Leg leg = bestRoute.legs[i];
+                for (int k = 0; k < leg.waypoints.length; k++) {
+                    Waypoint waypoint = leg.waypoints[k];
+                    for (int j = 0; j < waypoint.polyline.length-1; j++) {
+                        LatLng src = waypoint.polyline[j];
+                        LatLng dest = waypoint.polyline[j+ 1];
+                        Polyline line = googleMap.addPolyline(new PolylineOptions()
+                                .add(new LatLng(src.latitude, src.longitude),
+                                        new LatLng(dest.latitude, dest.longitude))
+                                .width(8).color(Color.RED).geodesic(true));
+                    }
+                }
             }
     }
 }

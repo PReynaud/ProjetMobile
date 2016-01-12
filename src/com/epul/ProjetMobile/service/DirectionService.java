@@ -1,8 +1,11 @@
 package com.epul.ProjetMobile.service;
 
 
+import android.content.Context;
 import android.location.Location;
 import android.util.Log;
+import android.widget.Toast;
+import com.epul.ProjetMobile.R;
 import com.epul.ProjetMobile.business.Place;
 import com.epul.ProjetMobile.business.Route;
 import org.json.JSONArray;
@@ -23,11 +26,13 @@ public class DirectionService extends GoogleService {
     private boolean getPublicTransport;
     private List<Place> places;
     private ArrayList<Route> travels;
+    private Context context;
 
-    public DirectionService(String apiKey, boolean getPublicTransport, List<Place> places) {
+    public DirectionService(String apiKey, boolean getPublicTransport, List<Place> places, Context context) {
         super(apiKey);
         this.getPublicTransport = getPublicTransport;
         this.places = places;
+        this.context = context;
     }
 
     public void init(Location location, DirectionServiceDelegate delegate) {
@@ -47,7 +52,7 @@ public class DirectionService extends GoogleService {
                 .append("&avoid=highways&sensor=false");
         if (places.size() > 0){
             urlString.append("&waypoints=optimize:true");
-            for (int i = 0; i < places.size() - 1; i++) {
+            for (int i = 0; i < places.size(); i++) {
                 Location.distanceBetween(location.getLatitude(), location.getLongitude(),places.get(i).getLatitude(),places.get(i).getLongitude(),result);
                 if (result[0]>distance){
                     if (destination!=null)
@@ -93,6 +98,14 @@ public class DirectionService extends GoogleService {
             Logger.getLogger(PlacesService.class.getName()).log(Level.SEVERE,
                     null, e);
         }
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        Toast.makeText(context,
+                context.getString(R.string.LaunchDirectionService), Toast.LENGTH_SHORT)
+                .show();
     }
 
     @Override

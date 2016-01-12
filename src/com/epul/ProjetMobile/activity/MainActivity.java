@@ -49,10 +49,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private PlaceAdapter adapter;
     private AutoCompleteTextView autoCompleteTextView;
     private PlacesService placesService;
-    private DirectionService directionService;
     private ListManager listManager;
-    private ImageView settingsButton;
-    private Button parcoursSimpleButton;
+    private List<Polyline> parcours;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Set the default language
         Locale.setDefault(new Locale("fr_FR"));
         userLocation = null;
-
+        parcours = new ArrayList<>();
         initializeSearchBar();
         initializeMonumentList();
         try {
@@ -78,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         ListView monumentList = (ListView) findViewById(R.id.list);
         listManager = new ListManager(monumentList, way, markers);
         listManager.createListView();
-        settingsButton = (ImageView) findViewById(R.id.settings_icon);
+        ImageView settingsButton = (ImageView) findViewById(R.id.settings_icon);
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         .show();
             }
         });
-        parcoursSimpleButton = (Button) findViewById(R.id.ParcoursSimpleButton);
+        Button parcoursSimpleButton = (Button) findViewById(R.id.ParcoursSimpleButton);
         parcoursSimpleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -213,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void launchDirectionService() {
-        directionService = new DirectionService(getResources().getString(R.string.google_direction_key), false, way);
+        DirectionService directionService = new DirectionService(getResources().getString(R.string.google_direction_key), false, way, this);
         directionService.init(this.userLocation, this);
         directionService.execute();
     }
@@ -351,7 +349,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void displayWay(List<Route> routes) {
-        //TODO: Choose the best route
+        //Clear la map
+        for (Polyline line : parcours)
+            line.remove();
+        parcours = new ArrayList<>();
         Route bestRoute = routes.size() > 0 ? routes.get(0) : null;
         if (bestRoute != null)
             for (int i = 0; i < bestRoute.legs.length; i++) {
@@ -361,10 +362,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     for (int j = 0; j < waypoint.polyline.length-1; j++) {
                         LatLng src = waypoint.polyline[j];
                         LatLng dest = waypoint.polyline[j+ 1];
-                        Polyline line = googleMap.addPolyline(new PolylineOptions()
+                        parcours.add(googleMap.addPolyline(new PolylineOptions()
                                 .add(new LatLng(src.latitude, src.longitude),
                                         new LatLng(dest.latitude, dest.longitude))
-                                .width(8).color(Color.RED).geodesic(true));
+                                .width(8).color(Color.RED).geodesic(true)));
                     }
                 }
             }

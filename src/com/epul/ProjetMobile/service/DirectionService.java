@@ -36,19 +36,42 @@ public class DirectionService extends GoogleService {
     }
 
     private String makeUrl() {
+        float distance =-1;
+        float[]result = new float[1];
+        Place destination=null;
         StringBuilder urlString = new StringBuilder(
                 "https://maps.googleapis.com/maps/api/directions/json?");
         urlString.append("origin=")
                 .append(location.getLatitude()).append(",")
                 .append(location.getLongitude())
-                .append("&destination=")
-                .append(places.get(places.size() - 1).getLatitude()).append(",")
-                .append(places.get(places.size() - 1).getLongitude())
-                .append("&avoid=highways&sensor=false")
-                .append(places.size() > 0 ? "&waypoints=" : "");
-        for (int i = 0; i < places.size() - 1; i++) {
-            urlString.append(places.get(i).getLatitude()).append(",")
-                    .append(places.get(i).getLongitude()).append("|");
+                .append("&avoid=highways&sensor=false");
+        if (places.size() > 0){
+            urlString.append("&waypoints=optimize:true");
+            for (int i = 0; i < places.size() - 1; i++) {
+                Location.distanceBetween(location.getLatitude(), location.getLongitude(),places.get(i).getLatitude(),places.get(i).getLongitude(),result);
+                if (result[0]>distance){
+                    if (destination!=null)
+                        urlString.append(destination.getLatitude())
+                                .append(",")
+                                .append(destination.getLongitude());
+                    destination = places.get(i);
+                    distance = result[0];
+                }else{
+                    urlString.append(places.get(i).getLatitude()).append(",")
+                            .append(places.get(i).getLongitude());
+                }
+                urlString.append("|");
+            }
+            urlString.append("&destination=")
+                    .append(destination.getLatitude())
+                    .append(",")
+                    .append(destination.getLongitude());
+        }
+        else {
+            urlString.append("&destination=")
+                    .append(places.get(0).getLatitude())
+                    .append(",")
+                    .append(places.get(0).getLongitude());
         }
         urlString.append(getPublicTransport ?
                 "&mode=transit&transit_mode=tram|bus|subway"

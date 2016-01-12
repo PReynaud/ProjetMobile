@@ -20,6 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import com.epul.ProjetMobile.R;
 import com.epul.ProjetMobile.adapter.InfoPopup;
+import com.epul.ProjetMobile.adapter.InstructionAdapter;
 import com.epul.ProjetMobile.adapter.PlaceAdapter;
 import com.epul.ProjetMobile.business.Leg;
 import com.epul.ProjetMobile.business.Place;
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      * Initialisation de la searchBar et de tous ses paramètres
      */
     private void initializeMonumentList() {
-        ListView monumentList = (ListView) findViewById(R.id.list);
+        ListView monumentList = (ListView) findViewById(R.id.monumentListView);
         listManager = new ListManager(monumentList, way, markers);
         listManager.createListView();
         ImageView settingsButton = (ImageView) findViewById(R.id.settings_icon);
@@ -353,21 +354,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         for (Polyline line : parcours)
             line.remove();
         parcours = new ArrayList<>();
+        //Display the route
         Route bestRoute = routes.size() > 0 ? routes.get(0) : null;
-        if (bestRoute != null)
+        if (bestRoute != null) {
+            ArrayList<String> instructions = new ArrayList<>();
+            findViewById(R.id.directionListContainer).setVisibility(View.VISIBLE);
+            ListView listView = (ListView) findViewById(R.id.directionListView);
+
             for (int i = 0; i < bestRoute.legs.length; i++) {
                 Leg leg = bestRoute.legs[i];
                 for (int k = 0; k < leg.waypoints.length; k++) {
                     Waypoint waypoint = leg.waypoints[k];
-                    for (int j = 0; j < waypoint.polyline.length-1; j++) {
+                    for (int j = 0; j < waypoint.polyline.length - 1; j++) {
                         LatLng src = waypoint.polyline[j];
-                        LatLng dest = waypoint.polyline[j+ 1];
+                        LatLng dest = waypoint.polyline[j + 1];
                         parcours.add(googleMap.addPolyline(new PolylineOptions()
                                 .add(new LatLng(src.latitude, src.longitude),
                                         new LatLng(dest.latitude, dest.longitude))
                                 .width(8).color(Color.RED).geodesic(true)));
                     }
+                    instructions.add(waypoint.instruction);
                 }
             }
+            listView.setAdapter(new InstructionAdapter(instructions, this));
+        }
     }
 }

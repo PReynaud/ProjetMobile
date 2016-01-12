@@ -11,7 +11,7 @@
         sothree:umanoParallaxOffset="100dp"
         sothree:umanoDragView="@+id/list_top"
         sothree:umanoOverlay="true"
-        sothree:umanoScrollableView="@+id/list"
+        sothree:umanoScrollableView="@+id/monumentListView"
 >
     <RelativeLayout android:orientation="vertical"
                     android:layout_width="match_parent"
@@ -31,6 +31,7 @@
                 <include layout="@layout/searchbar"/>
             </fragment>
         </com.epul.ProjetMobile.tools.MapLayout>
+        <include layout="@layout/direction_list"/>
     </RelativeLayout>
     <include layout="@layout/monument_list"/>
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

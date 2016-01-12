@@ -2,13 +2,9 @@ package com.epul.ProjetMobile.business;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import com.google.android.gms.maps.model.LatLng;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @Author Dimitri on 09/01/2016.
@@ -26,8 +22,6 @@ public class Route implements Parcelable {
             return new Route[size];
         }
     };
-    public int distance;
-    public int duree;
     public Leg[] legs;
 
     public Route(JSONObject jsonObject) {

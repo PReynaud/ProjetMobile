@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/monumentList"
+              android:id="@+id/monumentListContainer"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/primary"
               android:weightSum="1">
     <include layout="@layout/list_top"/>
-    <ListView android:id="@+id/list"
+    <ListView android:id="@+id/monumentListView"
               android:background="@color/windowBackground"
               android:layout_width="match_parent"
               android:layout_height="wrap_content" android:layout_weight="1.00">

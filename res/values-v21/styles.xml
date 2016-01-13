@@ -30,7 +30,7 @@
     <style name="DetailButton" parent="android:Widget.Button">
     </style>
     <style name="AddButton" parent="android:Widget.Button">
-        <item name="android:colorButtonNormal">@color/primary</item>
+        <item name="android:colorButtonNormal">@color/textColorPrimary</item>
         <item name="android:textColor">@color/textColorPrimary</item>
     </style>
     <style name="ParcoursSimpleButton" parent="android:Widget.Button">

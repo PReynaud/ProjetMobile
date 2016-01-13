@@ -81,7 +81,7 @@ public class DirectionService extends GoogleService {
         urlString.append(getPublicTransport ?
                 "&mode=transit&transit_mode=tram|bus|subway"
                 : "&mode=walking")
-                .append("&key=" + this.apiKey);
+                .append("&language=fr&key=" + this.apiKey);
 
         return urlString.toString();
     }

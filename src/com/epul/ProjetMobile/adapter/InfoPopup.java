@@ -55,8 +55,15 @@ public class InfoPopup implements GoogleMap.InfoWindowAdapter{
         Place place = places.get(marker).entrySet().iterator().next().getKey();
         float rating = place.getRating();
 
-        ((RatingBar) view.findViewById(R.id.ratingBarPopup)).setRating(rating <= 0 ? 0 : rating);
-        ((TextView) view.findViewById(R.id.ratingText)).setText(rating < 0 ? "Pas encore de note" : Float.toString(rating));
+        if (rating < 0) {
+            view.findViewById(R.id.ratingBarPopup).setVisibility(View.GONE);
+            ((TextView) view.findViewById(R.id.ratingText)).setText("Pas encore de note");
+        } else {
+            view.findViewById(R.id.ratingBarPopup).setVisibility(View.VISIBLE);
+            ((TextView) view.findViewById(R.id.ratingText)).setText(Float.toString(rating));
+            ((RatingBar) view.findViewById(R.id.ratingBarPopup)).setRating(rating);
+        }
+
 
         ((TextView) view.findViewById(R.id.place_name)).setText(marker.getTitle());
         layout.setMarkerWithInfoWindow(marker, view);

@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         parcoursSimpleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                launchDirectionService();
+                if (way.size() >= 1) launchDirectionService();
             }
         });
     }
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         localisationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                centerMapOnUserLocation();
+                centerMapOnUserLocation(15);
             }
         });
         AdapterView.OnItemClickListener mAutocompleteClickListener = new AdapterView.OnItemClickListener() {
@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
-        centerMapOnUserLocation();
+        centerMapOnUserLocation(15);
         launchPlaceService();
         final MapLayout layout = ((MapLayout) findViewById(R.id.map_layout));
         layout.init(this.googleMap, (int) (59 * this.getResources().getDisplayMetrics().density + 0.5f));
@@ -231,11 +231,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     /**
      * Vérifie l'autorisation concernant la position de l'utilisateur et centre la map sur celle-ci
      */
-    private void centerMapOnUserLocation() {
+    private void centerMapOnUserLocation(int zoom) {
         Location location = getLastKnownLocation();
         if (location != null) {
             this.googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                    new LatLng(location.getLatitude(), location.getLongitude()), 15));
+                    new LatLng(location.getLatitude(), location.getLongitude()), zoom));
             this.userLocation = location;
         } else {
             Toast.makeText(getApplicationContext(),
@@ -378,5 +378,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
             listView.setAdapter(new InstructionAdapter(instructions, this));
         }
+        centerMapOnUserLocation(18);
     }
 }

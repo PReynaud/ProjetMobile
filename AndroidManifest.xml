@@ -37,6 +37,7 @@
         <activity android:name=".activity.DetailActivity"
                   android:configChanges="orientation|screenSize"/>
         <activity android:name=".activity.SettingsActivity"
+                  android:theme="@style/PrefTheme"
                   android:configChanges="orientation|screenSize"/>
         <meta-data
                 android:name="com.google.android.geo.API_KEY"

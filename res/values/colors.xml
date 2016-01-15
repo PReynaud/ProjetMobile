@@ -2,11 +2,14 @@
 <resources>
     <color name="primary">#0074e1</color>
     <color name="primaryDark">#0054a3</color>
-    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="textColorPrimary">#000000</color>
+    <color name="textColorPrimaryWhite">#FFFFFF</color>
     <color name="windowBackground">#FFFFFF</color>
     <color name="navigationBar">#FFFFFF</color>
     <color name="accent">#C5CAE9</color>
     <color name="warning">#ef5350</color>
     <color name="favorite">#26a69a</color>
     <color name="black">#000000</color>
+    <color name="settingsPrimary">#f58002</color>
+    <color name="settingsPrimaryDark">#d16d02</color>
 </resources>

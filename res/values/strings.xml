@@ -72,4 +72,30 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+    <string name="settings_title">Préférences</string>
+    <string name="transports_select_title">Moyens de transport</string>
+    <string name="transports_select_summary">Choisissez vos moyens de transport</string>
+    <string name="monuments_select_title">Types de monuments à visiter</string>
+    <string name="monuments_select_summary">Choisissez les types de monuments à visiter</string>
+    <string name="time_limit_title">Temps limite (en heures)</string>
+
+
+    <string-array name="array_transports_values">
+        <item>pied</item>
+        <item>transports</item>
+        <item>voiture</item>
+    </string-array>
+    <string-array name="array_transports_titles">
+        <item>À pied</item>
+        <item>En transports en commun</item>
+        <item>En voiture</item>
+    </string-array>
+    <string-array name="array_monuments_values">
+        <item>musee</item>
+        <item>troll</item>
+    </string-array>
+    <string-array name="array_monuments_titles">
+        <item>Musées</item>
+        <item>A compléter :troll:</item>
+    </string-array>
 </resources>

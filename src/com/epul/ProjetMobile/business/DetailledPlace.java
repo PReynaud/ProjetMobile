@@ -1,8 +1,10 @@
 package com.epul.ProjetMobile.business;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,15 +22,18 @@ public class DetailledPlace extends Place {
     private String website;
 
     public DetailledPlace(){
-
+        this.photoUrls = new ArrayList<>();
+        this.reviews = new ArrayList<>();
     }
 
     public static DetailledPlace jsonToObject(JSONObject jsonResult) {
         try {
+            //TODO: rajouter vérification de la présence de certains objets
             DetailledPlace result = new DetailledPlace();
             JSONObject resultNode = (JSONObject) jsonResult.get("result");
             JSONObject geometry = (JSONObject) resultNode.get("geometry");
             JSONObject location = (JSONObject) geometry.get("location");
+            JSONArray photosNode = (JSONArray) resultNode.get("photos");
             result.setLatitude((Double) location.get("lat"));
             result.setLongitude((Double) location.get("lng"));
             result.setIcon(resultNode.getString("icon"));
@@ -43,6 +48,9 @@ public class DetailledPlace extends Place {
             result.setOpeningHours(openingHoursNode.getString("weekday_text"));
 
             //TODO: rajouter récupération des urls et des reviews
+            for (int i = 0; i < photosNode.length(); i++) {
+                result.getPhotoUrls().add(photosNode.getJSONObject(i).getString("photo_reference"));
+            }
 
             result.setWebsite(resultNode.getString("website"));
 

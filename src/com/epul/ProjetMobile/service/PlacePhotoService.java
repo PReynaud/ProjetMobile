@@ -1,0 +1,47 @@
+package com.epul.ProjetMobile.service;
+
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
+import android.util.Log;
+
+import java.io.InputStream;
+import java.net.URL;
+
+/**
+ * Created by Pierre on 15/01/2016.
+ */
+public class PlacePhotoService extends AsyncTask<String, Void, String> {
+    private PlacePhotoServiceDelegate delegate;
+    private Drawable result;
+    private String apiKey;
+    private String photoId;
+
+    public PlacePhotoService(PlacePhotoServiceDelegate delegate, String apiKey, String photoId) {
+        this.delegate = delegate;
+        this.apiKey = apiKey;
+        this.photoId = photoId;
+    }
+
+    @Override
+    protected String doInBackground(String... params) {
+        try {
+            String url = "https://maps.googleapis.com/maps/api/place/photo?maxheight=250&photoreference=";
+            url += photoId;
+            url += "&key=";
+            url += apiKey;
+            Log.d("com.epul.ProjetMobile", "Url : " + url);
+
+            InputStream is = (InputStream) new URL(url).getContent();
+            this.result = Drawable.createFromStream(is, "place image");
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    protected void onPostExecute(String s) {
+        super.onPostExecute(s);
+        delegate.loadPhoto(result);
+    }
+}

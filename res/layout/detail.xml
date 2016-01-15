@@ -5,7 +5,9 @@
 >
     <ImageView android:layout_width="match_parent"
                android:layout_height="250dp"
-               android:background="#d90800"/>
+               android:background="#d90800"
+               android:id="@+id/placeImage"
+    />
 
     <ScrollView
             android:layout_width="match_parent"

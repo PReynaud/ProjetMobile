@@ -20,6 +20,7 @@
 
     <style name="ToolbarTheme" parent="android:Widget.Material.Toolbar">
         <item name="android:background">@color/primary</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
     <style name="ratingBarTheme" parent="android:Widget.Material.RatingBar.Small">
@@ -27,12 +28,15 @@
         <item name="android:minHeight">30dip</item>
         <item name="android:maxHeight">30dip</item>
     </style>
+
     <style name="DetailButton" parent="android:Widget.Button">
     </style>
+
     <style name="AddButton" parent="android:Widget.Button">
         <item name="android:colorButtonNormal">@color/textColorPrimary</item>
         <item name="android:textColor">@color/textColorPrimary</item>
     </style>
+
     <style name="ParcoursSimpleButton" parent="android:Widget.Button">
         <item name="android:colorButtonNormal">@color/textColorPrimary</item>
         <item name="android:textColor">@color/primary</item>

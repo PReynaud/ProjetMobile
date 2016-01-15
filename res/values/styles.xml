@@ -8,29 +8,37 @@
         <item name="colorPrimaryDark">@color/primaryDark</item>
         <item name="colorAccent">@color/accent</item>
     </style>
+
     <style name="Theme.Transparent" parent="AppTheme">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
     </style>
+
     <style name="ToolbarTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:background">@color/primary</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
+
     <style name="ToolbarTransparentTheme" parent="ToolbarTheme">
         <item name="android:background">#33000000</item>
         <item name="android:windowNoTitle">true</item>
     </style>
+
     <style name="ratingBarTheme" parent="Base.Widget.AppCompat.RatingBar">
         <item name="android:progressDrawable">@drawable/rating_stars</item>
         <item name="android:minHeight">30dip</item>
         <item name="android:maxHeight">30dip</item>
     </style>
+
     <style name="DetailButton" parent="Base.Widget.AppCompat.Button">
     </style>
+
     <style name="AddButton" parent="Base.Widget.AppCompat.Button">
         <item name="colorButtonNormal">@color/primary</item>
         <item name="android:textColor">@color/textColorPrimary</item>
     </style>
+
     <style name="ParcoursSimpleButton" parent="Base.Widget.AppCompat.Button">
         <item name="colorButtonNormal">@color/textColorPrimary</item>
         <item name="android:textColor">@color/primary</item>

@@ -26,6 +26,7 @@ public class Place implements Parcelable {
     private String vicinity;
     private Double latitude;
     private Double longitude;
+    private String placeId;
     private float rating;
 
     public Place() {
@@ -39,6 +40,7 @@ public class Place implements Parcelable {
         this.latitude = in.readDouble();
         this.longitude = in.readDouble();
         this.rating = in.readFloat();
+        this.placeId = in.readString();
     }
 
     public static Place jsonToObject(JSONObject JSONResult) {
@@ -53,6 +55,7 @@ public class Place implements Parcelable {
             result.setName(JSONResult.getString("name"));
             result.setVicinity(JSONResult.getString("vicinity"));
             result.setId(JSONResult.getString("id"));
+            result.setPlaceId(JSONResult.getString("place_id"));
         } catch (JSONException ex) {
             Logger.getLogger(Place.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -123,6 +126,14 @@ public class Place implements Parcelable {
         this.rating = rating;
     }
 
+    public String getPlaceId() {
+        return placeId;
+    }
+
+    public void setPlaceId(String placeId) {
+        this.placeId = placeId;
+    }
+
     @Override
     public String toString() {
         return "Place{" + "id=" + id + ", icon=" + icon + ", name=" + name + ", latitude=" + latitude + ", longitude=" + longitude + '}';
@@ -141,6 +152,7 @@ public class Place implements Parcelable {
         dest.writeString(vicinity);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
+        dest.writeString(placeId);
     }
 
     @Override

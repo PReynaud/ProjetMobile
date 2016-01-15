@@ -28,8 +28,7 @@ public class PlaceDetailService extends GoogleService {
         JSONObject object = null;
         try {
             object = new JSONObject(json);
-            detailledPlace = new DetailledPlace();
-            detailledPlace.jsonToObject(object);
+            detailledPlace = DetailledPlace.jsonToObject(object);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -48,6 +47,6 @@ public class PlaceDetailService extends GoogleService {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        this.delegate.loadDetails();
+        this.delegate.loadDetails(detailledPlace);
     }
 }

@@ -48,7 +48,7 @@ public class InfoPopup implements GoogleMap.InfoWindowAdapter{
         Intent intent = new Intent(context, DetailActivity.class);
         Place place = places.get(marker).entrySet().iterator().next().getKey();
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(PLACE_ID, place.getId());
+        intent.putExtra(PLACE_ID, place.getPlaceId());
         context.startActivity(intent);
     }
 

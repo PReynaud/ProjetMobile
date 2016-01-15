@@ -23,6 +23,36 @@ public class DetailledPlace extends Place {
 
     }
 
+    public static DetailledPlace jsonToObject(JSONObject jsonResult) {
+        try {
+            DetailledPlace result = new DetailledPlace();
+            JSONObject resultNode = (JSONObject) jsonResult.get("result");
+            JSONObject geometry = (JSONObject) resultNode.get("geometry");
+            JSONObject location = (JSONObject) geometry.get("location");
+            result.setLatitude((Double) location.get("lat"));
+            result.setLongitude((Double) location.get("lng"));
+            result.setIcon(resultNode.getString("icon"));
+            result.setName(resultNode.getString("name"));
+            result.setVicinity(resultNode.getString("vicinity"));
+            result.setId(resultNode.getString("id"));
+            result.setAddress(resultNode.getString("formatted_address"));
+            result.setPhoneNumber(resultNode.getString("formatted_phone_number"));
+
+            JSONObject openingHoursNode = (JSONObject) resultNode.get("opening_hours");
+            result.setOpenNow(openingHoursNode.getString("open_now") == "true");
+            result.setOpeningHours(openingHoursNode.getString("weekday_text"));
+
+            //TODO: rajouter récupération des urls et des reviews
+
+            result.setWebsite(resultNode.getString("website"));
+
+            return result;
+        } catch (JSONException ex) {
+            Logger.getLogger(Place.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
     public String getAddress() {
         return address;
     }
@@ -77,32 +107,5 @@ public class DetailledPlace extends Place {
 
     public void setWebsite(String website) {
         this.website = website;
-    }
-
-    public static DetailledPlace jsonToObject(JSONObject JSONResult) {
-        try {
-            DetailledPlace result = new DetailledPlace();
-            JSONObject geometry = (JSONObject) JSONResult.get("geometry");
-            JSONObject location = (JSONObject) geometry.get("location");
-            result.setLatitude((Double) location.get("lat"));
-            result.setLongitude((Double) location.get("lng"));
-            result.setIcon(JSONResult.getString("icon"));
-            result.setName(JSONResult.getString("name"));
-            result.setVicinity(JSONResult.getString("vicinity"));
-            result.setId(JSONResult.getString("id"));
-            result.setAddress(JSONResult.getString("formatted_address"));
-            result.setPhoneNumber(JSONResult.getString("formatted_phone_number"));
-            result.setOpenNow(JSONResult.getString("open_now") == "true");
-            result.setOpeningHours(JSONResult.getString("weekday_text"));
-
-            //TODO: rajouter récupération des urls et des reviews
-
-            result.setWebsite(JSONResult.getString("website"));
-
-            return result;
-        } catch (JSONException ex) {
-            Logger.getLogger(Place.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
     }
 }

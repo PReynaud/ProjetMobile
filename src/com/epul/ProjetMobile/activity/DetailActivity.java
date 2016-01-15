@@ -2,7 +2,7 @@ package com.epul.ProjetMobile.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.epul.ProjetMobile.R;
 
@@ -16,8 +16,7 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail);
 
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.detail_toolbar);
-        setSupportActionBar(mToolbar);
+        RelativeLayout mToolbar = (RelativeLayout) findViewById(R.id.detail_toolbar);
 
         TextView tName = (TextView) findViewById(R.id.nameDetail);
         TextView tDistance = (TextView) findViewById(R.id.distanceDetail);

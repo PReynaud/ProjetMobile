@@ -14,6 +14,7 @@
     <string name="toolbarList">Liste de Monuments</string>
     <string name="ParcoursSimpleButton">Parcours Simple</string>
     <string name="LaunchDirectionService">Recherche du meilleur parcours</string>
+    <string name="backButton">Retour</string>
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->

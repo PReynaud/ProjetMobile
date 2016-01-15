@@ -43,6 +43,7 @@ import java.util.*;
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, PlacesServiceDelegate, DirectionServiceDelegate {
     public static final String wayResource = "Way";
     public static final int ListResult = 1;
+    public static final int Param = 2;
     private final ArrayList<Place> way = new ArrayList<>();
     private final Map<Marker, Place> markers = new HashMap<>();
     private GoogleMap googleMap;
@@ -84,6 +85,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Toast.makeText(getApplicationContext(),
                         "Bouton Settings", Toast.LENGTH_SHORT)
                         .show();
+                Intent myIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                MainActivity.this.startActivityForResult(myIntent, Param);
             }
         });
         Button parcoursSimpleButton = (Button) findViewById(R.id.ParcoursSimpleButton);
@@ -336,6 +339,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.monument_normal));
                 }
                 listManager.createListView();
+            }
+
+            @Override
+            public void actionDetail(Marker marker) {
+                super.actionDetail(marker);
             }
         });
     }

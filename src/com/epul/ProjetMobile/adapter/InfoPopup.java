@@ -42,6 +42,7 @@ public class InfoPopup implements GoogleMap.InfoWindowAdapter{
     }
 
     public void actionDetail(Marker marker) {
+
     }
 
     @Override

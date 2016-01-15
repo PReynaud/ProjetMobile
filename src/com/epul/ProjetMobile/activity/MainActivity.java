@@ -312,7 +312,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         markers.clear();
         for (Place place : listOfPlaces) {
             Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude()))
-                    .title(place.getName())
+                    .title(place.getName()).anchor(0.5f, 0.5f)
                     .icon(way.contains(place) ?
                             BitmapDescriptorFactory.fromResource(R.drawable.monument_selectionne) :
                             BitmapDescriptorFactory.fromResource(R.drawable.monument_normal)));

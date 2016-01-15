@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private AutoCompleteTextView autoCompleteTextView;
     private PlacesService placesService;
     private ListManager listManager;
-    private List<Polyline> parcours;
+    private Map<Route, List<Polyline>> parcours;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Set the default language
         Locale.setDefault(new Locale("fr_FR"));
         userLocation = null;
-        parcours = new ArrayList<>();
+        parcours = new HashMap<>();
         initializeSearchBar();
         initializeMonumentList();
         try {
@@ -76,7 +76,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     private void initializeMonumentList() {
         ListView monumentList = (ListView) findViewById(R.id.monumentListView);
-        listManager = new ListManager(monumentList, way, markers);
+        listManager = new ListManager(monumentList, way, markers) {
+            @Override
+            public boolean removeMonument(Place place) {
+                boolean res = super.removeMonument(place);
+                resetPopUps();
+                return res;
+            }
+        };
         listManager.createListView();
         ImageView settingsButton = (ImageView) findViewById(R.id.settings_icon);
         settingsButton.setOnClickListener(new View.OnClickListener() {
@@ -201,6 +208,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //On met à jour la position et les markers
         googleMap.clear();
         launchPlaceService();
+        if (!parcours.isEmpty()) displayWay(new ArrayList<>(parcours.keySet()));
     }
 
     @Override
@@ -268,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     private Location getLastKnownLocation() {
         LocationManager locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
-        List<String> providers = locationManager.getProviders(true);
+        final List<String> providers = locationManager.getProviders(true);
         Location bestLocation = null;
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(getApplicationContext(),
@@ -292,6 +300,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                         @Override
                         public void onLocationChanged(final Location location) {
+                            consumeParcours();
                         }
                     });
             for (String provider : providers) {
@@ -307,21 +316,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return bestLocation;
     }
 
-    @Override
-    public void placeMarkers(List<Place> listOfPlaces) {
-        markers.clear();
-        for (Place place : listOfPlaces) {
-            Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude()))
-                    .title(place.getName()).anchor(0.5f, 0.5f)
-                    .icon(way.contains(place) ?
-                            BitmapDescriptorFactory.fromResource(R.drawable.monument_selectionne) :
-                            BitmapDescriptorFactory.fromResource(R.drawable.monument_normal)));
-            markers.put(marker, place);
-        }
-        final ViewGroup view = (ViewGroup) getLayoutInflater().inflate(R.layout.info_popup, null);
+    private void consumeParcours() {
+    }
 
+    public void resetPopUps() {
         MapLayout layout = ((MapLayout) findViewById(R.id.map_layout));
+        ViewGroup view = (ViewGroup) getLayoutInflater().inflate(R.layout.info_popup, null);
         Map<Marker, Map<Place, Boolean>> placeAdapter = new HashMap<>();
+
         for (Map.Entry<Marker, Place> placeEntry : markers.entrySet()) {
             Map<Place, Boolean> temp = new HashMap<>();
             temp.put(placeEntry.getValue(), false);
@@ -349,6 +351,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
+    public void placeMarkers(List<Place> listOfPlaces) {
+        markers.clear();
+        for (Place place : listOfPlaces) {
+            Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude()))
+                    .title(place.getName()).anchor(0.5f, 0.5f)
+                    .icon(way.contains(place) ?
+                            BitmapDescriptorFactory.fromResource(R.drawable.monument_selectionne) :
+                            BitmapDescriptorFactory.fromResource(R.drawable.monument_normal)));
+            markers.put(marker, place);
+        }
+        resetPopUps();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
@@ -359,16 +375,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void displayWay(List<Route> routes) {
         //Clear la map
-        for (Polyline line : parcours)
-            line.remove();
-        parcours = new ArrayList<>();
+        if (parcours.size() > 0)
+            for (Polyline line : parcours.values().iterator().next())
+                line.remove();
+        parcours = new HashMap<>();
         //Display the route
         Route bestRoute = routes.size() > 0 ? routes.get(0) : null;
         if (bestRoute != null) {
             ArrayList<String> instructions = new ArrayList<>();
             findViewById(R.id.directionListContainer).setVisibility(View.VISIBLE);
             ListView listView = (ListView) findViewById(R.id.directionListView);
-
+            ArrayList<Polyline> polylines = new ArrayList<>();
             for (int i = 0; i < bestRoute.legs.length; i++) {
                 Leg leg = bestRoute.legs[i];
                 for (int k = 0; k < leg.waypoints.length; k++) {
@@ -376,7 +393,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     for (int j = 0; j < waypoint.polyline.length - 1; j++) {
                         LatLng src = waypoint.polyline[j];
                         LatLng dest = waypoint.polyline[j + 1];
-                        parcours.add(googleMap.addPolyline(new PolylineOptions()
+                        polylines.add(googleMap.addPolyline(new PolylineOptions()
                                 .add(new LatLng(src.latitude, src.longitude),
                                         new LatLng(dest.latitude, dest.longitude))
                                 .width(8).color(Color.RED).geodesic(true)));
@@ -384,6 +401,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     instructions.add(waypoint.instruction);
                 }
             }
+            parcours.clear();
+            parcours.put(bestRoute, polylines);
             listView.setAdapter(new InstructionAdapter(instructions, this));
         }
         centerMapOnUserLocation(18);

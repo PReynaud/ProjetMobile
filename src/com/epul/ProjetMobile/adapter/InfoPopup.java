@@ -22,6 +22,7 @@ import java.util.Map;
  * Created by Pierre on 26/12/2015.
  */
 public class InfoPopup implements GoogleMap.InfoWindowAdapter{
+    public final static String PLACE_ID = "com.epul.ProjetMobile.DetailActivity.PLACE_ID";
     private Context context;
     private View view;
     private MapLayout layout;
@@ -45,7 +46,9 @@ public class InfoPopup implements GoogleMap.InfoWindowAdapter{
 
     public void actionDetail(Marker marker) {
         Intent intent = new Intent(context, DetailActivity.class);
+        Place place = places.get(marker).entrySet().iterator().next().getKey();
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(PLACE_ID, place.getId());
         context.startActivity(intent);
     }
 

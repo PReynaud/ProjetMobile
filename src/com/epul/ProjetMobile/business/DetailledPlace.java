@@ -43,11 +43,12 @@ public class DetailledPlace extends Place {
             result.setAddress(resultNode.getString("formatted_address"));
             result.setPhoneNumber(resultNode.getString("formatted_phone_number"));
 
-            JSONObject openingHoursNode = (JSONObject) resultNode.get("opening_hours");
-            result.setOpenNow(openingHoursNode.getString("open_now") == "true");
-            result.setOpeningHours(openingHoursNode.getString("weekday_text"));
-
-            //TODO: rajouter récupération des urls et des reviews
+            if (resultNode.has("opening_hours")) {
+                JSONObject openingHoursNode = (JSONObject) resultNode.get("opening_hours");
+                result.setOpenNow(openingHoursNode.getString("open_now") == "true");
+                result.setOpeningHours(openingHoursNode.getString("weekday_text"));
+            }
+            //TODO: rajouter récupération des reviews
             for (int i = 0; i < photosNode.length(); i++) {
                 result.getPhotoUrls().add(photosNode.getJSONObject(i).getString("photo_reference"));
             }

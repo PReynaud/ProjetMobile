@@ -15,17 +15,21 @@ public class PlacePhotoService extends AsyncTask<String, Void, String> {
     private Drawable result;
     private String apiKey;
     private String photoId;
+    private int width;
 
-    public PlacePhotoService(PlacePhotoServiceDelegate delegate, String apiKey, String photoId) {
+    public PlacePhotoService(PlacePhotoServiceDelegate delegate, String apiKey, String photoId, int width) {
         this.delegate = delegate;
         this.apiKey = apiKey;
         this.photoId = photoId;
+        this.width = width;
     }
 
     @Override
     protected String doInBackground(String... params) {
         try {
-            String url = "https://maps.googleapis.com/maps/api/place/photo?maxheight=250&photoreference=";
+            String url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=";
+            url += this.width;
+            url += "&photoreference=";
             url += photoId;
             url += "&key=";
             url += apiKey;

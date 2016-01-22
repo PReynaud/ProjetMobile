@@ -5,7 +5,6 @@
 >
     <ImageView android:layout_width="match_parent"
                android:layout_height="250dp"
-               android:background="#d90800"
                android:id="@+id/placeImage"
     />
 
@@ -19,19 +18,21 @@
             <Space
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
+                    android:id="@+id/photoSpace"
             />
             <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="wrap_content"
                     android:background="@color/primary">
                 <TextView
                         android:id="@+id/nameDetail"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:text="Tour Eiffel"
-                        android:textColor="@color/textColorPrimary"
-                        android:layout_margin="5dp" android:layout_marginTop="15dp" android:textSize="30sp"/>
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/textColorPrimaryWhite"
+                        android:layout_margin="5dp"
+                        android:layout_marginTop="15dp"
+                        android:textSize="30sp"/>
                 <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -41,9 +42,8 @@
                             android:id="@+id/adresseDetail"
                             android:layout_width="match_parent"
                             android:layout_height="fill_parent"
-                            android:text="Adresse"
                             android:layout_weight="0.4"
-                            android:textColor="@color/textColorPrimary"
+                            android:textColor="@color/textColorPrimaryWhite"
                             android:layout_marginLeft="5dp"/>
                     <TextView
                             android:id="@+id/distanceDetail"
@@ -51,7 +51,7 @@
                             android:layout_height="fill_parent"
                             android:text="153m"
                             android:layout_weight="0.9"
-                            android:textColor="@color/textColorPrimary"
+                            android:textColor="@color/textColorPrimaryWhite"
                             android:textSize="18sp"/>
                 </LinearLayout>
 

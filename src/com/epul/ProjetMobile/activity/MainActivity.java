@@ -3,6 +3,7 @@ package com.epul.ProjetMobile.activity;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -53,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private PlacesService placesService;
     private ListManager listManager;
     private Map<Route, List<Polyline>> parcours;
+    private SharedPreferences preferences;
+    private String timeLimit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +67,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         parcours = new HashMap<>();
         initializeSearchBar();
         initializeMonumentList();
+        preferences = this.getSharedPreferences(
+                SettingsActivity.SETTINGS_SHARED_PREFERENCES_FILE_NAME,
+                Context.MODE_PRIVATE);
         try {
             initializeMap();
         } catch (Exception e) {
@@ -209,6 +215,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         googleMap.clear();
         launchPlaceService();
         if (!parcours.isEmpty()) displayWay(new ArrayList<>(parcours.keySet()));
+        timeLimit = preferences.getString("time_limit", "0");
     }
 
     @Override
@@ -243,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      * Vérifie l'autorisation concernant la position de l'utilisateur et centre la map sur celle-ci
      */
     private void centerMapOnUserLocation(int zoom) {
-        Location location = getLastKnownLocation();
+        Location location = getLocation();
         if (location != null) {
             this.googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                     new LatLng(location.getLatitude(), location.getLongitude()), zoom));
@@ -274,46 +281,82 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      *
      * @return dernière location
      */
-    private Location getLastKnownLocation() {
-        LocationManager locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
-        final List<String> providers = locationManager.getProviders(true);
-        Location bestLocation = null;
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(getApplicationContext(),
-                    getString(R.string.ErrorPermissionWhenGettingLocation), Toast.LENGTH_SHORT)
-                    .show();
-        } else {
-            // Règle les bugs de location dus aux roms customs de type TouchWiz, etc
-            locationManager.requestLocationUpdates(
-                    LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener() {
-                        @Override
-                        public void onStatusChanged(String provider, int status, Bundle extras) {
-                        }
+    public Location getLocation() {
+        Location location = null;
+        try {
+            LocationManager locationManager = (LocationManager) getApplicationContext()
+                    .getSystemService(LOCATION_SERVICE);
+            // getting GPS status
+            boolean isGPSEnabled = locationManager
+                    .isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-                        @Override
-                        public void onProviderEnabled(String provider) {
-                        }
+            // getting network status
+            boolean isNetworkEnabled = locationManager
+                    .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-                        @Override
-                        public void onProviderDisabled(String provider) {
-                        }
+            if (!isGPSEnabled && !isNetworkEnabled) {
+                // no network provider is enabled
+            } else {
+                if (isNetworkEnabled) {
+                    locationManager.requestLocationUpdates(
+                            LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener() {
+                                @Override
+                                public void onStatusChanged(String provider, int status, Bundle extras) {
+                                }
 
-                        @Override
-                        public void onLocationChanged(final Location location) {
-                            consumeParcours();
-                        }
-                    });
-            for (String provider : providers) {
-                Location l = locationManager.getLastKnownLocation(provider);
-                if (l == null) {
-                    continue;
+                                @Override
+                                public void onProviderEnabled(String provider) {
+                                }
+
+                                @Override
+                                public void onProviderDisabled(String provider) {
+                                }
+
+                                @Override
+                                public void onLocationChanged(final Location location) {
+                                    consumeParcours();
+                                }
+                            });
+                    if (locationManager != null) {
+                        location = locationManager
+                                .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                    }
                 }
-                if (bestLocation == null || l.getAccuracy() > bestLocation.getAccuracy()) {
-                    bestLocation = l;
+                // if GPS Enabled get lat/long using GPS Services
+                if (isGPSEnabled) {
+                    if (location == null) {
+                        locationManager.requestLocationUpdates(
+                                LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
+                                    @Override
+                                    public void onStatusChanged(String provider, int status, Bundle extras) {
+                                    }
+
+                                    @Override
+                                    public void onProviderEnabled(String provider) {
+                                    }
+
+                                    @Override
+                                    public void onProviderDisabled(String provider) {
+                                    }
+
+                                    @Override
+                                    public void onLocationChanged(final Location location) {
+                                        consumeParcours();
+                                    }
+                                });
+                        if (locationManager != null) {
+                            location = locationManager
+                                    .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        }
+                    }
                 }
             }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return bestLocation;
+
+        return location;
     }
 
     private void consumeParcours() {

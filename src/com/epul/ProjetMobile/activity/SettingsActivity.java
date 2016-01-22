@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.*;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import com.epul.ProjetMobile.R;
@@ -28,6 +27,11 @@ import com.epul.ProjetMobile.R;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends AppCompatPreferenceActivity {
+
+    private final static String TAG = SettingsActivity.class.getName();
+    public final static String SETTINGS_SHARED_PREFERENCES_FILE_NAME = TAG + ".preferences";
+
+
     /**
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
@@ -79,7 +83,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             return true;
         }
     };
-    private AppCompatDelegate mDelegate;
 
     /**
      * Binds a preference's summary to its value. More specifically, when the
@@ -148,7 +151,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_general);
+            // Define the settings file to use by this settings fragment
+            getPreferenceManager().setSharedPreferencesName(SETTINGS_SHARED_PREFERENCES_FILE_NAME);
+            addPreferencesFromResource(R.xml.preferences);
             setHasOptionsMenu(true);
 
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences

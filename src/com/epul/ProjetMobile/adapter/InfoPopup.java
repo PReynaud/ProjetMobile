@@ -3,6 +3,7 @@ package com.epul.ProjetMobile.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.location.Location;
 import android.support.v4.content.ContextCompat;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,16 +24,20 @@ import java.util.Map;
  */
 public class InfoPopup implements GoogleMap.InfoWindowAdapter{
     public final static String PLACE_ID = "com.epul.ProjetMobile.DetailActivity.PLACE_ID";
+    public final static String USER_LOCATION_LATITUDE = "com.epul.ProjetMobile.DetailActivity.USER_LOCATION_LATITUDE";
+    public final static String USER_LOCATION_LONGITUDE = "com.epul.ProjetMobile.DetailActivity.USER_LOCATION_LONGITUDE";
     private Context context;
     private View view;
     private MapLayout layout;
     private Map<Marker, Map<Place, Boolean>> places;
+    private Location userLocation;
 
-    public InfoPopup(Context context, View view, MapLayout layout, Map<Marker, Map<Place, Boolean>> places) {
+    public InfoPopup(Context context, View view, MapLayout layout, Map<Marker, Map<Place, Boolean>> places, Location userLocation) {
         this.context = context;
         this.view = view;
         this.layout = layout;
         this.places = places;
+        this.userLocation = userLocation;
     }
 
     public Context getContext() {
@@ -49,6 +54,8 @@ public class InfoPopup implements GoogleMap.InfoWindowAdapter{
         Place place = places.get(marker).entrySet().iterator().next().getKey();
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(PLACE_ID, place.getPlaceId());
+        intent.putExtra(USER_LOCATION_LATITUDE, this.userLocation.getLatitude());
+        intent.putExtra(USER_LOCATION_LONGITUDE, this.userLocation.getLongitude());
         context.startActivity(intent);
     }
 

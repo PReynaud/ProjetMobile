@@ -372,7 +372,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             temp.put(placeEntry.getValue(), false);
             placeAdapter.put(placeEntry.getKey(), temp);
         }
-        googleMap.setInfoWindowAdapter(new InfoPopup(getApplicationContext(), view, layout, placeAdapter) {
+        googleMap.setInfoWindowAdapter(new InfoPopup(getApplicationContext(), view, layout, placeAdapter, userLocation) {
             @Override
             public void actionAjouter(Marker marker) {
                 super.actionAjouter(marker);

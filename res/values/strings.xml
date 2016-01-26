@@ -78,6 +78,7 @@
     <string name="monuments_select_title">Types de monuments à visiter</string>
     <string name="monuments_select_summary">Choisissez les types de monuments à visiter</string>
     <string name="time_limit_title">Temps limite (en heures)</string>
+    <string name="LoadInProgress">Chargement en cours...</string>
 
 
     <string-array name="array_transports_values">

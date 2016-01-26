@@ -49,7 +49,6 @@
                             android:id="@+id/distanceDetail"
                             android:layout_width="match_parent"
                             android:layout_height="fill_parent"
-                            android:text="153m"
                             android:layout_weight="0.9"
                             android:textColor="@color/textColorPrimaryWhite"
                             android:textSize="18sp"/>

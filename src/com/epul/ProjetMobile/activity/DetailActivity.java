@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
@@ -23,6 +24,9 @@ import com.epul.ProjetMobile.service.PlaceDetailServiceDelegate;
 import com.epul.ProjetMobile.service.PlacePhotoService;
 import com.epul.ProjetMobile.service.PlacePhotoServiceDelegate;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+
 /**
  * Created by Pierre on 27/12/2015.
  */
@@ -35,6 +39,8 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
     private Space spaceImage;
     private ProgressDialog progressDialog;
     private int width;
+    private double userLocationLatitude;
+    private double userLocationLongitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +66,11 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
         Intent i = getIntent();
         String placeID = i.getStringExtra(InfoPopup.PLACE_ID);
 
+        this.userLocationLatitude = i.getDoubleExtra(InfoPopup.USER_LOCATION_LATITUDE, 0.0);
+        this.userLocationLongitude = i.getDoubleExtra(InfoPopup.USER_LOCATION_LONGITUDE, 0.0);
+
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Chargement en cours...");
+        progressDialog.setMessage(getString(R.string.LoadInProgress));
         progressDialog.show();
 
         PlaceDetailService service = new PlaceDetailService(getResources().getString(R.string.google_places_key), placeID, this);
@@ -82,6 +91,20 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
             PlacePhotoService service = new PlacePhotoService(this, getResources().getString(R.string.google_places_key), place.getPhotoUrls().get(0), width);
             service.execute();
         }
+
+        Location userLocation = new Location("userLocation");
+        userLocation.setLatitude(this.userLocationLatitude);
+        userLocation.setLongitude(this.userLocationLongitude);
+
+        Location placeLocation = new Location("placeLocation");
+        placeLocation.setLatitude(place.getLatitude());
+        placeLocation.setLongitude(place.getLongitude());
+
+        double result = userLocation.distanceTo(placeLocation);
+        DecimalFormat df = new DecimalFormat("#");
+        df.setRoundingMode(RoundingMode.CEILING);
+        tDistance.setText(df.format(result) + "m");
+
         //TODO: Charger d'autres choses ici
     }
 

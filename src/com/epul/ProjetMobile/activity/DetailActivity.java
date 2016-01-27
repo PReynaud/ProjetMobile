@@ -34,6 +34,7 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
     private TextView tName;
     private TextView tDistance;
     private TextView tAdresse;
+    private TextView tOpeningHours;
     private TextView tDescription;
     private ImageView tImage;
     private Space spaceImage;
@@ -61,6 +62,7 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
         tDescription = (TextView) findViewById(R.id.descriptionDetail);
         tName = (TextView) findViewById(R.id.nameDetail);
         tImage = (ImageView) findViewById(R.id.placeImage);
+        tOpeningHours = (TextView) findViewById(R.id.openingHours);
         spaceImage = (Space) findViewById(R.id.photoSpace);
 
         Intent i = getIntent();
@@ -79,9 +81,6 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
 
     @Override
     public void loadDetails(DetailledPlace place) {
-        tName.setText(place.getName());
-        tAdresse.setText(place.getAddress());
-
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -92,18 +91,11 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
             service.execute();
         }
 
-        Location userLocation = new Location("userLocation");
-        userLocation.setLatitude(this.userLocationLatitude);
-        userLocation.setLongitude(this.userLocationLongitude);
 
-        Location placeLocation = new Location("placeLocation");
-        placeLocation.setLatitude(place.getLatitude());
-        placeLocation.setLongitude(place.getLongitude());
-
-        double result = userLocation.distanceTo(placeLocation);
-        DecimalFormat df = new DecimalFormat("#");
-        df.setRoundingMode(RoundingMode.CEILING);
-        tDistance.setText(df.format(result) + "m");
+        tName.setText(place.getName());
+        tAdresse.setText(place.getAddress());
+        this.setUserLocation(place);
+        this.setOpeningHours(place);
 
         //TODO: Charger d'autres choses ici
     }
@@ -127,5 +119,37 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
         if (progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
+    }
+
+    //Show the distance between the user location and the location of the place
+    private void setUserLocation(DetailledPlace place) {
+        Location userLocation = new Location("userLocation");
+        userLocation.setLatitude(this.userLocationLatitude);
+        userLocation.setLongitude(this.userLocationLongitude);
+
+        Location placeLocation = new Location("placeLocation");
+        placeLocation.setLatitude(place.getLatitude());
+        placeLocation.setLongitude(place.getLongitude());
+
+        double result = userLocation.distanceTo(placeLocation);
+        DecimalFormat df = new DecimalFormat("#");
+        df.setRoundingMode(RoundingMode.CEILING);
+        tDistance.setText(df.format(result) + "m");
+    }
+
+    //Show the opening hour if they exist
+    private void setOpeningHours(DetailledPlace place) {
+        String openingHoursText = place.getOpeningHours();
+        openingHoursText = openingHoursText.replace("[", "");
+        openingHoursText = openingHoursText.replace("]", "");
+        openingHoursText = openingHoursText.replace("\"", "");
+
+        String[] openingHoursTexts = openingHoursText.split(",");
+        openingHoursText = "";
+        for (String text : openingHoursTexts) {
+            openingHoursText += text + "\n";
+        }
+
+        tOpeningHours.setText(openingHoursText);
     }
 }

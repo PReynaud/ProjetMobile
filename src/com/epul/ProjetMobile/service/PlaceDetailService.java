@@ -40,6 +40,7 @@ public class PlaceDetailService extends GoogleService {
         StringBuilder urlString = new StringBuilder(
                 "https://maps.googleapis.com/maps/api/place/details/json?placeid=");
         urlString.append(placeId);
+        urlString.append("&language=fr");
         urlString.append("&key=" + this.apiKey);
         return urlString.toString();
     }

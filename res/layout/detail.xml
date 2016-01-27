@@ -112,6 +112,29 @@
                             android:autoLink="all"
                             android:textSize="15sp"/>
                 </LinearLayout>
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/phoneLayout"
+                        android:layout_marginTop="10dp">
+                    <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:id="@+id/phoneIcon"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="5dp"
+                            android:src="@drawable/phone"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/phone"
+                            android:layout_margin="5dp"
+                            android:layout_marginLeft="10dp"
+                            android:autoLink="phone"
+                            android:linksClickable="true"
+                            android:textSize="15sp"/>
+                </LinearLayout>
                 <TextView
                         android:id="@+id/descriptionDetail"
                         android:layout_width="match_parent"

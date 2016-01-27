@@ -35,6 +35,7 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
     private TextView tOpeningHours;
     private TextView tDescription;
     private TextView tWebsite;
+    private TextView tPhoneNumber;
     private ImageView tImage;
     private Space spaceImage;
     private ProgressDialog progressDialog;
@@ -63,6 +64,7 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
         tImage = (ImageView) findViewById(R.id.placeImage);
         tOpeningHours = (TextView) findViewById(R.id.openingHours);
         tWebsite = (TextView) findViewById(R.id.website);
+        tPhoneNumber = (TextView) findViewById(R.id.phone);
         spaceImage = (Space) findViewById(R.id.photoSpace);
 
         Intent i = getIntent();
@@ -100,6 +102,7 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
         this.setUserLocation(place);
         this.setOpeningHours(place);
         this.setWebsite(place);
+        this.setPhoneNUmber(place);
 
         //TODO: Charger d'autres choses ici
     }
@@ -171,6 +174,17 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
         else{
             View layoutWebsite = findViewById(R.id.websiteLayout);
             layoutWebsite.setVisibility(LinearLayout.GONE);
+        }
+    }
+
+    // Show the phone number if it exists
+    private void setPhoneNUmber(DetailledPlace place){
+        if(place.hasPhoneNumber()){
+            this.tPhoneNumber.setText(place.getPhoneNumber());
+        }
+        else{
+            View layoutPhone = findViewById(R.id.phoneLayout);
+            layoutPhone.setVisibility(LinearLayout.GONE);
         }
     }
 }

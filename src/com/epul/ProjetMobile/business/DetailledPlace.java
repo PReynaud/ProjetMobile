@@ -40,7 +40,10 @@ public class DetailledPlace extends Place {
             result.setVicinity(resultNode.getString("vicinity"));
             result.setId(resultNode.getString("id"));
             result.setAddress(resultNode.getString("formatted_address"));
-            result.setPhoneNumber(resultNode.getString("formatted_phone_number"));
+
+            if(resultNode.has("formatted_phone_number")){
+                result.setPhoneNumber(resultNode.getString("formatted_phone_number"));
+            }
 
             if (resultNode.has("opening_hours")) {
                 JSONObject openingHoursNode = (JSONObject) resultNode.get("opening_hours");
@@ -133,5 +136,9 @@ public class DetailledPlace extends Place {
 
     public boolean hasPhotos(){
         return this.photoUrls != null && this.photoUrls.size() != 0;
+    }
+
+    public boolean hasPhoneNumber(){
+        return this.phoneNumber != null;
     }
 }

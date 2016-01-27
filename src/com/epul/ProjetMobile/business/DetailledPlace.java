@@ -56,7 +56,9 @@ public class DetailledPlace extends Place {
                 }
             }
 
-            result.setWebsite(resultNode.getString("website"));
+            if(resultNode.has("website")){
+                result.setWebsite(resultNode.getString("website"));
+            }
 
             return result;
         } catch (JSONException ex) {

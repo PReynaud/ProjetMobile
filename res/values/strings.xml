@@ -80,6 +80,8 @@
     <string name="time_limit_title">Temps limite (en heures)</string>
     <string name="LoadInProgress">Chargement en cours...</string>
     <string name="openingHours">Horaires d\'ouverture</string>
+    <string name="openingHoursIcon">Opening Hours Icons</string>
+    <string name="websiteIcon">Website icon</string>
 
 
     <string-array name="array_transports_values">

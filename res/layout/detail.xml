@@ -59,20 +59,22 @@
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/windowBackground">
+                    android:background="@color/windowBackground"
+            >
                 <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/openingHoursLayout">
+                        android:id="@+id/openingHoursLayout"
+                        android:layout_marginTop="10dp">
                     <ImageView
                             android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_height="20dp"
                             android:id="@+id/openingHoursIcon"
                             android:layout_marginLeft="5dp"
-                            android:layout_marginTop="7dp"
+                            android:layout_marginTop="10dp"
                             android:src="@drawable/clock"
-                    />
+                            android:contentDescription="@string/openingHoursIcon"/>
                     <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -86,7 +88,30 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/openingHours"
                         android:layout_margin="5dp"
-                />
+                        android:paddingLeft="30dp"
+                        android:textSize="15sp"/>
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/websiteLayout">
+                    <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:id="@+id/websiteIcon"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="5dp"
+                            android:src="@drawable/globe"
+                            android:contentDescription="@string/websiteIcon"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/website"
+                            android:layout_margin="5dp"
+                            android:layout_marginLeft="10dp"
+                            android:autoLink="all"
+                            android:textSize="15sp"/>
+                </LinearLayout>
                 <TextView
                         android:id="@+id/descriptionDetail"
                         android:layout_width="match_parent"

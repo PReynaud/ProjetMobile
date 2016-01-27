@@ -34,6 +34,7 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
     private TextView tAdresse;
     private TextView tOpeningHours;
     private TextView tDescription;
+    private TextView tWebsite;
     private ImageView tImage;
     private Space spaceImage;
     private ProgressDialog progressDialog;
@@ -61,6 +62,7 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
         tName = (TextView) findViewById(R.id.nameDetail);
         tImage = (ImageView) findViewById(R.id.placeImage);
         tOpeningHours = (TextView) findViewById(R.id.openingHours);
+        tWebsite = (TextView) findViewById(R.id.website);
         spaceImage = (Space) findViewById(R.id.photoSpace);
 
         Intent i = getIntent();
@@ -97,6 +99,7 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
         tAdresse.setText(place.getAddress());
         this.setUserLocation(place);
         this.setOpeningHours(place);
+        this.setWebsite(place);
 
         //TODO: Charger d'autres choses ici
     }
@@ -157,6 +160,17 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
         else{
             View layoutOpeningHours = findViewById(R.id.openingHoursLayout);
             layoutOpeningHours.setVisibility(LinearLayout.GONE);
+        }
+    }
+
+    //Show the website if it exists
+    private void setWebsite(DetailledPlace place) {
+        if(place.hasWebsite()){
+            this.tWebsite.setText(place.getWebsite());
+        }
+        else{
+            View layoutWebsite = findViewById(R.id.websiteLayout);
+            layoutWebsite.setVisibility(LinearLayout.GONE);
         }
     }
 }

@@ -9,13 +9,11 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Layout;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.Space;
-import android.widget.TextView;
+import android.widget.*;
 import com.epul.ProjetMobile.R;
 import com.epul.ProjetMobile.adapter.InfoPopup;
 import com.epul.ProjetMobile.business.DetailledPlace;
@@ -86,9 +84,12 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
         display.getSize(size);
         this.width = size.x;
 
-        if (place.getPhotoUrls().size() > 0) {
+        if (place.hasPhotos() && place.getPhotoUrls().size() > 0) {
             PlacePhotoService service = new PlacePhotoService(this, getResources().getString(R.string.google_places_key), place.getPhotoUrls().get(0), width);
             service.execute();
+        }
+        else{
+            //TODO : enlever l'espace des photos
         }
 
 
@@ -139,17 +140,23 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
 
     //Show the opening hour if they exist
     private void setOpeningHours(DetailledPlace place) {
-        String openingHoursText = place.getOpeningHours();
-        openingHoursText = openingHoursText.replace("[", "");
-        openingHoursText = openingHoursText.replace("]", "");
-        openingHoursText = openingHoursText.replace("\"", "");
+        if(place.hasOpeningHours()){
+            String openingHoursText = place.getOpeningHours();
+            openingHoursText = openingHoursText.replace("[", "");
+            openingHoursText = openingHoursText.replace("]", "");
+            openingHoursText = openingHoursText.replace("\"", "");
 
-        String[] openingHoursTexts = openingHoursText.split(",");
-        openingHoursText = "";
-        for (String text : openingHoursTexts) {
-            openingHoursText += text + "\n";
+            String[] openingHoursTexts = openingHoursText.split(",");
+            openingHoursText = "";
+            for (String text : openingHoursTexts) {
+                openingHoursText += text + "\n";
+            }
+
+            tOpeningHours.setText(openingHoursText);
         }
-
-        tOpeningHours.setText(openingHoursText);
+        else{
+            View layoutOpeningHours = findViewById(R.id.openingHoursLayout);
+            layoutOpeningHours.setVisibility(LinearLayout.GONE);
+        }
     }
 }

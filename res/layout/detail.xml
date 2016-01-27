@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
 >
     <ImageView android:layout_width="match_parent"
                android:layout_height="250dp"
@@ -60,12 +60,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/windowBackground">
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Horaires d'ouverture"
-                        android:layout_margin="5dp"
-                        android:textColor="#636363" android:textSize="25sp"/>
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/openingHoursLayout">
+                    <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:id="@+id/openingHoursIcon"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="7dp"
+                            android:src="@drawable/clock"
+                    />
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/openingHours"
+                            android:layout_margin="5dp"
+                            android:textColor="#636363"
+                            android:textSize="25sp"/>
+                </LinearLayout>
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -81,5 +96,5 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-    <include layout="@layout/detail_toolbar" />
+    <include layout="@layout/detail_toolbar"/>
 </RelativeLayout>

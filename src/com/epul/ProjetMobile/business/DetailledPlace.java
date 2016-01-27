@@ -33,7 +33,6 @@ public class DetailledPlace extends Place {
             JSONObject resultNode = (JSONObject) jsonResult.get("result");
             JSONObject geometry = (JSONObject) resultNode.get("geometry");
             JSONObject location = (JSONObject) geometry.get("location");
-            JSONArray photosNode = (JSONArray) resultNode.get("photos");
             result.setLatitude((Double) location.get("lat"));
             result.setLongitude((Double) location.get("lng"));
             result.setIcon(resultNode.getString("icon"));
@@ -49,8 +48,12 @@ public class DetailledPlace extends Place {
                 result.setOpeningHours(openingHoursNode.getString("weekday_text"));
             }
             //TODO: rajouter récupération des reviews
-            for (int i = 0; i < photosNode.length(); i++) {
-                result.getPhotoUrls().add(photosNode.getJSONObject(i).getString("photo_reference"));
+
+            if(resultNode.has("photos")){
+                JSONArray photosNode = (JSONArray) resultNode.get("photos");
+                for (int i = 0; i < photosNode.length(); i++) {
+                    result.getPhotoUrls().add(photosNode.getJSONObject(i).getString("photo_reference"));
+                }
             }
 
             result.setWebsite(resultNode.getString("website"));
@@ -116,5 +119,17 @@ public class DetailledPlace extends Place {
 
     public void setWebsite(String website) {
         this.website = website;
+    }
+
+    public boolean hasOpeningHours(){
+        return this.openingHours != null;
+    }
+
+    public boolean hasWebsite(){
+        return this.website != null;
+    }
+
+    public boolean hasPhotos(){
+        return this.photoUrls != null && this.photoUrls.size() != 0;
     }
 }

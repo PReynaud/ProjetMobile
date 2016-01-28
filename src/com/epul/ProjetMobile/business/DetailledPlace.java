@@ -50,10 +50,16 @@ public class DetailledPlace extends Place {
                 result.setOpenNow(openingHoursNode.getString("open_now") == "true");
                 result.setOpeningHours(openingHoursNode.getString("weekday_text"));
             }
-            //TODO: rajouter récupération des reviews
+
+            if(resultNode.has("reviews")){
+                JSONArray reviewNode = resultNode.getJSONArray("reviews");
+                for(int i = 0; i < reviewNode.length(); i++){
+                    result.getReviews().add(Review.jsonToObject(reviewNode.getJSONObject(i)));
+                }
+            }
 
             if(resultNode.has("photos")){
-                JSONArray photosNode = (JSONArray) resultNode.get("photos");
+                JSONArray photosNode = resultNode.getJSONArray("photos");
                 for (int i = 0; i < photosNode.length(); i++) {
                     result.getPhotoUrls().add(photosNode.getJSONObject(i).getString("photo_reference"));
                 }
@@ -140,5 +146,9 @@ public class DetailledPlace extends Place {
 
     public boolean hasPhoneNumber(){
         return this.phoneNumber != null;
+    }
+
+    public boolean hasReview(){
+        return this.reviews != null && this.reviews.size() != 0;
     }
 }

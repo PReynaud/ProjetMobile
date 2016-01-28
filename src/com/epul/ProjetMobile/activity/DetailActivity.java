@@ -17,6 +17,7 @@ import android.widget.*;
 import com.epul.ProjetMobile.R;
 import com.epul.ProjetMobile.adapter.InfoPopup;
 import com.epul.ProjetMobile.business.DetailledPlace;
+import com.epul.ProjetMobile.business.Review;
 import com.epul.ProjetMobile.service.PlaceDetailService;
 import com.epul.ProjetMobile.service.PlaceDetailServiceDelegate;
 import com.epul.ProjetMobile.service.PlacePhotoService;
@@ -59,7 +60,6 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
 
         tDistance = (TextView) findViewById(R.id.distanceDetail);
         tAdresse = (TextView) findViewById(R.id.adresseDetail);
-        tDescription = (TextView) findViewById(R.id.descriptionDetail);
         tName = (TextView) findViewById(R.id.nameDetail);
         tImage = (ImageView) findViewById(R.id.placeImage);
         tOpeningHours = (TextView) findViewById(R.id.openingHours);
@@ -89,7 +89,8 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
         this.width = size.x;
 
         if (place.hasPhotos() && place.getPhotoUrls().size() > 0) {
-            PlacePhotoService service = new PlacePhotoService(this, getResources().getString(R.string.google_places_key), place.getPhotoUrls().get(0), width);
+            PlacePhotoService service = new PlacePhotoService(this, getResources().getString(R.string.google_places_key),
+                    place.getPhotoUrls().get(0), width);
             service.execute();
         }
         else{
@@ -103,6 +104,7 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
         this.setOpeningHours(place);
         this.setWebsite(place);
         this.setPhoneNUmber(place);
+        this.setReview(place);
 
         //TODO: Charger d'autres choses ici
     }
@@ -185,6 +187,26 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
         else{
             View layoutPhone = findViewById(R.id.phoneLayout);
             layoutPhone.setVisibility(LinearLayout.GONE);
+        }
+    }
+
+    private void setReview(DetailledPlace place){
+        if(place.hasReview()){
+            TextView userFirstReview = (TextView) findViewById(R.id.userFirstReview);
+            TextView ratingFirstReview = (TextView) findViewById(R.id.ratingFirstReview);
+            TextView textFirstReview = (TextView) findViewById(R.id.textFirstReview);
+
+            Review currentReview = place.getReviews().get(0);
+            userFirstReview.setText(currentReview.getAuthorName());
+            ratingFirstReview.setText(currentReview.getRating());
+            textFirstReview.setText(currentReview.getText());
+            System.out.println("Pierre la banane");
+
+
+        }
+        else{
+            View layoutFirstReview = findViewById(R.id.firstReviewLayout);
+            layoutFirstReview.setVisibility(LinearLayout.GONE);
         }
     }
 }

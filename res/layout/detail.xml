@@ -135,12 +135,66 @@
                             android:linksClickable="true"
                             android:textSize="15sp"/>
                 </LinearLayout>
-                <TextView
-                        android:id="@+id/descriptionDetail"
-                        android:layout_width="match_parent"
-                        android:layout_height="500dp"
-                        android:text="blabla \n blabla\nbloublou\nje décris des choses\blabla"
-                        android:layout_margin="5dp"/>
+                <LinearLayout android:orientation="horizontal" android:layout_width="match_parent"
+                              android:layout_height="match_parent" android:id="@+id/reviewLayout"
+                              android:layout_marginTop="10dp">
+                    <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="20dp"
+                            android:id="@+id/reviewIcon"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="10dp"
+                            android:src="@drawable/user"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Derniers avis"
+                            android:layout_margin="5dp"
+                            android:textColor="#636363"
+                            android:textSize="25sp"/>
+                </LinearLayout>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                              android:orientation="vertical" android:id="@+id/firstReviewLayout"
+                              android:layout_marginLeft="10dp" android:layout_marginRight="10dp">
+                    <LinearLayout android:layout_width="match_parent"
+                                  android:layout_height="match_parent"
+                                  android:orientation="horizontal">
+                        <TextView android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  android:textSize="17sp"
+                                  android:textStyle="bold"
+                                  android:id="@+id/userFirstReview"
+                        />
+                        <TextView android:layout_width="match_parent"
+                                  android:layout_height="wrap_content"
+                                  android:id="@+id/ratingFirstReview"
+                                  android:gravity="right"/>
+                    </LinearLayout>
+                    <TextView android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:id="@+id/textFirstReview"/>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                          android:orientation="vertical" android:id="@+id/secondReviewLayout"
+                          android:layout_marginLeft="10dp" android:layout_marginRight="10dp">
+                <LinearLayout android:layout_width="match_parent"
+                              android:layout_height="match_parent"
+                              android:orientation="horizontal">
+                    <TextView android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:textSize="17sp"
+                              android:textStyle="bold"
+                              android:id="@+id/userSecondReview"
+                    />
+                    <TextView android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:id="@+id/ratingSecondReview"
+                              android:gravity="right"/>
+                </LinearLayout>
+                <TextView android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:id="@+id/textSecondReview"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

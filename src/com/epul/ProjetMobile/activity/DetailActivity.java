@@ -9,7 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Layout;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -193,16 +192,39 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
     private void setReview(DetailledPlace place){
         if(place.hasReview()){
             TextView userFirstReview = (TextView) findViewById(R.id.userFirstReview);
-            TextView ratingFirstReview = (TextView) findViewById(R.id.ratingFirstReview);
+            RatingBar ratingFirstReview = (RatingBar) findViewById(R.id.ratingFirstReview);
             TextView textFirstReview = (TextView) findViewById(R.id.textFirstReview);
 
             Review currentReview = place.getReviews().get(0);
             userFirstReview.setText(currentReview.getAuthorName());
-            ratingFirstReview.setText(currentReview.getRating());
+            ratingFirstReview.setRating(Float.parseFloat(currentReview.getRating()));
             textFirstReview.setText(currentReview.getText());
-            System.out.println("Pierre la banane");
 
+            if (place.getReviews().size() > 1) {
+                TextView userSecondReview = (TextView) findViewById(R.id.userSecondReview);
+                RatingBar ratingSecondReview = (RatingBar) findViewById(R.id.ratingSecondReview);
+                TextView textSecondReview = (TextView) findViewById(R.id.textSecondReview);
 
+                currentReview = place.getReviews().get(1);
+                userSecondReview.setText(currentReview.getAuthorName());
+                ratingSecondReview.setRating(Float.parseFloat(currentReview.getRating()));
+                textSecondReview.setText(currentReview.getText());
+
+                if (place.getReviews().size() > 2) {
+                    TextView userThirdReview = (TextView) findViewById(R.id.userThirdReview);
+                    RatingBar ratingThirdReview = (RatingBar) findViewById(R.id.ratingThirdReview);
+                    TextView textThirdReview = (TextView) findViewById(R.id.textThirdReview);
+
+                    currentReview = place.getReviews().get(2);
+                    userThirdReview.setText(currentReview.getAuthorName());
+                    ratingThirdReview.setRating(Float.parseFloat(currentReview.getRating()));
+                    textThirdReview.setText(currentReview.getText());
+                } else {
+
+                }
+            } else {
+
+            }
         }
         else{
             View layoutFirstReview = findViewById(R.id.firstReviewLayout);

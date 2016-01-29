@@ -165,37 +165,89 @@
                                   android:textStyle="bold"
                                   android:id="@+id/userFirstReview"
                         />
-                        <TextView android:layout_width="match_parent"
-                                  android:layout_height="wrap_content"
-                                  android:id="@+id/ratingFirstReview"
-                                  android:gravity="right"/>
+                        <RatingBar
+                                android:layout_width="160dp"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="20dp"
+                                android:paddingTop="5dp"
+                                android:id="@+id/ratingFirstReview"
+                                style="@style/ratingBarTheme"
+                                android:isIndicator="false"
+                                android:scaleX="0.5"
+                                android:scaleY="0.5"
+                                android:transformPivotX="0dp"
+                                android:transformPivotY="0dp"
+                                android:numStars="5"/>
                     </LinearLayout>
                     <TextView android:layout_width="match_parent"
                               android:layout_height="wrap_content"
                               android:id="@+id/textFirstReview"/>
                 </LinearLayout>
-            </LinearLayout>
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                          android:orientation="vertical" android:id="@+id/secondReviewLayout"
-                          android:layout_marginLeft="10dp" android:layout_marginRight="10dp">
-                <LinearLayout android:layout_width="match_parent"
-                              android:layout_height="match_parent"
-                              android:orientation="horizontal">
-                    <TextView android:layout_width="wrap_content"
-                              android:layout_height="wrap_content"
-                              android:textSize="17sp"
-                              android:textStyle="bold"
-                              android:id="@+id/userSecondReview"
-                    />
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                              android:orientation="vertical" android:id="@+id/secondReviewLayout"
+                              android:layout_marginLeft="10dp" android:layout_marginRight="10dp"
+                              android:layout_marginTop="10dp">
+                    <LinearLayout android:layout_width="match_parent"
+                                  android:layout_height="match_parent"
+                                  android:orientation="horizontal">
+                        <TextView android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  android:textSize="17sp"
+                                  android:textStyle="bold"
+                                  android:id="@+id/userSecondReview"
+                        />
+                        <RatingBar
+                                android:layout_width="160dp"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="20dp"
+                                android:paddingTop="5dp"
+                                android:id="@+id/ratingSecondReview"
+                                style="@style/ratingBarTheme"
+                                android:isIndicator="false"
+                                android:scaleX="0.5"
+                                android:scaleY="0.5"
+                                android:transformPivotX="0dp"
+                                android:transformPivotY="0dp"
+                                android:numStars="5"/>
+                    </LinearLayout>
                     <TextView android:layout_width="match_parent"
                               android:layout_height="wrap_content"
-                              android:id="@+id/ratingSecondReview"
-                              android:gravity="right"/>
+                              android:id="@+id/textSecondReview"/>
                 </LinearLayout>
-                <TextView android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:id="@+id/textSecondReview"/>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                              android:orientation="vertical" android:id="@+id/thirdReviewLayout"
+                              android:layout_marginLeft="10dp" android:layout_marginRight="10dp"
+                              android:layout_marginTop="10dp"
+                >
+                    <LinearLayout android:layout_width="match_parent"
+                                  android:layout_height="match_parent"
+                                  android:orientation="horizontal">
+                        <TextView android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  android:textSize="17sp"
+                                  android:textStyle="bold"
+                                  android:id="@+id/userThirdReview"
+                        />
+                        <RatingBar
+                                android:layout_width="160dp"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="20dp"
+                                android:paddingTop="5dp"
+                                android:id="@+id/ratingThirdReview"
+                                style="@style/ratingBarTheme"
+                                android:isIndicator="false"
+                                android:scaleX="0.5"
+                                android:scaleY="0.5"
+                                android:transformPivotX="0dp"
+                                android:transformPivotY="0dp"
+                                android:numStars="5"/>
+                    </LinearLayout>
+                    <TextView android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:id="@+id/textThirdReview"/>
+                </LinearLayout>
             </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
     <include layout="@layout/detail_toolbar"/>

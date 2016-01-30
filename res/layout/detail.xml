@@ -155,7 +155,9 @@
                 </LinearLayout>
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                               android:orientation="vertical" android:id="@+id/firstReviewLayout"
-                              android:layout_marginLeft="10dp" android:layout_marginRight="10dp">
+                              android:layout_marginLeft="10dp" android:layout_marginRight="10dp"
+                              android:visibility="gone"
+                >
                     <LinearLayout android:layout_width="match_parent"
                                   android:layout_height="match_parent"
                                   android:orientation="horizontal">
@@ -166,7 +168,7 @@
                                   android:id="@+id/userFirstReview"
                         />
                         <RatingBar
-                                android:layout_width="160dp"
+                                android:layout_width="180dp"
                                 android:layout_height="wrap_content"
                                 android:paddingLeft="20dp"
                                 android:paddingTop="5dp"
@@ -186,6 +188,7 @@
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                               android:orientation="vertical" android:id="@+id/secondReviewLayout"
                               android:layout_marginLeft="10dp" android:layout_marginRight="10dp"
+                              android:visibility="gone"
                               android:layout_marginTop="10dp">
                     <LinearLayout android:layout_width="match_parent"
                                   android:layout_height="match_parent"
@@ -197,7 +200,7 @@
                                   android:id="@+id/userSecondReview"
                         />
                         <RatingBar
-                                android:layout_width="160dp"
+                                android:layout_width="180dp"
                                 android:layout_height="wrap_content"
                                 android:paddingLeft="20dp"
                                 android:paddingTop="5dp"
@@ -217,6 +220,7 @@
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                               android:orientation="vertical" android:id="@+id/thirdReviewLayout"
                               android:layout_marginLeft="10dp" android:layout_marginRight="10dp"
+                              android:visibility="gone"
                               android:layout_marginTop="10dp"
                 >
                     <LinearLayout android:layout_width="match_parent"
@@ -229,7 +233,7 @@
                                   android:id="@+id/userThirdReview"
                         />
                         <RatingBar
-                                android:layout_width="160dp"
+                                android:layout_width="180dp"
                                 android:layout_height="wrap_content"
                                 android:paddingLeft="20dp"
                                 android:paddingTop="5dp"

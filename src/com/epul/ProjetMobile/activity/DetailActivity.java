@@ -191,6 +191,9 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
 
     private void setReview(DetailledPlace place){
         if(place.hasReview()){
+            View layoutFirstReview = findViewById(R.id.firstReviewLayout);
+            layoutFirstReview.setVisibility(LinearLayout.VISIBLE);
+
             TextView userFirstReview = (TextView) findViewById(R.id.userFirstReview);
             RatingBar ratingFirstReview = (RatingBar) findViewById(R.id.ratingFirstReview);
             TextView textFirstReview = (TextView) findViewById(R.id.textFirstReview);
@@ -201,6 +204,9 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
             textFirstReview.setText(currentReview.getText());
 
             if (place.getReviews().size() > 1) {
+                View layoutSecondReview = findViewById(R.id.firstReviewLayout);
+                layoutSecondReview.setVisibility(LinearLayout.VISIBLE);
+
                 TextView userSecondReview = (TextView) findViewById(R.id.userSecondReview);
                 RatingBar ratingSecondReview = (RatingBar) findViewById(R.id.ratingSecondReview);
                 TextView textSecondReview = (TextView) findViewById(R.id.textSecondReview);
@@ -211,6 +217,9 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
                 textSecondReview.setText(currentReview.getText());
 
                 if (place.getReviews().size() > 2) {
+                    View layoutThirdReview = findViewById(R.id.firstReviewLayout);
+                    layoutThirdReview.setVisibility(LinearLayout.VISIBLE);
+
                     TextView userThirdReview = (TextView) findViewById(R.id.userThirdReview);
                     RatingBar ratingThirdReview = (RatingBar) findViewById(R.id.ratingThirdReview);
                     TextView textThirdReview = (TextView) findViewById(R.id.textThirdReview);
@@ -219,16 +228,8 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
                     userThirdReview.setText(currentReview.getAuthorName());
                     ratingThirdReview.setRating(Float.parseFloat(currentReview.getRating()));
                     textThirdReview.setText(currentReview.getText());
-                } else {
-
                 }
-            } else {
-
             }
-        }
-        else{
-            View layoutFirstReview = findViewById(R.id.firstReviewLayout);
-            layoutFirstReview.setVisibility(LinearLayout.GONE);
         }
     }
 }

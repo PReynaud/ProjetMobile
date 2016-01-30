@@ -1,21 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/detail_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/abc_action_bar_default_height_material"
                 android:minHeight="@dimen/abc_action_bar_default_height_material"
                 android:theme="@style/ToolbarTransparentTheme">
-    <ImageView android:id="@+id/return_icon"
-               android:layout_width="wrap_content"
-               android:layout_height="match_parent"
-               android:scaleType="center"
-               android:src="@drawable/left_arrow" android:background="@android:color/transparent"
-               android:contentDescription="@string/backButton" android:layout_marginLeft="7dp"/>
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-              android:textColor="@color/textColorPrimaryWhite"
-              android:id="@+id/text_detail_toolbar"
-              android:autoText="false" android:background="@android:color/transparent" android:textSize="20sp"
-              android:visibility="gone"
-              android:paddingLeft="5dp" android:textAlignment="gravity"
-              android:gravity="fill_vertical"/>
-</android.support.v7.widget.Toolbar>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:weightSum="1" android:background="@android:color/transparent">
+        <ImageView android:id="@+id/return_icon"
+                   android:layout_width="wrap_content"
+                   android:layout_height="match_parent"
+                   android:scaleType="center"
+                   android:layout_weight="0.1"
+                   android:src="@drawable/left_arrow"
+                   android:background="@android:color/transparent"
+                   android:contentDescription="@string/backButton" android:paddingRight="5dp"
+                   android:paddingLeft="15dp"/>
+        <TextView android:layout_width="fill_parent"
+                  android:layout_height="match_parent"
+                  android:textColor="@color/textColorPrimaryWhite"
+                  android:id="@+id/text_detail_toolbar"
+                  android:background="@android:color/transparent"
+                  android:textSize="20sp"
+                  android:visibility="invisible"
+                  android:layout_weight="0.8"
+                  android:textAlignment="gravity"
+                  android:gravity="fill_vertical"
+                  android:paddingLeft="10dp" android:paddingRight="10dp"/>
+        <ImageView android:id="@+id/plus_icon"
+                   android:layout_width="wrap_content"
+                   android:layout_height="match_parent"
+                   android:background="@android:color/transparent"
+                   android:layout_weight="0.1"
+                   android:scaleType="center"
+                   android:src="@drawable/plus"
+                   android:contentDescription="@string/backButton" android:paddingRight="15dp"
+                   android:layout_gravity="right"/>
+    </LinearLayout>
+</LinearLayout>

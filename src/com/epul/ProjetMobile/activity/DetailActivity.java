@@ -46,7 +46,7 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail);
 
-        Toolbar mToolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.detail_toolbar);
+        LinearLayout mToolbar = (LinearLayout) findViewById(R.id.detail_toolbar);
         ImageView returnIcon = (ImageView) findViewById(R.id.return_icon);
         returnIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,7 +211,7 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
             textFirstReview.setText(currentReview.getText());
 
             if (place.getReviews().size() > 1) {
-                View layoutSecondReview = findViewById(R.id.firstReviewLayout);
+                View layoutSecondReview = findViewById(R.id.secondReviewLayout);
                 layoutSecondReview.setVisibility(LinearLayout.VISIBLE);
 
                 TextView userSecondReview = (TextView) findViewById(R.id.userSecondReview);
@@ -224,7 +224,7 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
                 textSecondReview.setText(currentReview.getText());
 
                 if (place.getReviews().size() > 2) {
-                    View layoutThirdReview = findViewById(R.id.firstReviewLayout);
+                    View layoutThirdReview = findViewById(R.id.thirdReviewLayout);
                     layoutThirdReview.setVisibility(LinearLayout.VISIBLE);
 
                     TextView userThirdReview = (TextView) findViewById(R.id.userThirdReview);

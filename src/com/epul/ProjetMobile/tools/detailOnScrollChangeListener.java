@@ -36,7 +36,7 @@ public class detailOnScrollChangeListener implements View.OnScrollChangeListener
         else {
             int alpha = 0;
             alpha = (int)  ((255.0/maxDist)*scrollY);
-            title.setVisibility(View.GONE);
+            title.setVisibility(View.INVISIBLE);
             return alpha;
         }
     }

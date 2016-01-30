@@ -3,12 +3,16 @@ package com.epul.ProjetMobile.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.*;
+import android.support.v7.widget.Toolbar;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +25,7 @@ import com.epul.ProjetMobile.service.PlaceDetailService;
 import com.epul.ProjetMobile.service.PlaceDetailServiceDelegate;
 import com.epul.ProjetMobile.service.PlacePhotoService;
 import com.epul.ProjetMobile.service.PlacePhotoServiceDelegate;
+import com.epul.ProjetMobile.tools.detailOnScrollChangeListener;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -29,26 +34,19 @@ import java.text.DecimalFormat;
  * Created by Pierre on 27/12/2015.
  */
 public class DetailActivity extends AppCompatActivity implements PlaceDetailServiceDelegate, PlacePhotoServiceDelegate {
-    private TextView tName;
-    private TextView tDistance;
-    private TextView tAdresse;
-    private TextView tOpeningHours;
-    private TextView tDescription;
-    private TextView tWebsite;
-    private TextView tPhoneNumber;
+    private TextView tName, tTitle, tDistance, tAdresse, tOpeningHours, tDescription, tWebsite, tPhoneNumber;
     private ImageView tImage;
     private Space spaceImage;
     private ProgressDialog progressDialog;
     private int width;
-    private double userLocationLatitude;
-    private double userLocationLongitude;
+    private double userLocationLatitude,  userLocationLongitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail);
 
-        RelativeLayout mToolbar = (RelativeLayout) findViewById(R.id.detail_toolbar);
+        Toolbar mToolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.detail_toolbar);
         ImageView returnIcon = (ImageView) findViewById(R.id.return_icon);
         returnIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,6 +54,15 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
                 finish();
             }
         });
+
+        ColorDrawable cd = new ColorDrawable(Color.rgb(0, 116, 225));
+        mToolbar.setBackground(cd);
+        cd.setAlpha(0);
+
+        tTitle = (TextView) findViewById(R.id.text_detail_toolbar);
+
+        ScrollView detailScrollView = (ScrollView) findViewById(R.id.detailScrollView);
+        detailScrollView.setOnScrollChangeListener(new detailOnScrollChangeListener(cd, tTitle));
 
         tDistance = (TextView) findViewById(R.id.distanceDetail);
         tAdresse = (TextView) findViewById(R.id.adresseDetail);
@@ -96,7 +103,7 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
             //TODO : enlever l'espace des photos
         }
 
-
+        tTitle.setText(place.getName());
         tName.setText(place.getName());
         tAdresse.setText(place.getAddress());
         this.setUserLocation(place);

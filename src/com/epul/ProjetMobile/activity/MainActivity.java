@@ -33,11 +33,13 @@ import com.epul.ProjetMobile.service.PlacesService;
 import com.epul.ProjetMobile.service.PlacesServiceDelegate;
 import com.epul.ProjetMobile.tools.ListManager;
 import com.epul.ProjetMobile.tools.MapLayout;
+import com.epul.ProjetMobile.tools.listSlideListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.*;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.*;
 
@@ -57,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Map<Route, List<Polyline>> parcours;
     private SharedPreferences preferences;
     private String timeLimit;
+    private SlidingUpPanelLayout slidePanel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Locale.setDefault(new Locale("fr_FR"));
         userLocation = null;
         parcours = new HashMap<>();
+        slidePanel = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        slidePanel.setPanelSlideListener(new listSlideListener((ImageView) findViewById(R.id.expand_icon)));
         initializeSearchBar();
         initializeMonumentList();
         preferences = this.getSharedPreferences(

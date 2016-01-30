@@ -131,6 +131,9 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
         }
         else{
             //TODO : enlever l'espace des photos
+            if (progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
         }
 
         tTitle.setText(place.getName());
@@ -141,8 +144,6 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
         this.setWebsite(place);
         this.setPhoneNUmber(place);
         this.setReview(place);
-
-        //TODO: Charger d'autres choses ici
     }
 
     @Override

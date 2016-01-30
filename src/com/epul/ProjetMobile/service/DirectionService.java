@@ -103,9 +103,6 @@ public class DirectionService extends GoogleService {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        Toast.makeText(context,
-                context.getString(R.string.LaunchDirectionService), Toast.LENGTH_SHORT)
-                .show();
     }
 
     @Override

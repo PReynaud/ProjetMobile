@@ -1,6 +1,7 @@
 package com.epul.ProjetMobile.activity;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private SharedPreferences preferences;
     private String timeLimit;
     private SlidingUpPanelLayout slidePanel;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.main);
         //Set the default language
         Locale.setDefault(new Locale("fr_FR"));
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getString(R.string.LoadInProgress));
+        progressDialog.show();
+
         userLocation = null;
         parcours = new HashMap<>();
         slidePanel = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
@@ -113,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
                 if (way.size() >= 1) launchDirectionService();
+                slidePanel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             }
         });
     }
@@ -262,9 +270,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void launchDirectionService() {
+        progressDialog.show();
         DirectionService directionService = new DirectionService(getResources().getString(R.string.google_direction_key), false, way, this);
         directionService.init(this.userLocation, this);
         directionService.execute();
+
+
     }
 
     /**
@@ -437,6 +448,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             markers.put(marker, place);
         }
         resetPopUps();
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 
     @Override
@@ -471,7 +485,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         polylines.add(googleMap.addPolyline(new PolylineOptions()
                                 .add(new LatLng(src.latitude, src.longitude),
                                         new LatLng(dest.latitude, dest.longitude))
-                                .width(8).color(Color.RED).geodesic(true)));
+                                .width(6).color(getResources().getColor(R.color.settingsPrimary)).geodesic(true)));
                     }
                     instructions.add(waypoint.instruction);
                 }
@@ -481,5 +495,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             listView.setAdapter(new InstructionAdapter(instructions, this));
         }
         centerMapOnUserLocation(18);
+
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 }

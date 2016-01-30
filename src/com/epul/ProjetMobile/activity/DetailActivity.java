@@ -39,7 +39,9 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
     private Space spaceImage;
     private ProgressDialog progressDialog;
     private int width;
+    private String placeId;
     private double userLocationLatitude,  userLocationLongitude;
+    private boolean result = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +53,16 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
         returnIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                finishActivity();
+            }
+        });
+
+        ImageView plusIcon = (ImageView) findViewById(R.id.plus_icon);
+        plusIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "Lieu ajouté à la liste", Toast.LENGTH_SHORT).show();
+                result = true;
             }
         });
 
@@ -88,11 +99,30 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
     }
 
     @Override
+    public void onBackPressed() {
+        this.finishActivity();
+    }
+
+    private void finishActivity(){
+        Intent returnIntent = new Intent();
+        if(result){
+            returnIntent.putExtra("result", placeId);
+            setResult(RESULT_OK, returnIntent);
+        }
+        else{
+            setResult(RESULT_CANCELED, returnIntent);
+        }
+        finish();
+    }
+
+    @Override
     public void loadDetails(DetailledPlace place) {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         this.width = size.x;
+
+        this.placeId = place.getId();
 
         if (place.hasPhotos() && place.getPhotoUrls().size() > 0) {
             PlacePhotoService service = new PlacePhotoService(this, getResources().getString(R.string.google_places_key),

@@ -1,5 +1,6 @@
 package com.epul.ProjetMobile.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
@@ -12,6 +13,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import com.epul.ProjetMobile.R;
 import com.epul.ProjetMobile.activity.DetailActivity;
+import com.epul.ProjetMobile.activity.MainActivity;
 import com.epul.ProjetMobile.business.Place;
 import com.epul.ProjetMobile.tools.MapLayout;
 import com.google.android.gms.maps.GoogleMap;
@@ -52,11 +54,10 @@ public class InfoPopup implements GoogleMap.InfoWindowAdapter{
     public void actionDetail(Marker marker) {
         Intent intent = new Intent(context, DetailActivity.class);
         Place place = places.get(marker).entrySet().iterator().next().getKey();
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(PLACE_ID, place.getPlaceId());
         intent.putExtra(USER_LOCATION_LATITUDE, this.userLocation.getLatitude());
         intent.putExtra(USER_LOCATION_LONGITUDE, this.userLocation.getLongitude());
-        context.startActivity(intent);
+        ((Activity)context).startActivityForResult(intent, 3);
     }
 
     @Override

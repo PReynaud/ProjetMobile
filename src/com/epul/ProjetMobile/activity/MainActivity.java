@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static final String wayResource = "Way";
     public static final int ListResult = 1;
     public static final int Param = 2;
+    public static final int resultFromDetailActivity = 3;
     private final ArrayList<Place> way = new ArrayList<>();
     private final Map<Marker, Place> markers = new HashMap<>();
     private GoogleMap googleMap;
@@ -210,12 +211,38 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             way.clear();
             way.addAll((ArrayList<Place>) data.getExtras().getSerializable(wayResource));
             //A la fin de l'activité secondaire on réaffiche la toolbar
+
+            //On met à jour la position et les markers
+            googleMap.clear();
+            launchPlaceService();
+            if (!parcours.isEmpty()) displayWay(new ArrayList<>(parcours.keySet()));
+            timeLimit = preferences.getString("time_limit", "0");
         }
-        //On met à jour la position et les markers
-        googleMap.clear();
-        launchPlaceService();
-        if (!parcours.isEmpty()) displayWay(new ArrayList<>(parcours.keySet()));
-        timeLimit = preferences.getString("time_limit", "0");
+
+        //On ajoute l'activité dont l'id est stocké dans result
+        if(requestCode == resultFromDetailActivity){
+            if(resultCode == RESULT_OK ) {
+                String resultPlaceId = data.getStringExtra("result");
+                Iterator it = markers.entrySet().iterator();
+                Place placeToAdd = null;
+                Marker markerToAdd = null;
+                while (it.hasNext() && placeToAdd == null) {
+                    Map.Entry pair = (Map.Entry) it.next();
+                    Place currentPlace = (Place) pair.getValue();
+                    if (currentPlace.getId().equals(resultPlaceId)) {
+                        placeToAdd = (Place) pair.getValue();
+                        markerToAdd = (Marker) pair.getKey();
+                    }
+                }
+
+                if (!way.contains(markerToAdd)) {
+                    way.add(placeToAdd);
+                    markerToAdd.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.monument_selectionne));
+                    listManager.createListView();
+                }
+
+            }
+        }
     }
 
     @Override
@@ -372,7 +399,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             temp.put(placeEntry.getValue(), false);
             placeAdapter.put(placeEntry.getKey(), temp);
         }
-        googleMap.setInfoWindowAdapter(new InfoPopup(getApplicationContext(), view, layout, placeAdapter, userLocation) {
+        googleMap.setInfoWindowAdapter(new InfoPopup(this, view, layout, placeAdapter, userLocation) {
             @Override
             public void actionAjouter(Marker marker) {
                 super.actionAjouter(marker);

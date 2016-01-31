@@ -125,6 +125,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 slidePanel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             }
         });
+
+        ImageView stopButton = (ImageView) findViewById(R.id.stop_icon);
+        stopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeWay();
+            }
+        });
     }
 
     /**
@@ -470,6 +478,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             for (Polyline line : parcours.values().iterator().next())
                 line.remove();
         parcours = new HashMap<>();
+
         //Display the route
         Route bestRoute = routes.size() > 0 ? routes.get(0) : null;
         if (bestRoute != null) {
@@ -496,13 +505,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             parcours.put(bestRoute, polylines);
             listView.setAdapter(new InstructionAdapter(instructions, this));
 
+            // Création et affichage de la liste pour les directions
             final ImageView removeDirectionListButton = (ImageView) findViewById(R.id.removeDirectionList);
             removeDirectionListButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     LinearLayout listContainer = (LinearLayout) findViewById(R.id.directionListContainer);
                     ListView listDirection = (ListView) findViewById(R.id.directionListView);
-                    if(listDirection.getVisibility() == View.VISIBLE){
+
+                    if (listDirection.getVisibility() == View.VISIBLE) {
                         listDirection.setVisibility(View.GONE);
 
                         removeDirectionListButton.animate().rotation(180f);
@@ -510,19 +521,37 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         //On convertit les 115 dp en pixels
                         int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 115, getResources().getDisplayMetrics());
                         listContainer.animate().translationY(height);
-                    }
-                    else{
+                    } else {
                         listDirection.setVisibility(View.VISIBLE);
                         listContainer.animate().translationY(0);
                         removeDirectionListButton.animate().rotation(0f);
                     }
                 }
             });
+
+
+            // Apparition du bouton pour stopper le parcours
+            findViewById(R.id.stop_icon).setVisibility(View.VISIBLE);
         }
         centerMapOnUserLocation(18);
 
         if (progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
+    }
+
+    private void removeWay(){
+        if (parcours.size() > 0)
+            for (Polyline line : parcours.values().iterator().next())
+                line.remove();
+        parcours = new HashMap<>();
+
+
+        // Disparition du bouton pour stopper le parcours
+        findViewById(R.id.stop_icon).setVisibility(View.INVISIBLE);
+
+        // Disparition du listview direction
+        LinearLayout listContainer = (LinearLayout) findViewById(R.id.directionListContainer);
+        listContainer.setVisibility(View.INVISIBLE);
     }
 }

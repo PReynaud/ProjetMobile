@@ -11,8 +11,6 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.*;
-import android.support.v7.widget.Toolbar;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +23,7 @@ import com.epul.ProjetMobile.service.PlaceDetailService;
 import com.epul.ProjetMobile.service.PlaceDetailServiceDelegate;
 import com.epul.ProjetMobile.service.PlacePhotoService;
 import com.epul.ProjetMobile.service.PlacePhotoServiceDelegate;
-import com.epul.ProjetMobile.tools.detailOnScrollChangeListener;
+import com.epul.ProjetMobile.tools.DetailOnScrollChangeListener;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -73,7 +71,7 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
         tTitle = (TextView) findViewById(R.id.text_detail_toolbar);
 
         ScrollView detailScrollView = (ScrollView) findViewById(R.id.detailScrollView);
-        detailScrollView.setOnScrollChangeListener(new detailOnScrollChangeListener(cd, tTitle));
+        detailScrollView.setOnScrollChangeListener(new DetailOnScrollChangeListener(cd, tTitle));
 
         tDistance = (TextView) findViewById(R.id.distanceDetail);
         tAdresse = (TextView) findViewById(R.id.adresseDetail);

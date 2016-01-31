@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationListener;
@@ -14,10 +13,13 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import com.epul.ProjetMobile.R;
@@ -34,7 +36,7 @@ import com.epul.ProjetMobile.service.PlacesService;
 import com.epul.ProjetMobile.service.PlacesServiceDelegate;
 import com.epul.ProjetMobile.tools.ListManager;
 import com.epul.ProjetMobile.tools.MapLayout;
-import com.epul.ProjetMobile.tools.listSlideListener;
+import com.epul.ProjetMobile.tools.ListSlideListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -77,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         userLocation = null;
         parcours = new HashMap<>();
         slidePanel = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
-        slidePanel.setPanelSlideListener(new listSlideListener((ImageView) findViewById(R.id.expand_icon)));
+        slidePanel.setPanelSlideListener(new ListSlideListener((ImageView) findViewById(R.id.expand_icon)));
         initializeSearchBar();
         initializeMonumentList();
         preferences = this.getSharedPreferences(
@@ -485,7 +487,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         polylines.add(googleMap.addPolyline(new PolylineOptions()
                                 .add(new LatLng(src.latitude, src.longitude),
                                         new LatLng(dest.latitude, dest.longitude))
-                                .width(6).color(getResources().getColor(R.color.settingsPrimary)).geodesic(true)));
+                                .width(8).color(getResources().getColor(R.color.settingsPrimary)).geodesic(true)));
                     }
                     instructions.add(waypoint.instruction);
                 }
@@ -493,6 +495,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             parcours.clear();
             parcours.put(bestRoute, polylines);
             listView.setAdapter(new InstructionAdapter(instructions, this));
+
+            final ImageView removeDirectionListButton = (ImageView) findViewById(R.id.removeDirectionList);
+            removeDirectionListButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    LinearLayout listContainer = (LinearLayout) findViewById(R.id.directionListContainer);
+                    ListView listDirection = (ListView) findViewById(R.id.directionListView);
+                    if(listDirection.getVisibility() == View.VISIBLE){
+                        listDirection.setVisibility(View.GONE);
+
+                        removeDirectionListButton.animate().rotation(180f);
+
+                        //On convertit les 115 dp en pixels
+                        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 115, getResources().getDisplayMetrics());
+                        listContainer.animate().translationY(height);
+                    }
+                    else{
+                        listDirection.setVisibility(View.VISIBLE);
+                        listContainer.animate().translationY(0);
+                        removeDirectionListButton.animate().rotation(0f);
+                    }
+                }
+            });
         }
         centerMapOnUserLocation(18);
 

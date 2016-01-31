@@ -10,11 +10,11 @@ import android.widget.TextView;
  * Created by Pierre on 30/01/2016.
  */
 @TargetApi(Build.VERSION_CODES.M)
-public class detailOnScrollChangeListener implements View.OnScrollChangeListener {
+public class DetailOnScrollChangeListener implements View.OnScrollChangeListener {
     private Drawable drawable;
     private TextView title;
 
-    public detailOnScrollChangeListener(Drawable drawable, TextView title) {
+    public DetailOnScrollChangeListener(Drawable drawable, TextView title) {
         this.drawable = drawable;
         this.title = title;
     }

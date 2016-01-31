@@ -10,10 +10,10 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 /**
  * Created by Pierre on 30/01/2016.
  */
-public class listSlideListener implements SlidingUpPanelLayout.PanelSlideListener {
+public class ListSlideListener implements SlidingUpPanelLayout.PanelSlideListener {
     private ImageView imageToRotate;
 
-    public listSlideListener(ImageView imageToRotate) {
+    public ListSlideListener(ImageView imageToRotate) {
         this.imageToRotate = imageToRotate;
     }
 

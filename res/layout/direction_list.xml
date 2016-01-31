@@ -8,6 +8,16 @@
               android:layout_alignParentBottom="true"
               android:layout_marginBottom="55dp"
               android:visibility="gone">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="match_parent"
+                  android:layout_height="25dp"
+                  android:minHeight="25dp"
+                  android:background="@color/settingsPrimary">
+        <ImageView
+                android:id="@+id/removeDirectionList" android:background="@android:color/transparent"
+                android:layout_width="match_parent" android:layout_height="20dp"
+                android:layout_gravity="right" android:src="@drawable/list_down"/>
+    </LinearLayout>
     <ListView android:id="@+id/directionListView"
               android:layout_width="match_parent"
               android:layout_height="match_parent">

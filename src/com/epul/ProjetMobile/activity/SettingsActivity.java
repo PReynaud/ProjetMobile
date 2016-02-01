@@ -130,10 +130,19 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        this.finishActivity();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        this.finishActivity();
+    }
+
+    private void finishActivity() {
         Intent returnIntent = new Intent();
         setResult(RESULT_OK, returnIntent);
         finish();
-        return true;
     }
 
     /**

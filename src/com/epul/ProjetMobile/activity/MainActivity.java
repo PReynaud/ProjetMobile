@@ -241,41 +241,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //On influence l'application en fonction des paramètres retournés
         if (requestCode == Param) {
             if (resultCode == RESULT_OK) {
-                System.out.println("FIN ACTIVITE SETTING");
-                HashSet<String> types = (HashSet<String>) preferences.getAll().get("types_monuments");
-                Iterator<String> iterator = types.iterator();
-                ArrayList<PlaceType> listTypes = new ArrayList<>();
-                while (iterator.hasNext()) {
-                    switch (iterator.next()) {
-                        case "aquarium":
-                            listTypes.add(PlaceType.aquarium);
-                            break;
-                        case "art_gallery":
-                            listTypes.add(PlaceType.art_gallery);
-                            break;
-                        case "city_hall":
-                            listTypes.add(PlaceType.city_hall);
-                            break;
-                        case "museum":
-                            listTypes.add(PlaceType.museum);
-                            break;
-                        case "park":
-                            listTypes.add(PlaceType.park);
-                            break;
-                        case "place_of_worship":
-                            listTypes.add(PlaceType.place_of_worship);
-                            break;
-                        case "zoo":
-                            listTypes.add(PlaceType.zoo);
-                            break;
-                    }
-                }
                 progressDialog.show();
-                googleMap.clear();
-                placesService = new PlacesService(getResources().getString(R.string.google_places_key), this);
-                placesService.setLocation(this.userLocation);
-                placesService.setPlaceTypes(listTypes);
-                placesService.execute();
+                launchPlaceService();
             }
         }
 
@@ -311,8 +278,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void launchPlaceService() {
+        googleMap.clear();
         placesService = new PlacesService(getResources().getString(R.string.google_places_key), this);
         placesService.setLocation(this.userLocation);
+        placesService.setPlaceTypes(getPlaceTypeFromSettings());
         placesService.execute();
     }
 
@@ -588,5 +557,37 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Disparition du listview direction
         LinearLayout listContainer = (LinearLayout) findViewById(R.id.directionListContainer);
         listContainer.setVisibility(View.INVISIBLE);
+    }
+
+    private ArrayList<PlaceType> getPlaceTypeFromSettings() {
+        HashSet<String> types = (HashSet<String>) preferences.getAll().get("types_monuments");
+        Iterator<String> iterator = types.iterator();
+        ArrayList<PlaceType> listTypes = new ArrayList<>();
+        while (iterator.hasNext()) {
+            switch (iterator.next()) {
+                case "aquarium":
+                    listTypes.add(PlaceType.aquarium);
+                    break;
+                case "art_gallery":
+                    listTypes.add(PlaceType.art_gallery);
+                    break;
+                case "city_hall":
+                    listTypes.add(PlaceType.city_hall);
+                    break;
+                case "museum":
+                    listTypes.add(PlaceType.museum);
+                    break;
+                case "park":
+                    listTypes.add(PlaceType.park);
+                    break;
+                case "place_of_worship":
+                    listTypes.add(PlaceType.place_of_worship);
+                    break;
+                case "zoo":
+                    listTypes.add(PlaceType.zoo);
+                    break;
+            }
+        }
+        return listTypes;
     }
 }

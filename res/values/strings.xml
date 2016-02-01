@@ -85,9 +85,9 @@
 
 
     <string-array name="array_transports_values">
-        <item>pied</item>
-        <item>transports</item>
-        <item>voiture</item>
+        <item>foot</item>
+        <item>publicTransport</item>
+        <item>car</item>
     </string-array>
     <string-array name="array_transports_titles">
         <item>À pied</item>

@@ -32,10 +32,7 @@ import com.epul.ProjetMobile.service.DirectionService;
 import com.epul.ProjetMobile.service.DirectionServiceDelegate;
 import com.epul.ProjetMobile.service.PlacesService;
 import com.epul.ProjetMobile.service.PlacesServiceDelegate;
-import com.epul.ProjetMobile.tools.ListManager;
-import com.epul.ProjetMobile.tools.ListSlideListener;
-import com.epul.ProjetMobile.tools.MapLayout;
-import com.epul.ProjetMobile.tools.PlaceType;
+import com.epul.ProjetMobile.tools.*;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -287,7 +284,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void launchDirectionService() {
         progressDialog.show();
-        DirectionService directionService = new DirectionService(getResources().getString(R.string.google_direction_key), false, way, this);
+        DirectionService directionService = new DirectionService(getResources().getString(R.string.google_direction_key),
+                getTransportFromSettings(), way, this);
         directionService.init(this.userLocation, this);
         directionService.execute();
     }
@@ -589,5 +587,25 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
         return listTypes;
+    }
+
+    private ArrayList<Transport> getTransportFromSettings() {
+        ArrayList<Transport> transportList = new ArrayList<>();
+        HashSet<String> types = (HashSet<String>) preferences.getAll().get("transports");
+        Iterator<String> iterator = types.iterator();
+        while (iterator.hasNext()) {
+            switch (iterator.next()) {
+                case "foot":
+                    transportList.add(Transport.foot);
+                    break;
+                case "publicTransport":
+                    transportList.add(Transport.publicTransport);
+                    break;
+                case "car":
+                    transportList.add(Transport.car);
+                    break;
+            }
+        }
+        return transportList;
     }
 }

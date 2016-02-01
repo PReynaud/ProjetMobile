@@ -13,7 +13,7 @@
     <string name="RatingImageDescription">Rating</string>
     <string name="toolbarList">Lieux sélectionnés</string>
     <string name="toolbarListParcours"></string>
-    <string name="ParcoursSimpleButton">Parcours Simple</string>
+    <string name="ParcoursButton">Créer un parcours</string>
     <string name="LaunchDirectionService">Recherche du meilleur parcours</string>
     <string name="backButton">Retour</string>
     <!-- Strings related to Settings -->

@@ -13,11 +13,11 @@
               android:layout_height="wrap_content" android:layout_weight="1.00">
     </ListView>
     <Button
-            android:id="@+id/ParcoursSimpleButton"
+            android:id="@+id/ParcoursButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/ParcoursSimpleButton"
-            android:theme="@style/ParcoursSimpleButton"
+            android:text="@string/ParcoursButton"
+            android:theme="@style/ParcoursButton"
             android:textAllCaps="false"
             android:elevation="4dp"
             android:layout_margin="3dp"

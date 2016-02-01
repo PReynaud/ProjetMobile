@@ -49,7 +49,7 @@
         <item name="android:textColor">@color/textColorPrimaryWhite</item>
     </style>
 
-    <style name="ParcoursSimpleButton" parent="Base.Widget.AppCompat.Button">
+    <style name="ParcoursButton" parent="Base.Widget.AppCompat.Button">
         <item name="colorButtonNormal">@color/textColorPrimaryWhite</item>
         <item name="android:textColor">@color/primary</item>
     </style>

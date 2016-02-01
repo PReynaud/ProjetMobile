@@ -32,7 +32,10 @@ import com.epul.ProjetMobile.service.DirectionService;
 import com.epul.ProjetMobile.service.DirectionServiceDelegate;
 import com.epul.ProjetMobile.service.PlacesService;
 import com.epul.ProjetMobile.service.PlacesServiceDelegate;
-import com.epul.ProjetMobile.tools.*;
+import com.epul.ProjetMobile.tools.ListManager;
+import com.epul.ProjetMobile.tools.MapLayout;
+import com.epul.ProjetMobile.tools.PlaceType;
+import com.epul.ProjetMobile.tools.Transport;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -61,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private SlidingUpPanelLayout slidePanel;
     private ProgressDialog progressDialog;
     private TextView listTopTextView;
+    private ImageView expandImage;
 
     private ArrayList<Transport> transportType;
     private ArrayList<PlaceType> placeType;
@@ -81,7 +85,31 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         userLocation = null;
         parcours = new HashMap<>();
         slidePanel = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
-        slidePanel.setPanelSlideListener(new ListSlideListener((ImageView) findViewById(R.id.expand_icon)));
+        expandImage = (ImageView) findViewById(R.id.expand_icon);
+        //slidePanel.setPanelSlideListener(new ListSlideListener((ImageView) findViewById(R.id.expand_icon)));
+        slidePanel.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+                float angle = slideOffset * (float) 180;
+                expandImage.setRotation(angle);
+            }
+
+            @Override
+            public void onPanelExpanded(View panel) {
+            }
+
+            @Override
+            public void onPanelCollapsed(View panel) {
+            }
+
+            @Override
+            public void onPanelAnchored(View panel) {
+            }
+
+            @Override
+            public void onPanelHidden(View panel) {
+            }
+        });
         preferences = this.getSharedPreferences(
                 SettingsActivity.SETTINGS_SHARED_PREFERENCES_FILE_NAME,
                 Context.MODE_PRIVATE);
@@ -90,8 +118,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         initializeSearchBar();
         initializeMonumentList();
 
-        transportType = getTransportFromSettings();
-        placeType = getPlaceTypeFromSettings();
+        if (preferences != null && preferences.getAll() != null
+                && preferences.getAll().get("transports") != null
+                && preferences.getAll().get("types_monuments") != null) {
+            transportType = getTransportFromSettings();
+            placeType = getPlaceTypeFromSettings();
+        } else {
+            transportType = new ArrayList<>(Arrays.asList(Transport.values()));
+            placeType = new ArrayList<>(Arrays.asList(PlaceType.values()));
+        }
         try {
             initializeMap();
         } catch (Exception e) {
@@ -121,8 +156,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 MainActivity.this.startActivityForResult(myIntent, Param);
             }
         });
-        Button parcoursSimpleButton = (Button) findViewById(R.id.ParcoursSimpleButton);
-        parcoursSimpleButton.setOnClickListener(new View.OnClickListener() {
+        Button parcoursButton = (Button) findViewById(R.id.ParcoursButton);
+        parcoursButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (way.size() >= 1) {
@@ -254,7 +289,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (requestCode == Param) {
             if (resultCode == RESULT_OK) {
                 progressDialog.show();
-                if(getPlaceTypeFromSettings().equals(this.placeType) || getTransportFromSettings().equals(this.transportType)){
+                if (getPlaceTypeFromSettings().equals(this.placeType) || getTransportFromSettings().equals(this.transportType)) {
                     launchPlaceService();
                     launchDirectionService();
                 }
@@ -262,8 +297,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         //On ajoute la place dont l'id est stocké dans result
-        if(requestCode == resultFromDetailActivity){
-            if(resultCode == RESULT_OK ) {
+        if (requestCode == resultFromDetailActivity) {
+            if (resultCode == RESULT_OK) {
                 String resultPlaceId = data.getStringExtra("result");
                 Iterator it = markers.entrySet().iterator();
                 Place placeToAdd = null;
@@ -565,7 +600,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void removeWay(){
+    private void removeWay() {
         if (parcours.size() > 0)
             for (Polyline line : parcours.values().iterator().next())
                 line.remove();

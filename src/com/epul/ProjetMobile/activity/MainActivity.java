@@ -62,6 +62,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ProgressDialog progressDialog;
     private TextView listTopTextView;
 
+    private ArrayList<Transport> transportType;
+    private ArrayList<PlaceType> placeType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,8 +85,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         preferences = this.getSharedPreferences(
                 SettingsActivity.SETTINGS_SHARED_PREFERENCES_FILE_NAME,
                 Context.MODE_PRIVATE);
+
+
         initializeSearchBar();
         initializeMonumentList();
+
+        transportType = getTransportFromSettings();
+        placeType = getPlaceTypeFromSettings();
         try {
             initializeMap();
         } catch (Exception e) {
@@ -246,8 +254,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (requestCode == Param) {
             if (resultCode == RESULT_OK) {
                 progressDialog.show();
-                launchPlaceService();
-                launchDirectionService();
+                if(getPlaceTypeFromSettings().equals(this.placeType) || getTransportFromSettings().equals(this.transportType)){
+                    launchPlaceService();
+                    launchDirectionService();
+                }
             }
         }
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ProjetMobile</string>
+    <string name="app_name">Tonky</string>
     <string name="ErrorWhenLoadingMap">La carte n\'a pas pu être chargée</string>
     <string name="ErrorWhenGettingLocation">Impossible d\'obtenir la position actuelle</string>
     <string name="action_settings">Paramètres</string>
@@ -12,6 +12,7 @@
     <string name="AddedButton">Supprimer</string>
     <string name="RatingImageDescription">Rating</string>
     <string name="toolbarList">Lieux sélectionnés</string>
+    <string name="toolbarListParcours"></string>
     <string name="ParcoursSimpleButton">Parcours Simple</string>
     <string name="LaunchDirectionService">Recherche du meilleur parcours</string>
     <string name="backButton">Retour</string>
@@ -94,6 +95,7 @@
         <item>En transports en commun</item>
         <item>En voiture</item>
     </string-array>
+    <string name="transport_default">foot</string>
     <string-array name="array_monuments_values">
         <item>aquarium</item>
         <item>art_gallery</item>

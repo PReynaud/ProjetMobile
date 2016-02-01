@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String timeLimit;
     private SlidingUpPanelLayout slidePanel;
     private ProgressDialog progressDialog;
+    private TextView listTopTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,15 +73,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         progressDialog.setMessage(getString(R.string.LoadInProgress));
         progressDialog.show();
 
+        listTopTextView = (TextView) findViewById(R.id.list_top_text_view);
+
         userLocation = null;
         parcours = new HashMap<>();
         slidePanel = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         slidePanel.setPanelSlideListener(new ListSlideListener((ImageView) findViewById(R.id.expand_icon)));
-        initializeSearchBar();
-        initializeMonumentList();
         preferences = this.getSharedPreferences(
                 SettingsActivity.SETTINGS_SHARED_PREFERENCES_FILE_NAME,
                 Context.MODE_PRIVATE);
+        initializeSearchBar();
+        initializeMonumentList();
         try {
             initializeMap();
         } catch (Exception e) {
@@ -114,7 +117,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         parcoursSimpleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (way.size() >= 1) launchDirectionService();
+                if (way.size() >= 1) {
+                    launchDirectionService();
+                    listTopTextView.setText(R.string.toolbarListParcours);
+                }
                 slidePanel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             }
         });
@@ -123,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                listTopTextView.setText(R.string.toolbarList);
                 removeWay();
             }
         });
@@ -278,7 +285,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         googleMap.clear();
         placesService = new PlacesService(getResources().getString(R.string.google_places_key), this);
         placesService.setLocation(this.userLocation);
-        placesService.setPlaceTypes(getPlaceTypeFromSettings());
+        if (preferences != null && preferences.getAll().get("types_monuments") != null) {
+            placesService.setPlaceTypes(getPlaceTypeFromSettings());
+        } else {
+            ArrayList<PlaceType> placeTypes = new ArrayList<>(Arrays.asList(PlaceType.values()));
+            placesService.setPlaceTypes(placeTypes);
+        }
         placesService.execute();
     }
 
@@ -589,6 +601,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return listTypes;
     }
 
+    /*private Transport getTransportFromSettings(){
+       Transport result = null;
+       String type = (String) preferences.getAll().get("transports");
+        switch(type){
+            case "foot":
+                result = Transport.foot;
+                break;
+            case "publicTransport":
+                result =Transport.publicTransport;
+                break;
+            case "car":
+                result = Transport.car;
+                break;
+        }
+        return result;
+    }*/
     private ArrayList<Transport> getTransportFromSettings() {
         ArrayList<Transport> transportList = new ArrayList<>();
         HashSet<String> types = (HashSet<String>) preferences.getAll().get("transports");

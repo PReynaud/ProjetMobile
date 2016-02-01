@@ -46,6 +46,8 @@ public class PlacePhotoService extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        delegate.loadPhoto(result);
+        if (result != null) {
+            delegate.loadPhoto(result);
+        }
     }
 }

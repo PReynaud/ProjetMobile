@@ -95,11 +95,21 @@
         <item>En voiture</item>
     </string-array>
     <string-array name="array_monuments_values">
-        <item>musee</item>
-        <item>troll</item>
+        <item>aquarium</item>
+        <item>art_gallery</item>
+        <item>city_hall</item>
+        <item>museum</item>
+        <item>park</item>
+        <item>place_of_worship</item>
+        <item>zoo</item>
     </string-array>
     <string-array name="array_monuments_titles">
-        <item>Musées</item>
-        <item>A compléter :troll:</item>
+        <item>Aquarium</item>
+        <item>Galerie d\'art</item>
+        <item>Hôtel de ville</item>
+        <item>Musée</item>
+        <item>Parc</item>
+        <item>Lieu religieux</item>
+        <item>Zoo</item>
     </string-array>
 </resources>

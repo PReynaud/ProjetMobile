@@ -18,8 +18,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import com.epul.ProjetMobile.R;
@@ -35,8 +33,9 @@ import com.epul.ProjetMobile.service.DirectionServiceDelegate;
 import com.epul.ProjetMobile.service.PlacesService;
 import com.epul.ProjetMobile.service.PlacesServiceDelegate;
 import com.epul.ProjetMobile.tools.ListManager;
-import com.epul.ProjetMobile.tools.MapLayout;
 import com.epul.ProjetMobile.tools.ListSlideListener;
+import com.epul.ProjetMobile.tools.MapLayout;
+import com.epul.ProjetMobile.tools.PlaceType;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -110,9 +109,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),
-                        "Bouton Settings", Toast.LENGTH_SHORT)
-                        .show();
                 Intent myIntent = new Intent(MainActivity.this, SettingsActivity.class);
                 MainActivity.this.startActivityForResult(myIntent, Param);
             }
@@ -242,7 +238,48 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             timeLimit = preferences.getString("time_limit", "0");
         }
 
-        //On ajoute l'activité dont l'id est stocké dans result
+        //On influence l'application en fonction des paramètres retournés
+        if (requestCode == Param) {
+            if (resultCode == RESULT_OK) {
+                System.out.println("FIN ACTIVITE SETTING");
+                HashSet<String> types = (HashSet<String>) preferences.getAll().get("types_monuments");
+                Iterator<String> iterator = types.iterator();
+                ArrayList<PlaceType> listTypes = new ArrayList<>();
+                while (iterator.hasNext()) {
+                    switch (iterator.next()) {
+                        case "aquarium":
+                            listTypes.add(PlaceType.aquarium);
+                            break;
+                        case "art_gallery":
+                            listTypes.add(PlaceType.art_gallery);
+                            break;
+                        case "city_hall":
+                            listTypes.add(PlaceType.city_hall);
+                            break;
+                        case "museum":
+                            listTypes.add(PlaceType.museum);
+                            break;
+                        case "park":
+                            listTypes.add(PlaceType.park);
+                            break;
+                        case "place_of_worship":
+                            listTypes.add(PlaceType.place_of_worship);
+                            break;
+                        case "zoo":
+                            listTypes.add(PlaceType.zoo);
+                            break;
+                    }
+                }
+                progressDialog.show();
+                googleMap.clear();
+                placesService = new PlacesService(getResources().getString(R.string.google_places_key), this);
+                placesService.setLocation(this.userLocation);
+                placesService.setPlaceTypes(listTypes);
+                placesService.execute();
+            }
+        }
+
+        //On ajoute la place dont l'id est stocké dans result
         if(requestCode == resultFromDetailActivity){
             if(resultCode == RESULT_OK ) {
                 String resultPlaceId = data.getStringExtra("result");
@@ -274,8 +311,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void launchPlaceService() {
-        placesService = new PlacesService(getResources().getString(R.string.google_places_key));
-        placesService.setLocation(this.userLocation, this);
+        placesService = new PlacesService(getResources().getString(R.string.google_places_key), this);
+        placesService.setLocation(this.userLocation);
         placesService.execute();
     }
 
@@ -284,8 +321,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         DirectionService directionService = new DirectionService(getResources().getString(R.string.google_direction_key), false, way, this);
         directionService.init(this.userLocation, this);
         directionService.execute();
-
-
     }
 
     /**

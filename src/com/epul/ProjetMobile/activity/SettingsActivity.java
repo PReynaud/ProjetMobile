@@ -130,6 +130,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent returnIntent = new Intent();
+        setResult(RESULT_OK, returnIntent);
         finish();
         return true;
     }

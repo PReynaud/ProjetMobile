@@ -247,6 +247,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (resultCode == RESULT_OK) {
                 progressDialog.show();
                 launchPlaceService();
+                launchDirectionService();
             }
         }
 

@@ -1,5 +1,6 @@
 package com.epul.ProjetMobile.activity;
 
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -9,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
@@ -41,6 +43,7 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
     private double userLocationLatitude,  userLocationLongitude;
     private boolean result = false;
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,8 +73,10 @@ public class DetailActivity extends AppCompatActivity implements PlaceDetailServ
 
         tTitle = (TextView) findViewById(R.id.text_detail_toolbar);
 
-        ScrollView detailScrollView = (ScrollView) findViewById(R.id.detailScrollView);
-        detailScrollView.setOnScrollChangeListener(new DetailOnScrollChangeListener(cd, tTitle));
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            ScrollView detailScrollView = (ScrollView) findViewById(R.id.detailScrollView);
+            detailScrollView.setOnScrollChangeListener(new DetailOnScrollChangeListener(cd, tTitle));
+        }
 
         tDistance = (TextView) findViewById(R.id.distanceDetail);
         tAdresse = (TextView) findViewById(R.id.adresseDetail);

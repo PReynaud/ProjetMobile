@@ -16,6 +16,7 @@ public class PlacesService extends GoogleService {
     private PlacesServiceDelegate delegate;
     private Location location;
     private ArrayList<PlaceType> placeTypes;
+    private int radius = 5000;
 
     public PlacesService(String apiKey, PlacesServiceDelegate delegate) {
         super(apiKey);
@@ -28,6 +29,10 @@ public class PlacesService extends GoogleService {
 
     public void setPlaceTypes(ArrayList<PlaceType> placeTypes) {
         this.placeTypes = placeTypes;
+    }
+
+    public void setRadius(int radius) {
+        this.radius = radius;
     }
 
     private ArrayList<Place> createPlaces(String jsonResult) {
@@ -103,7 +108,7 @@ public class PlacesService extends GoogleService {
     @Override
     protected String doInBackground(String... params) {
         if(this.location != null) {
-            String urlString = this.makeUrl(this.location.getLatitude(), this.location.getLongitude(), 5000);
+            String urlString = this.makeUrl(this.location.getLatitude(), this.location.getLongitude(), radius);
             Log.d("com.epul.ProjetMobile", "Url : " + urlString);
             String json = getJSON(urlString);
             Log.d("com.epul.ProjetMobile", "Result : " + json);

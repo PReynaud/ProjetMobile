@@ -306,6 +306,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         googleMap.clear();
         placesService = new PlacesService(getResources().getString(R.string.google_places_key), this);
         placesService.setLocation(this.userLocation);
+        if (preferences != null && preferences.getAll().get("radius_limit") != null) {
+            String radiusLimit = (String) preferences.getAll().get("radius_limit");
+            placesService.setRadius(Integer.parseInt(radiusLimit));
+        }
         if (preferences != null && preferences.getAll().get("types_monuments") != null) {
             placesService.setPlaceTypes(getPlaceTypeFromSettings());
         } else {
@@ -316,11 +320,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void launchDirectionService() {
-        progressDialog.show();
-        DirectionService directionService = new DirectionService(getResources().getString(R.string.google_direction_key),
-                getTransportFromSettings(), way, this);
-        directionService.init(this.userLocation, this);
-        directionService.execute();
+        if (way != null & way.size() > 0) {
+            progressDialog.show();
+            DirectionService directionService = new DirectionService(getResources().getString(R.string.google_direction_key),
+                    getTransportFromSettings(), way, this);
+            directionService.init(this.userLocation, this);
+            directionService.execute();
+        }
     }
 
     /**

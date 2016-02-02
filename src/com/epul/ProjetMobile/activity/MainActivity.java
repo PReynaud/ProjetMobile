@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ListManager listManager;
     private Map<Route, List<Polyline>> parcours;
     private SharedPreferences preferences;
-    private String timeLimit;
     private SlidingUpPanelLayout slidePanel;
     private ProgressDialog progressDialog;
     private TextView listTopTextView;
@@ -266,7 +265,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             googleMap.clear();
             launchPlaceService();
             if (!parcours.isEmpty()) displayWay(new ArrayList<>(parcours.keySet()));
-            timeLimit = preferences.getString("time_limit", "0");
         }
 
         //On influence l'application en fonction des paramètres retournés

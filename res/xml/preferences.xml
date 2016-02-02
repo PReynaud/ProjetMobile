@@ -1,16 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <EditTextPreference
-            android:defaultValue="0"
-            android:key="time_limit"
-            android:inputType="number"
-            android:maxLines="1"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:numeric="integer"
-            android:textColor="@color/textColorPrimary"
-            android:title="@string/time_limit_title"/>
-    <EditTextPreference
             android:defaultValue="5000"
             android:key="radius_limit"
             android:inputType="number"

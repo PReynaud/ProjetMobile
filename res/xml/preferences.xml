@@ -9,6 +9,15 @@
             android:singleLine="true"
             android:numeric="integer"
             android:title="@string/time_limit_title"/>
+    <EditTextPreference
+            android:defaultValue="5000"
+            android:key="radius_limit"
+            android:inputType="number"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:numeric="integer"
+            android:title="@string/radius_limit_title"/>
     <MultiSelectListPreference
             android:key="transports"
             android:title="@string/transports_select_title"
@@ -16,8 +25,7 @@
             android:dialogTitle="@string/transports_select_summary"
             android:entries="@array/array_transports_titles"
             android:entryValues="@array/array_transports_values"
-            android:defaultValue="@array/array_transports_values"
-    />
+            android:defaultValue="@array/array_transports_values"/>
     <MultiSelectListPreference
             android:key="types_monuments"
             android:title="@string/monuments_select_title"
@@ -25,7 +33,6 @@
             android:dialogTitle="@string/monuments_select_summary"
             android:entries="@array/array_monuments_titles"
             android:entryValues="@array/array_monuments_values"
-            android:defaultValue="@array/array_monuments_values"
-    />
+            android:defaultValue="@array/array_monuments_values"/>
 
 </PreferenceScreen>

@@ -24,15 +24,17 @@
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/primary">
+                    android:background="@color/primary"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp">
                 <TextView
                         android:id="@+id/nameDetail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/textColorPrimaryWhite"
-                        android:layout_margin="5dp"
-                        android:layout_marginTop="15dp"
-                        android:textSize="30sp"/>
+                        android:textSize="26sp"/>
                 <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -44,14 +46,15 @@
                             android:layout_height="fill_parent"
                             android:layout_weight="0.4"
                             android:textColor="@color/textColorPrimaryWhite"
-                            android:layout_marginLeft="5dp"/>
+                            android:textSize="16sp"/>
                     <TextView
                             android:id="@+id/distanceDetail"
                             android:layout_width="match_parent"
                             android:layout_height="fill_parent"
                             android:layout_weight="0.9"
+                            android:gravity="bottom|end"
                             android:textColor="@color/textColorPrimaryWhite"
-                            android:textSize="18sp"/>
+                            android:textSize="20sp"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -61,28 +64,15 @@
                     android:layout_height="match_parent"
                     android:background="@color/windowBackground"
             >
-                <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/openingHours"
                         android:id="@+id/openingHoursLayout"
-                        android:layout_marginTop="10dp">
-                    <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="20dp"
-                            android:id="@+id/openingHoursIcon"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginTop="10dp"
-                            android:src="@drawable/clock"
-                            android:contentDescription="@string/openingHoursIcon"/>
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/openingHours"
-                            android:layout_margin="5dp"
-                            android:textColor="#636363"
-                            android:textSize="25sp"/>
-                </LinearLayout>
+                        android:layout_margin="5dp"
+                        android:textColor="#636363"
+                        android:textSize="22sp"
+                        android:drawableLeft="@drawable/clock"/>
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -96,8 +86,8 @@
                         android:layout_height="match_parent"
                         android:id="@+id/websiteLayout">
                     <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             android:id="@+id/websiteIcon"
                             android:layout_marginLeft="5dp"
                             android:layout_marginTop="5dp"
@@ -110,7 +100,7 @@
                             android:layout_margin="5dp"
                             android:layout_marginLeft="10dp"
                             android:autoLink="all"
-                            android:textSize="15sp"/>
+                            android:textSize="18sp"/>
                 </LinearLayout>
                 <LinearLayout
                         android:orientation="horizontal"
@@ -119,8 +109,8 @@
                         android:id="@+id/phoneLayout"
                         android:layout_marginTop="10dp">
                     <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             android:id="@+id/phoneIcon"
                             android:layout_marginLeft="5dp"
                             android:layout_marginTop="5dp"
@@ -133,14 +123,14 @@
                             android:layout_marginLeft="10dp"
                             android:autoLink="phone"
                             android:linksClickable="true"
-                            android:textSize="15sp"/>
+                            android:textSize="18sp"/>
                 </LinearLayout>
                 <LinearLayout android:orientation="horizontal" android:layout_width="match_parent"
                               android:layout_height="match_parent" android:id="@+id/reviewLayout"
                               android:layout_marginTop="10dp">
                     <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="20dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             android:id="@+id/reviewIcon"
                             android:layout_marginLeft="5dp"
                             android:layout_marginTop="10dp"
@@ -151,7 +141,7 @@
                             android:text="Derniers avis"
                             android:layout_margin="5dp"
                             android:textColor="#636363"
-                            android:textSize="25sp"/>
+                            android:textSize="22sp"/>
                 </LinearLayout>
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                               android:orientation="vertical" android:id="@+id/firstReviewLayout"

@@ -3,7 +3,6 @@ package com.epul.ProjetMobile.service;
 import android.location.Location;
 import android.util.Log;
 import com.epul.ProjetMobile.business.Place;
-import com.epul.ProjetMobile.tools.PlaceType;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,7 +14,7 @@ import java.util.logging.Logger;
 public class PlacesService extends GoogleService {
     private PlacesServiceDelegate delegate;
     private Location location;
-    private ArrayList<PlaceType> placeTypes;
+    private ArrayList<String> placeTypes;
     private int radius = 5000;
 
     public PlacesService(String apiKey, PlacesServiceDelegate delegate) {
@@ -27,7 +26,7 @@ public class PlacesService extends GoogleService {
         this.location = location;
     }
 
-    public void setPlaceTypes(ArrayList<PlaceType> placeTypes) {
+    public void setPlaceTypes(ArrayList<String> placeTypes) {
         this.placeTypes = placeTypes;
     }
 
@@ -69,35 +68,14 @@ public class PlacesService extends GoogleService {
         urlString.append("&rankBy=distance");
 
         if (placeTypes == null || placeTypes.size() == 0) {
-            urlString.append("&types=aquarium|art_gallery|city_hall|museum|park|place_of_worship|zoo");
+            urlString.append("&types=aquarium|art_gallery|city_hall|museum|park|place_of_worship|zoo|establishment|premise");
         } else {
             urlString.append("&types=");
             for (int i = 0; i < placeTypes.size(); i++) {
-                PlaceType type = placeTypes.get(i);
                 if (i > 0) {
                     urlString.append("|");
                 }
-                if (type == PlaceType.aquarium) {
-                    urlString.append("aquarium");
-                }
-                if (type == PlaceType.art_gallery) {
-                    urlString.append("art_gallery");
-                }
-                if (type == PlaceType.city_hall) {
-                    urlString.append("city_hall");
-                }
-                if (type == PlaceType.museum) {
-                    urlString.append("museum");
-                }
-                if (type == PlaceType.park) {
-                    urlString.append("park");
-                }
-                if (type == PlaceType.place_of_worship) {
-                    urlString.append("place_of_worship");
-                }
-                if (type == PlaceType.zoo) {
-                    urlString.append("zoo");
-                }
+                urlString.append(placeTypes.get(i));
             }
         }
         //urlString.append("style=feature:poi.attraction");

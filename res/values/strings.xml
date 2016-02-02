@@ -87,9 +87,9 @@
 
 
     <string-array name="array_transports_values">
-        <item>foot</item>
-        <item>publicTransport</item>
-        <item>car</item>
+        <item>&amp;mode=walking</item>
+        <item>&amp;mode=transit&amp;transit_mode=tram|bus|subway</item>
+        <item>&amp;mode=driving</item>
     </string-array>
     <string-array name="array_transports_titles">
         <item>À pied</item>
@@ -105,6 +105,7 @@
         <item>park</item>
         <item>place_of_worship</item>
         <item>zoo</item>
+        <item>establishment|premise</item>
     </string-array>
     <string-array name="array_monuments_titles">
         <item>Aquarium</item>
@@ -114,5 +115,6 @@
         <item>Parc</item>
         <item>Lieu religieux</item>
         <item>Zoo</item>
+        <item>Monument</item>
     </string-array>
 </resources>

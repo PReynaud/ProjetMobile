@@ -6,7 +6,6 @@ import android.location.Location;
 import android.util.Log;
 import com.epul.ProjetMobile.business.Place;
 import com.epul.ProjetMobile.business.Route;
-import com.epul.ProjetMobile.tools.Transport;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,12 +21,12 @@ import java.util.logging.Logger;
  */
 public class DirectionService extends GoogleService {
     private DirectionServiceDelegate delegate;
-    private ArrayList<Transport> transportMode;
+    private String transportMode;
     private List<Place> places;
     private ArrayList<Route> travels;
     private Context context;
 
-    public DirectionService(String apiKey, ArrayList<Transport> transportMode, List<Place> places, Context context) {
+    public DirectionService(String apiKey, String transportMode, List<Place> places, Context context) {
         super(apiKey);
         this.transportMode = transportMode;
         this.places = places;
@@ -49,7 +48,10 @@ public class DirectionService extends GoogleService {
                 .append(location.getLatitude()).append(",")
                 .append(location.getLongitude())
                 .append("&avoid=highways&sensor=false");
-        if (places.size() > 0) {
+        if (places == null || places.size() <= 0) {
+            throw new NullPointerException();
+        }
+        if (places.size() > 1) {
             urlString.append("&waypoints=optimize:true");
             for (int i = 0; i < places.size(); i++) {
                 Location.distanceBetween(location.getLatitude(), location.getLongitude(), places.get(i).getLatitude(), places.get(i).getLongitude(), result);
@@ -70,27 +72,15 @@ public class DirectionService extends GoogleService {
                     .append(destination.getLatitude())
                     .append(",")
                     .append(destination.getLongitude());
-        } else {
+        } else if (places.size() > 0) {
             urlString.append("&destination=")
                     .append(places.get(0).getLatitude())
                     .append(",")
                     .append(places.get(0).getLongitude());
         }
 
-        if (transportMode != null && transportMode.size() > 0) {
-            for (int i = 0; i < transportMode.size(); i++) {
-                switch (transportMode.get(i)) {
-                    case car:
-                        urlString.append("&mode=driving");
-                        break;
-                    case foot:
-                        urlString.append("&mode=walking");
-                        break;
-                    case publicTransport:
-                        urlString.append("&mode=transit&transit_mode=tram|bus|subway");
-                        break;
-                }
-            }
+        if (transportMode != null && transportMode != "") {
+            urlString.append(transportMode);
         } else {
             urlString.append("&mode=walking");
         }

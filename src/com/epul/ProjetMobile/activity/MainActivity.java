@@ -32,7 +32,9 @@ import com.epul.ProjetMobile.service.DirectionService;
 import com.epul.ProjetMobile.service.DirectionServiceDelegate;
 import com.epul.ProjetMobile.service.PlacesService;
 import com.epul.ProjetMobile.service.PlacesServiceDelegate;
-import com.epul.ProjetMobile.tools.*;
+import com.epul.ProjetMobile.tools.ListManager;
+import com.epul.ProjetMobile.tools.ListSlideListener;
+import com.epul.ProjetMobile.tools.MapLayout;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -63,8 +65,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private TextView listTopTextView;
     private ImageView expandImage;
 
-    private ArrayList<Transport> transportType;
-    private ArrayList<PlaceType> placeType;
+    private String transportType;
+    private ArrayList<String> placeType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,13 +96,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         initializeMonumentList();
 
         if (preferences != null && preferences.getAll() != null
-                && preferences.getAll().get("transports") != null
-                && preferences.getAll().get("types_monuments") != null) {
-            transportType = getTransportFromSettings();
+                && preferences.getAll().get("types_monuments") != null && preferences.getAll().get("transports") != null) {
             placeType = getPlaceTypeFromSettings();
+            transportType = (String) preferences.getAll().get("transports");
         } else {
-            transportType = new ArrayList<>(Arrays.asList(Transport.values()));
-            placeType = new ArrayList<>(Arrays.asList(PlaceType.values()));
+            transportType = "&mode=walking";
+            ArrayList<String> placeTypes = new ArrayList<>();
+            placeTypes.add("aquarium");
+            placeTypes.add("art_gallery");
+            placeTypes.add("city_hall");
+            placeTypes.add("museum");
+            placeTypes.add("park");
+            placeTypes.add("place_of_worship");
+            placeTypes.add("zoo");
+            placeTypes.add("establishment|premise");
         }
         try {
             initializeMap();
@@ -264,7 +273,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (requestCode == Param) {
             if (resultCode == RESULT_OK) {
                 progressDialog.show();
-                if (getPlaceTypeFromSettings().equals(this.placeType) || getTransportFromSettings().equals(this.transportType)) {
+                String new_transport = (String) preferences.getAll().get("transports");
+                if (getPlaceTypeFromSettings().equals(this.placeType) || new_transport.equals(this.transportType)) {
                     launchPlaceService();
                     launchDirectionService();
                 }
@@ -313,7 +323,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (preferences != null && preferences.getAll().get("types_monuments") != null) {
             placesService.setPlaceTypes(getPlaceTypeFromSettings());
         } else {
-            ArrayList<PlaceType> placeTypes = new ArrayList<>(Arrays.asList(PlaceType.values()));
+            ArrayList<String> placeTypes = new ArrayList<>();
+            placeTypes.add("aquarium");
+            placeTypes.add("art_gallery");
+            placeTypes.add("city_hall");
+            placeTypes.add("museum");
+            placeTypes.add("park");
+            placeTypes.add("place_of_worship");
+            placeTypes.add("zoo");
+            placeTypes.add("establishment|premise");
             placesService.setPlaceTypes(placeTypes);
         }
         placesService.execute();
@@ -323,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (way != null & way.size() > 0) {
             progressDialog.show();
             DirectionService directionService = new DirectionService(getResources().getString(R.string.google_direction_key),
-                    getTransportFromSettings(), way, this);
+                    transportType, way, this);
             directionService.init(this.userLocation, this);
             directionService.execute();
         }
@@ -596,55 +614,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         listContainer.setVisibility(View.INVISIBLE);
     }
 
-    private ArrayList<PlaceType> getPlaceTypeFromSettings() {
+    private ArrayList<String> getPlaceTypeFromSettings() {
         HashSet<String> types = (HashSet<String>) preferences.getAll().get("types_monuments");
-        Iterator<String> iterator = types.iterator();
-        ArrayList<PlaceType> listTypes = new ArrayList<>();
-        while (iterator.hasNext()) {
-            switch (iterator.next()) {
-                case "aquarium":
-                    listTypes.add(PlaceType.aquarium);
-                    break;
-                case "art_gallery":
-                    listTypes.add(PlaceType.art_gallery);
-                    break;
-                case "city_hall":
-                    listTypes.add(PlaceType.city_hall);
-                    break;
-                case "museum":
-                    listTypes.add(PlaceType.museum);
-                    break;
-                case "park":
-                    listTypes.add(PlaceType.park);
-                    break;
-                case "place_of_worship":
-                    listTypes.add(PlaceType.place_of_worship);
-                    break;
-                case "zoo":
-                    listTypes.add(PlaceType.zoo);
-                    break;
-            }
-        }
+        ArrayList<String> listTypes = new ArrayList<>(types);
         return listTypes;
     }
 
-    /*private Transport getTransportFromSettings(){
-       Transport result = null;
-       String type = (String) preferences.getAll().get("transports");
-        switch(type){
-            case "foot":
-                result = Transport.foot;
-                break;
-            case "publicTransport":
-                result =Transport.publicTransport;
-                break;
-            case "car":
-                result = Transport.car;
-                break;
-        }
-        return result;
-    }*/
-    private ArrayList<Transport> getTransportFromSettings() {
+    /*private ArrayList<Transport> getTransportFromSettings() {
         ArrayList<Transport> transportList = new ArrayList<>();
         HashSet<String> types = (HashSet<String>) preferences.getAll().get("transports");
         Iterator<String> iterator = types.iterator();
@@ -662,5 +638,5 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
         return transportList;
-    }
+    }*/
 }

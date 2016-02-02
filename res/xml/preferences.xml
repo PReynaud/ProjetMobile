@@ -18,14 +18,14 @@
             android:singleLine="true"
             android:numeric="integer"
             android:title="@string/radius_limit_title"/>
-    <MultiSelectListPreference
+    <ListPreference
             android:key="transports"
             android:title="@string/transports_select_title"
             android:summary="@string/transports_select_summary"
             android:dialogTitle="@string/transports_select_summary"
             android:entries="@array/array_transports_titles"
             android:entryValues="@array/array_transports_values"
-            android:defaultValue="@array/array_transports_values"/>
+            android:defaultValue="&amp;mode=walking"/>
     <MultiSelectListPreference
             android:key="types_monuments"
             android:title="@string/monuments_select_title"

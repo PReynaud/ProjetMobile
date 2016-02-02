@@ -32,10 +32,7 @@ import com.epul.ProjetMobile.service.DirectionService;
 import com.epul.ProjetMobile.service.DirectionServiceDelegate;
 import com.epul.ProjetMobile.service.PlacesService;
 import com.epul.ProjetMobile.service.PlacesServiceDelegate;
-import com.epul.ProjetMobile.tools.ListManager;
-import com.epul.ProjetMobile.tools.MapLayout;
-import com.epul.ProjetMobile.tools.PlaceType;
-import com.epul.ProjetMobile.tools.Transport;
+import com.epul.ProjetMobile.tools.*;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -86,30 +83,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         parcours = new HashMap<>();
         slidePanel = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         expandImage = (ImageView) findViewById(R.id.expand_icon);
-        //slidePanel.setPanelSlideListener(new ListSlideListener((ImageView) findViewById(R.id.expand_icon)));
-        slidePanel.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
-            @Override
-            public void onPanelSlide(View panel, float slideOffset) {
-                float angle = slideOffset * (float) 180;
-                expandImage.setRotation(angle);
-            }
+        slidePanel.setPanelSlideListener(new ListSlideListener((ImageView) findViewById(R.id.expand_icon)));
 
-            @Override
-            public void onPanelExpanded(View panel) {
-            }
-
-            @Override
-            public void onPanelCollapsed(View panel) {
-            }
-
-            @Override
-            public void onPanelAnchored(View panel) {
-            }
-
-            @Override
-            public void onPanelHidden(View panel) {
-            }
-        });
         preferences = this.getSharedPreferences(
                 SettingsActivity.SETTINGS_SHARED_PREFERENCES_FILE_NAME,
                 Context.MODE_PRIVATE);

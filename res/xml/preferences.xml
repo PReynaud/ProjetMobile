@@ -8,6 +8,7 @@
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:numeric="integer"
+            android:textColor="@color/textColorPrimary"
             android:title="@string/time_limit_title"/>
     <EditTextPreference
             android:defaultValue="5000"
@@ -17,6 +18,7 @@
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:numeric="integer"
+            android:textColor="@color/textColorPrimary"
             android:title="@string/radius_limit_title"/>
     <ListPreference
             android:key="transports"

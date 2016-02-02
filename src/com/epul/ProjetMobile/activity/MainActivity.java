@@ -67,6 +67,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String transportType;
     private ArrayList<String> placeType;
 
+    public static boolean isValidInteger(String s) {
+        try {
+            int i = Integer.parseInt(s);
+            if (i < 0) {
+                return false;
+            }
+            return true;
+        } catch (NumberFormatException ex) {
+            return false;
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -316,7 +328,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         placesService.setLocation(this.userLocation);
         if (preferences != null && preferences.getAll().get("radius_limit") != null) {
             String radiusLimit = (String) preferences.getAll().get("radius_limit");
-            placesService.setRadius(Integer.parseInt(radiusLimit));
+            if (isValidInteger(radiusLimit)) {
+                placesService.setRadius(Integer.parseInt(radiusLimit));
+            } else {
+                placesService.setRadius(5000);
+                Toast.makeText(this, "Rayon de recherche invalide, remplacé par 5000m", Toast.LENGTH_LONG).show();
+            }
         }
         if (preferences != null && preferences.getAll().get("types_monuments") != null) {
             placesService.setPlaceTypes(getPlaceTypeFromSettings());

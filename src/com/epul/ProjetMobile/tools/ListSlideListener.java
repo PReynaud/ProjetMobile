@@ -1,9 +1,6 @@
 package com.epul.ProjetMobile.tools;
 
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -19,7 +16,8 @@ public class ListSlideListener implements SlidingUpPanelLayout.PanelSlideListene
 
     @Override
     public void onPanelSlide(View view, float v) {
-        imageToRotate.animate().rotation(180);
+        float angle = v * (float) 180;
+        imageToRotate.setRotation(angle);
     }
 
     @Override
